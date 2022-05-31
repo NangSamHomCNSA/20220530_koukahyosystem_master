@@ -34,7 +34,7 @@ namespace koukahyosystem.Controllers
     {
         private bool connection_open;
         private MySqlConnection con;
-        // GET: Default
+        // GET: Default test default  2
         public ActionResult Login()
         {
 
