@@ -1,0 +1,1311 @@
+﻿@model koukahyosystem.Models.OneOnOneModel
+
+@{
+    ViewBag.Title = "OneOnOneKakunin";
+}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/Common/commonstyle.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />   
+    <script src=@Url.Content("~/Scripts/jquery-1.12.4.min.js")></script>
+    <script src="~/Scripts/bootstrap.js"></script>   
+    <script>
+        $(document).ready(function () {
+            var sortName = "";
+            var sortDirection = "ASC";
+            var maxpage = "";
+            var selectedpage = "";
+            // active the button
+            //$('.modal').on('hidden.bs.modal', function (e) {
+            //    if ($('.modal').hasClass('in')) {
+            //        $('body').addClass('modal-open');
+            //        document.getElementById("prvDataBtn").focus();
+            //    }
+            //    else {
+            //        document.getElementById("Ken_sMOKUHYO").focus();
+            //    }
+
+            //});
+            //$('#modal').on('hidden.bs.modal', function () {
+            //    //remove the bs.modal data attribute from it
+            //    $(this).removeData('bs.modal');
+            //    //and empty the modal-content element
+            //    $('#modal .modal-content').empty();
+
+            //    //remove backdrop
+            //    $('#modal').find('.modal-backdrop').removeClass('modal-backdrop');
+            //});
+
+            
+            $("#fSuperior").prop("checked", true);
+            var fkakuteiVal = false;           
+            //「<」ボタン
+            $('#preBtn').click(function () {
+                selectedpage = 0;
+                if ($('#Ken_fKAKUTEI').is(":checked")) {
+                    fkakuteiVal = true;
+                }
+                else {
+                    fkakuteiVal = false;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/OneNew/PreviousYearAction",
+                    data: {
+                        "yearval": $("#year").val(), "Kentaishosha": $("#Ken_taishosha").val(),
+                        "KensMOKUHYO": $('#Ken_sMOKUHYO').val(), "KenfKAKUTEI": fkakuteiVal, "fsuperior": $('#fSuperior').val()
+                    },
+                    success: function (response) {
+                        $("#year").val(response.cur_year);
+                        $('#Ken_taishosha').val(response.Ken_taishosha);
+                        $('#Ken_sMOKUHYO').val(response.Ken_sMOKUHYO);
+                        $("#Ken_fKAKUTEI").prop("checked", response.Ken_fKAKUTEI);
+                        //RefreshData(response.oneononelist)
+                        SortAndPage(1);
+
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+
+
+            });
+
+            //年度 dropdown on change
+            $('#year').change(function () {
+                if ($('#Ken_fKAKUTEI').is(":checked")) {
+                    fkakuteiVal = true;
+                }
+                else {
+                    fkakuteiVal = false;
+                }
+                selectedpage = 0;
+                //var SelectedText = $(this).find(":selected").text();
+                //alert('SelectedText<<' + SelectedText + '<<SelectedValue<<' + SelectedValue);
+                var SelectedValue = $(this).val();
+                $("#year").val(SelectedValue)
+                SortAndPage(1);
+
+            });
+
+            //「>」ボタン
+            $('#nextBtn').click(function () {
+                if ($('#Ken_fKAKUTEI').is(":checked")) {
+                    fkakuteiVal = true;
+                }
+                else {
+                    fkakuteiVal = false;
+                }
+                selectedpage = 0;
+                $.ajax({
+                    type: "POST",
+                    url: "/OneNew/NextYearAction",
+                    data: {
+                        "yearval": $("#year").val(), "Kentaishosha": $("#Ken_taishosha").val(),
+                        "KensMOKUHYO": $('#Ken_sMOKUHYO').val(), "KenfKAKUTEI": fkakuteiVal, "fsuperior": $('#fSuperior').val()},
+                    success: function (response) {
+                        $("#year").val(response.cur_year);
+                        $('#Ken_taishosha').val(response.Ken_taishosha);
+                        $('#Ken_sMOKUHYO').val(response.Ken_sMOKUHYO);
+                        $("#Ken_fKAKUTEI").prop("checked", response.Ken_fKAKUTEI);
+                        SortAndPage(1);
+                        //RefreshData(response.oneononelist)
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+
+            });
+           
+            //検索ボタン
+            $('#searchBtn').click(function () {
+                if ($('#Ken_fKAKUTEI').is(":checked")) {                   
+                    fkakuteiVal = true;
+                } else {
+                    fkakuteiVal = false;
+                }
+                selectedpage = 0;
+                sortName = "送信日";
+                sortDirection = "DESC";
+                SortAndPage(1);
+               
+            })
+            
+        　　//クリア ボタン
+            $('#clearBtn').click(function () {
+                if ($('#Ken_fKAKUTEI').is(":checked")) {
+                    fkakuteiVal = true;
+                } else {
+                    fkakuteiVal = false;
+                }
+                var thisyear = $("#thisyear").val();
+                $("#year").val(thisyear);
+                $('#Ken_taishosha').val("");
+                $('#Ken_sMOKUHYO').val("");                
+                $('#Ken_fKAKUTEI').prop('checked', false); // Unchecks it
+                
+                SortAndPage(1);
+               
+            })
+
+            //対象者保存ボタン
+            $('#saveBtn').click(function () {
+                
+                var checkData = true;
+                //入力したデータは有効かどうかのチェック
+                var konkiStartDate = $("#konkiStartDate").val();
+                konkiStartDate = konkiStartDate.split(' ')[0];
+                var YearStartDate = Date.parse(konkiStartDate);
+
+                var konkiEndDate = $("#konkiEndDate").val();
+                konkiEndDate = konkiEndDate.split(' ')[0];
+                YearEndDate = Date.parse(konkiEndDate);
+
+                var ApplyDateErr = "";
+                var konkiEndDate = $("#konkiEndDate").val();
+                if (!($('#fKAKUTEI').val()))
+                {
+                    if ($("#dHIDUKE").val() == "") {
+
+                        checkData = false;
+                        ApplyDateErr = "* 日付を選択してください。";
+                        document.getElementById('ApplyDateErr').innerText = ApplyDateErr;
+                    }
+                    else {
+
+                        var hiduke = $("#dHIDUKE").val();
+                        var applyDateVal = Date.parse(hiduke);
+                        if (!(YearStartDate <= applyDateVal && YearEndDate >= applyDateVal)) {
+                            checkData = false;
+                            ApplyDateErr = " * 今期の日付を選択してください。";
+                        }
+                        else {
+                            ApplyDateErr = "";
+                        }
+                        document.getElementById('ApplyDateErr').innerText = ApplyDateErr;
+                    }
+                }
+
+                
+
+                //目標チェック
+                var mokuhyoVal = $("#sMOKUHYO").val();
+                mokuhyoVal.trim();
+                var mokuhyoErr = "";
+                if (mokuhyoVal == "") {
+                    checkData = false;
+                    mokuhyoErr = "* 入力してください。";
+                    document.getElementById('mokuhyoErr').innerText = mokuhyoErr;
+                }
+                else {
+                    mokuhyoErr = "";
+                    document.getElementById('mokuhyoErr').innerText = mokuhyoErr;
+                }
+                if ($('#Ken_fKAKUTEI').is(":checked")) {
+                    fkakuteiVal = true;
+                }
+                else {
+                    fkakuteiVal = false;
+                }
+                
+              
+                if (checkData == true) {
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: "/OneNew/SaveAction",
+                        data: {
+                            "yearval": $("#year").val(), "Kentaishosha": $("#Ken_taishosha").val(),
+                            "KensMOKUHYO": $('#Ken_sMOKUHYO').val(), "KenfKAKUTEI": fkakuteiVal, "fsuperior": $('#fSuperior').val(),
+                            "applyDate": $("#dHIDUKE").val(), "cmokuhyo": $("#cMOKUHYO").val(), "mokuhyo": $("#sMOKUHYO").val(),
+                            "c_action": $("#Actiontask").val(), "l_action": $("#Feedback").val(),
+                            "c_problem": $("#Trouble_tantousha").val(), "l_problem": $("#Trouble_Leader").val(),
+                            "c_notic": $("#Awareness_tantousha").val(), "l_notic": $("#Awareness_Leader").val(),
+                            "l_memo": $("#memo").val(),
+                            "fkanryou": $('#fKANRYOU').val(), "fkakutei": $('#fKAKUTEI').val(), "ctaishosha" : $("#cTaishosha").val()
+                        }, /**/
+                        success: function (response) {
+                            $("#year").val(response.cur_year);
+                            $('#Ken_taishosha').val(response.Ken_taishosha);
+                            $('#Ken_sMOKUHYO').val(response.Ken_sMOKUHYO);
+                            $("#Ken_fKAKUTEI").prop("checked", response.Ken_fKAKUTEI);
+
+                            RefreshData(response.oneononelist);
+                            $("#myModal").modal('hide');
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+                }
+
+            })
+
+            //対象者確定ボタン
+            $('#confirmBtn').click(function () {
+               
+                var checkData = true;
+                //入力したデータは有効かどうかのチェック
+                var konkiStartDate = $("#konkiStartDate").val();
+                konkiStartDate = konkiStartDate.split(' ')[0];
+                var YearStartDate = Date.parse(konkiStartDate);
+
+                var konkiEndDate = $("#konkiEndDate").val();
+                konkiEndDate = konkiEndDate.split(' ')[0];
+                YearEndDate = Date.parse(konkiEndDate);
+
+                var ApplyDateErr = "";
+
+                if ($("#dHIDUKE").val() == "") {
+
+                    checkData = false;
+                    ApplyDateErr = "* 日付を選択してください。";
+                    document.getElementById('ApplyDateErr').innerText = ApplyDateErr;
+                }
+                else {
+
+                    var hiduke = $("#dHIDUKE").val();
+                    var applyDateVal = Date.parse(hiduke);
+                    if (!(YearStartDate <= applyDateVal && YearEndDate >= applyDateVal)) {
+                        checkData = false;
+                        ApplyDateErr = " * 今期の日付を選択してください。";
+                    }
+                    else {
+                        ApplyDateErr = "";
+                    }
+                    document.getElementById('ApplyDateErr').innerText = ApplyDateErr;
+                }
+
+                //目標チェック
+                var mokuhyoVal = $("#sMOKUHYO").val();
+                mokuhyoVal.trim();
+                var mokuhyoErr = "";
+                if (mokuhyoVal == "") {
+                    checkData = false;
+                    mokuhyoErr = "* 入力してください。";
+                    document.getElementById('mokuhyoErr').innerText = mokuhyoErr;
+                }
+                else {
+                    mokuhyoErr = "";
+                    document.getElementById('mokuhyoErr').innerText = mokuhyoErr;
+                }
+
+                //行なったタスクチェック
+                var c_task = $("#Actiontask").val();
+                c_task.trim();
+                var c_taskErr = "";
+                if (c_task == "") {
+                    checkData = false;
+                    c_taskErr = "* 入力してください。";
+                    document.getElementById('c_ActionTaskErr').innerText = c_taskErr;
+
+                }
+                else {
+                    c_taskErr = "";
+                    document.getElementById('c_ActionTaskErr').innerText = c_taskErr;
+                }
+                if ($('#Ken_fKAKUTEI').is(":checked")) {
+                    fkakuteiVal = true;
+                }
+                else {
+                    fkakuteiVal = false;
+                }
+
+                
+                if (checkData == true) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/OneNew/SaveAction",
+                        data: {
+                            "yearval": $("#year").val(), "Kentaishosha": $("#Ken_taishosha").val(),
+                            "KensMOKUHYO": $('#Ken_sMOKUHYO').val(), "KenfKAKUTEI": fkakuteiVal, "fsuperior": $('#fSuperior').val(),
+                            "applyDate": $("#dHIDUKE").val(), "cmokuhyo": $("#cMOKUHYO").val(), "mokuhyo": $("#sMOKUHYO").val(),
+                            "c_action": $("#Actiontask").val(), "l_action": $("#Feedback").val(),
+                            "c_problem": $("#Trouble_tantousha").val(), "l_problem": $("#Trouble_Leader").val(),
+                            "c_notic": $("#Awareness_tantousha").val(), "l_notic": $("#Awareness_Leader").val(),
+                            "l_memo": $("#memo").val(),
+                            "fkanryou": $('#fKANRYOU').val(), "fkakutei": $('#fKAKUTEI').val(), "ctaishosha": $("#cTaishosha").val()
+                        },
+                        success: function (response) {
+                            $("#year").val(response.cur_year);
+                            $('#Ken_taishosha').val(response.Ken_taishosha);
+                            $('#Ken_sMOKUHYO').val(response.Ken_sMOKUHYO);
+                            $("#Ken_fKAKUTEI").prop("checked", response.Ken_fKAKUTEI);
+                            RefreshData(response.oneononelist); $("#myModal").modal('hide');
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+                }
+
+            })
+
+            //戻るボタン
+            $('#backBtn').click(function () {
+                $("#myModal").modal('hide');
+            });
+
+            //入力画面閉じる
+            $('#myModalclose').click(function () {
+                $("#myModal").modal('hide');
+            });
+
+            //リスト一覧を表示する
+            function RefreshData(oneononelist) {
+                var pagenumber = 0;
+              
+                if (selectedpage != "") {                   
+                    pagenumber = parseInt(selectedpage) - 1;
+                }
+               
+                var table = document.getElementById("OneKakuninLists");
+                var rowCount = table.rows.length;
+                for (var i = rowCount - 1; i > 0; i--) {
+                    table.deleteRow(i);
+                }
+                var rownum = 1;
+                for (const [key, value] of Object.entries(oneononelist)) {
+
+                    //var objval = JSON.stringify(value);
+                    var d_dHIDUKE = "";
+                    var c_cTAISHOSHA = "";
+                    var s_sTAISHOSHA = "";
+                    var c_cMOKUHYO = "";
+                    var s_sMOKUHYO = "";
+                    var f_fKANRYOU = "";
+                    var d_dJISHIBI = "";
+
+                    for (const [key1, value1] of Object.entries(value)) {
+                        //alert("key1<<<" + key1 + " value1<<<" + value1);
+                        if (key1 == "dHIDUKE") {
+                            d_dHIDUKE = value1;
+                        }
+                        else if (key1 == "cTAISHOSHA") {
+                            c_cTAISHOSHA = value1;
+                        }
+                        else if (key1 == "sTAISHOSHA") {
+                            s_sTAISHOSHA = value1;
+                        }
+                        else if (key1 == "cMOKUHYO") {
+                            c_cMOKUHYO = value1;
+                        }
+                        else if (key1 == "sMOKUHYO") {
+                            s_sMOKUHYO = value1;
+                        }
+                       
+                        else if (key1 == "dJISHIBI") {
+                            d_dJISHIBI = value1;
+                        }
+
+                    }
+                    var row = table.insertRow(rownum);
+                    var cell0 = row.insertCell(0);
+                    var cell1 = row.insertCell(1);
+                    var cell2 = row.insertCell(2);
+                    var cell3 = row.insertCell(3);
+                    var cell4 = row.insertCell(4);
+                    var cell5 = row.insertCell(5);
+                    var cell6 = row.insertCell(6);
+                    var cell7 = row.insertCell(7);
+                    
+                    cell0.innerHTML = (pagenumber*10) + rownum;
+                    cell1.innerHTML = d_dHIDUKE;
+                    cell2.innerHTML = c_cTAISHOSHA;
+                    cell3.innerHTML = s_sTAISHOSHA;
+                    cell4.innerHTML = c_cMOKUHYO;
+                    cell5.innerHTML = s_sMOKUHYO;
+                    cell6.innerHTML = d_dJISHIBI;
+                    cell7.innerHTML = '<a href="#" id="' + c_cMOKUHYO + '" onclick="EditOneonOne(this,'+ c_cTAISHOSHA + ')">読込</a>';
+
+
+                    $("#OneKakuninLists tr:even").css("background-color", "#cdeefd");
+                    rownum++;
+                }
+
+                //$("#OneonOneLists").addClass("onelisttbl");
+                //$("#OneonOneLists").addClass("fontsize");
+                //alert();
+            }
+
+            //初期表示
+            $(function () {
+                $("#Ken_fKAKUTEI").val();
+                SortAndPage(1);
+            });
+
+            //順番
+            $("body").on("click", "#OneKakuninLists th a", function () {
+
+                sortName = $(this).html();
+                sortDirection = sortDirection == "ASC" ? "DESC" : "ASC";
+                SortAndPage(1);
+            });
+           
+            //順番とページ番号付ける
+            function SortAndPage(pageIndex) {              
+                if ($('#Ken_fKAKUTEI').is(":checked")) {
+                    fkakuteiVal = true;
+                }
+                else {
+                    fkakuteiVal = false;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/OneNew/SortPagination",
+                    data: {
+                        "yearval": $("#year").val(), "Kentaishosha": $("#Ken_taishosha").val(),
+                        "KensMOKUHYO": $('#Ken_sMOKUHYO').val(), "KenfKAKUTEI": fkakuteiVal,"fsuperior" : $('#fSuperior').val() ,  "pageIndex": pageIndex,
+                        "sortName": sortName, "sortDirection": sortDirection
+                    }, /**/
+                    success: function (response) {
+                        $("#year").val(response.cur_year);
+                        $('#Ken_taishosha').val(response.Ken_taishosha);
+                        $('#Ken_sMOKUHYO').val(response.Ken_sMOKUHYO);
+                        $("#Ken_fKAKUTEI").prop("checked", response.Ken_fKAKUTEI);
+                        $('#curPageindex').val(response.curPageIndex);
+                        RefreshData(response.oneononelist);
+                        Pager(response.pagination, response.curPageIndex);
+                    },
+                    failure: function (response) {
+                        //alert(response.responseText);
+                    },
+                    error: function (response) {
+                        //alert(response.responseText);
+                    }
+                });
+
+            };
+      
+            //ページ番号付ける
+            function Pager(pagination, curPageIndex) {
+                //10行以上ある場合
+                if (pagination != null) {
+
+                    var table = document.getElementById("pagerId");
+                    var rowCount = table.rows.length;
+
+                    for (var i = rowCount - 1; i >= 0; i--) {
+                        table.deleteRow(i);
+                    }
+
+                    var row = table.insertRow(0);
+                    maxpage = pagination.length;                   
+                    selectedpage = curPageIndex;
+                    if (maxpage > 1) {
+
+                        //row.insertCell(0).innerHTML = '<a href="#" id="prePage" onclick="return Pagination(this,' + maxpage + ', \'' + sortName + '\',\'' + sortDirection +'\')"> < </a>';
+                        row.insertCell(0).innerHTML = '<a href="javascript:;" id="prePage" > < </a>';
+                        for (var i = 1; i <= maxpage; i++) {
+                            if (i == curPageIndex) {
+                                row.insertCell(i).innerHTML = i;
+                            }
+                            else {
+                                row.insertCell(i).innerHTML = ' <a href="javascript:;" id="curPage" >' + i + '</a> ';
+
+                            }
+
+                        }
+                        var nextpage = maxpage + 1;
+                        row.insertCell(nextpage).innerHTML = '<a href="javascript:;" id="nextPage" > > </a>';
+
+
+                        if (curPageIndex == "1") {
+                            $("#pagerId td:eq(0)").hide();
+                        }
+
+                        if (pagination.length > 1 && maxpage == curPageIndex) {
+                            //row.insertCell(nextpage).css({ "visibility": "hidden" });
+                            $("#pagerId td:eq(" + nextpage + ")").hide();
+                        }
+
+                    }
+                    else {
+                        selectedpage = 0;
+                        var table = document.getElementById("pagerId");
+                        var rowCount = table.rows.length;
+
+                        for (var i = rowCount - 1; i >= 0; i--) {
+                            table.deleteRow(i);
+                        }
+                    }
+                }
+                //10行以下ある場合
+                else {
+                    selectedpage = 0;
+                    var table = document.getElementById("pagerId");
+                    var rowCount = table.rows.length;
+
+                    for (var i = rowCount - 1; i >= 0; i--) {
+                        table.deleteRow(i);
+                    }
+
+                }
+
+            }
+
+            //ページ番号クリック
+            $("body").on("click", "#pagerId td a", function () {
+
+                var linkId = $(this).attr('id');
+                if (linkId == "prePage") {
+
+                    if (selectedpage != "" && !isNaN(selectedpage)) {
+                        var index = parseInt(selectedpage);
+                        if (index > 1) {
+                            index = index - 1;
+                        }
+                    }
+                }
+                else if (linkId == "nextPage") {
+
+                    if (selectedpage != "" && !isNaN(selectedpage)) {
+                        var index = parseInt(selectedpage);
+                        if (maxpage > index) {
+                            index = index + 1;
+                        }
+
+                    }
+                }
+                else if (linkId == "curPage") {
+                    var index = $(this).text();
+
+                }
+                selectedpage = index;
+                SortAndPage(index);
+            });
+
+        });
+
+        //読込ボタン
+        function EditOneonOne(e, ctaishosha) {
+            
+            var cmokuhyo = e.id;
+            if ($('#Ken_fKAKUTEI').is(":checked")) {
+                fkakuteiVal = true;
+            }
+            else {
+                fkakuteiVal = false;
+            }
+            $("#cTaishosha").val(ctaishosha);
+            
+            $.ajax({
+                type: "POST",
+                url: "/OneNew/ReadOneonOne",
+                data: {
+                    "yearval": $("#year").val(), "Kentaishosha": $("#Ken_taishosha").val(),
+                    "KensMOKUHYO": $('#Ken_sMOKUHYO').val(), "KenfKAKUTEI": fkakuteiVal, "fsuperior": $('#fSuperior').val(), "cMokuhyou": cmokuhyo, "cTaishosha": ctaishosha},
+                success: function (response) {
+
+                    $("#year").val(response.cur_year);
+                    $('#Ken_taishosha').val(response.Ken_taishosha);
+                    $('#Ken_sMOKUHYO').val(response.Ken_sMOKUHYO);
+                    $("#Ken_fKAKUTEI").prop("checked", response.Ken_fKAKUTEI);
+                    $('#cMOKUHYO').val(response.cMokuhyou);
+                    $('#cTaishosha').val(ctaishosha);
+                    $('#fKAKUTEI').val(response.jyoutai);
+                    $('#fKANRYOU').val(response.kanryou);
+                    
+
+                    //送信日
+                    $("#dHIDUKE").val(response.applyDate);
+                    document.getElementById('ApplyDateErr').innerText = "";
+                    //実施日
+                    $("#dJISHIBI").val(response.comifrmDate);
+
+                    //目標
+                    $("#sMOKUHYO").val(response.mokuhyo);
+                    document.getElementById('mokuhyoErr').innerText = "";
+                    //行なったタスク 作成者
+                    $("#Actiontask").val(response.c_action);
+
+                    //行なったタスク リーダ
+                    $("#Feedback").val(response.l_action);
+
+                    //困っていること 作成者
+                    $("#Trouble_tantousha").val(response.c_problem);
+
+                    //困っていること リーダ
+                    $("#Trouble_Leader").val(response.l_problem);
+
+                    //気づいたこと 作成者
+                    $("#Awareness_tantousha").val(response.c_notic);
+
+                    //気づいたこと リーダ
+                    $("#Awareness_Leader").val(response.l_notic);
+
+                    //メモ
+                    $("#memo").val(response.memo);
+
+
+                    //前回内容データ
+                    //送信日
+                    $("#prv_date").val(response.pre_applyDate);
+
+                    //実施日
+                    $("#prv_djishi").val(response.pre_comifrmDate);
+
+                    //目標
+                    $("#prv_tema").val(response.pre_mokuhyo);
+
+                    //行なったタスク 作成者
+                    $("#prv_taskaction").val(response.c_pre_action);
+
+                    //行なったタスク リーダ
+                    $("#prv_feedback").val(response.l_pre_action);
+
+                    //困っていること 作成者
+                    $("#prv_trouble").val(response.c_pre_problem);
+
+                    //困っていること リーダ
+                    $("#prv_trouble_L").val(response.l_pre_problem);
+
+                    //気づいたこと 作成者
+                    $("#prv_awareness").val(response.c_pre_notic);
+
+                    //気づいたこと リーダ
+                    $("#prv_awareness_L").val(response.l_pre_notic);
+
+                    $("#prv_memo").val(response.pre_memo);
+
+                    BtnConditioncss(response.jyoutai, response.kanryou,response.applyDate);
+                    //var myModal = new bootstrap.Modal(document.getElementById('myModal'));
+                    //myModal.show();
+                    $("#myModal").modal('show');
+
+
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+
+        //テキスト色付ける・変更できない項目設定
+        function BtnConditioncss(jyoutai, kanryou) {
+            var ConfirmBtn = document.getElementById("confirmBtn");
+            var SaveBtn = document.getElementById("saveBtn");
+           
+            //リーダが確定した場合
+            $('#dHIDUKE').attr("readonly", true);
+            $('#dHIDUKE').css("background-color", "#FFFFCC");
+            $('#dHIDUKE').prop('tabIndex', -1);
+
+            $("#sMOKUHYO").attr("readonly", true);
+            $('#sMOKUHYO').css("background-color", "#FFFFCC");
+            $("#sMOKUHYO").prop('tabIndex', -1);
+
+            $('#Actiontask').attr("readonly", true);
+            $('#Actiontask').css("background-color", "#FFFFCC");
+            $('#Actiontask').prop('tabIndex', -1);
+
+            $('#Trouble_tantousha').attr("readonly", true);
+            $('#Trouble_tantousha').css("background-color", "#FFFFCC");
+            $('#Trouble_tantousha').prop('tabIndex', -1);
+
+            $('#Awareness_tantousha').attr("readonly", true);
+            $('#Awareness_tantousha').css("background-color", "#FFFFCC");
+            $('#Awareness_tantousha').prop('tabIndex', -1);
+            if (jyoutai) {
+                $("#status").text("実施状態　：　済");
+
+                //確定ボタン
+                $('#confirmBtn').css("background-color", "LightGray");
+                $("#confirmBtn").html("確定済");
+                $('#confirmBtn').prop('disabled', true);
+                $('#confirmBtn').addClass('disabled');
+            }
+           else {
+              
+                $("#status").text("");
+               
+
+                ////保存ボタン
+                //$('#saveBtn').prop('disabled', true);
+                //$('#saveBtn').addClass('disabled');
+
+                //確定ボタン
+                $('#confirmBtn').css("background-color", "#FFCDFF");
+                $("#confirmBtn").html("完了");
+                $('#confirmBtn').prop('disabled', false);
+                $('#confirmBtn').removeClass('disabled');
+            }
+
+        }
+
+    </script>
+</head>
+<body>
+    @if (Session["isAuthenticated"] != null)
+    {
+
+
+    <div class="panel panel-info">
+        @*<div style="background-color: rgb(34, 148, 172); width:100%;height:33px;">
+            <h6 class="text-center align-middle" style="color:white;line-height:33px">1on1ミーティング画面</h6>
+        </div>*@
+        <div id="headertitle" style="background-color: rgb(34, 148, 172); width:100%;">
+            <h6 class="text-center align-middle headline" style="color:white;">1on1確認画面</h6>
+        </div>
+
+
+        <div id="kakuninsha">
+            <div id="container" style="margin: 10px;">
+                @*<input type="submit" id="searchBtn" value="search" name="OneOnOneBtn" style="visibility:hidden;position:absolute" />*@
+                <div class="filter1on1">
+                    <div class="mb-2" style="display:inline-block;margin-right:15px; ">
+                        <div class="row g-3">
+                            <div class="col-auto" style="padding-right:0!important">
+                                @Html.Label("年度", new { @class = "lbl_year" })
+                            </div>
+                            <div class="col-auto" style="margin-top:11px;">
+                                <button id="preBtn" name="year_btn" class="btn btn-link preBtn">
+                                    <i class="fas fa-caret-left"></i>
+                                </button>
+                                @Html.DropDownListFor(m => m.SelectedYear, Model.YearList, new { @id = "year", style = "width:70px;", onchange = "SelectedIndexChanged()", @class = "btn btn-sm dropdown-toggle yeardropdown" })
+                                <button id="nextBtn" name="year_btn" class="btn btn-link preBtn">
+                                    <i class="fas fa-caret-right"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="mb-2" style="display:inline-block;margin-right:15px;">
+                        <div class="row ">
+                            <div class="col-auto mb-2" style="margin:0 !important;padding-right:10px!important;">
+                                @Html.LabelFor(m => m.Ken_taishosha, new { @class = "col-sm-1 col-form-label", style = "width:auto;" })
+                            </div>
+                            <div class="col-auto mb-2" style="margin:0 !important;padding-left:0!important;">
+
+                                @Html.TextBoxFor(m => m.Ken_taishosha, new{
+                               @id = "Ken_taishosha",
+                               style= "width:130px;",
+                               @class = "form-control fontsize",
+                               maxlength = "30",
+                               oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"})
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="mb-2" style="display:inline-block; margin-right:15px;">
+                        <div class="row ">
+                            <div class="col-auto mb-2" style="margin:0 !important;padding-right:10px!important;">
+                                @Html.LabelFor(m => m.Ken_sMOKUHYO, new { @class = "col-sm-1 col-form-label", style = "width:auto;" })
+                            </div>
+                            <div class="col-auto mb-2" style="margin:0 !important;padding-left:0!important;">
+
+                                @Html.TextBoxFor(m => m.Ken_sMOKUHYO, new{
+                                   @id = "Ken_sMOKUHYO",
+                                   style="width:250px;",
+                                        @class = "form-control fontsize",
+                                       maxlength = "30",
+                                       oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"})
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="mb-2" style="display:inline-block;margin-right:15px;margin-top:0!important;padding-top:0!important">
+                        <div class="row " style="margin-top:0!important;padding-top:0!important ">
+                            <div class="col-auto " style="margin:0 !important;padding-right:5px!important;">
+                                @Html.LabelFor(m => m.Ken_fKAKUTEI, new { @class = "lbl_kakutei" })
+                            </div>
+                            <div class="col-auto " style="margin:0 !important;padding-left:0!important;">
+
+                                @Html.CheckBoxFor(m => m.Ken_fKAKUTEI, new { @id = "Ken_fKAKUTEI" })
+                            </div>
+                            <div class="col-auto ">
+
+                                <button type="submit" id="clearBtn" value="clear" name="OneOnOneBtn" class="DefaultBtn btnClear1on1 " style="margin-top:0!important">クリア</button>
+                                <button type="submit" id="searchBtn" value="search" name="OneOnOneBtn" class="DefaultBtn btnmargin" style="margin-top:0!important">検索</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div>
+                <table id="OneKakuninLists" align="center" class="oneKakuninListtbl fontsize">
+                    <tr>
+                        <th>No.</th>
+                        <th><a href="javascript:;" style="color:black;">送信日</a></th>
+                        <th><a href="javascript:;" style="color:black;">社員コード</a></th>
+                        <th><a href="javascript:;" style="color:black;">社員名</a></th>
+                        <th><a href="javascript:;" style="color:black;">目標番号</a></th>
+                        <th><a href="javascript:;" style="color:black;">目標</a></th>
+                        <th><a href="javascript:;" style="color:black;">実施日</a></th>
+                        <th></th>
+                    </tr>
+                    <tbody>
+                        @{ int L_rowNo = 0; }
+                        @foreach (var item in Model.OneOnOneList)
+                        {
+
+                            <tr>
+                                <td>   @(L_rowNo += 1)</td>
+                                <td>
+                                    @item.dHIDUKE
+                                </td>
+                                <td>
+                                    @item.cTAISHOSHA
+                                </td>
+                                <td>
+                                    @item.sTAISHOSHA
+                                </td>
+                                <td>
+                                    @item.cMOKUHYO
+                                </td>
+                                <td>
+                                    @item.sMOKUHYO
+                                </td>
+
+
+                                <td>
+                                    @item.dJISHIBI
+                                </td>
+                                <td>
+                                    @*<a id="@item.cMOKUHYO" href="#"></a>*@
+                                    <a id="@item.cMOKUHYO" href="#" onclick="EditOneonOne(this, '@item.cMOKUHYO');return false;">読込</a>
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+
+
+                </table>
+                <div id="Pager">
+                    <table id="pagerId" cellpadding="5" align="center" class="fontsize">
+                        <tr>
+                            @foreach (var val in Model.pagination)
+                            {
+                                <th><a>val</a></th>
+                            }
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        @*ミーティング作成画面*@
+        <div class="modal" id="myModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg ">
+                <div class="modal-content fontsize ">
+                    @*overflow-auto*@
+                    <div class="modal-header text-center ">
+                        <h5 class="modal-title  w-100" id="staticBackdropLabel">1on1ミーティング入力画面</h5>
+                        <button id="myModalclose" type="button" class="btn-close"></button>
+                    </div>
+
+                    <div style="overflow-y:auto;overflow-x:hidden">
+                        @*class="overflow-auto "*@
+                        <div class="mt-3  row">
+                            <div class="col">
+
+                            </div>
+                            <div class="col" style="text-align:center">
+                                @*@Html.Label(Model.status ?? "", new { @id = "statusaa", Style = "align:center; color:blue;font-size:15px;font-weight: bold; " })*@
+                                <p id="status" style=" color:blue;font-size:16px;font-weight: bold; "></p>
+                            </div>
+                            <div class="col prebtn " style=" text-align:right;">
+                                <button id="prvDataBtn" name="OneOnOneBtn" class="DefaultBtn" value="前回内容" data-bs-toggle="modal" data-bs-target="#PrvModal">前回内容</button>
+
+                            </div>
+                        </div>
+                        @*@using (Html.BeginForm("OneOnOne", "OneOnOne", FormMethod.Post))
+                        {*@
+                        <div class="modal-body ">
+
+                            <div class="row">
+                                <div class="mb-0 row">
+                                    <div class="col-sm-2 col-md-2">
+                                        @Html.LabelFor(m => m.dHIDUKE, new { @class = "col-form-label ", style = " font-weight: normal !important; color:black;padding-top:3px;" })
+
+                                    </div>
+                                    <div class="col-sm-2 col-md-3">
+                                        @Html.TextBoxFor(m => m.ApplyDate, new { @id = "dHIDUKE", @class = "form-control fontsize", style = "width:116px !important;height:25px;", type = "date" })
+                                        <p id="ApplyDateErr" class="text-danger" style=" font-weight: normal !important; color:black;font-size:12px;"> </p>
+                                    </div>
+                                    <div class="col-sm-2 col-md-2">
+                                        @Html.LabelFor(m => m.dJISHIBI, new { @class = "col-form-label jishibicss", style = " font-weight: normal !important;color:black;padding-top:3px;" })
+                                    </div>
+                                    <div class="col-sm-2 col-md-3">
+                                        @Html.TextBoxFor(m => m.dJISHIBI, new { @id = "dJISHIBI", @class = " form-control fontsize", style = "width:116px;height:25px;", type = "date", @readonly = "true" })
+
+                                    </div>
+                                </div>
+
+
+                                <div class="mb-3 row">
+                                    @Html.LabelFor(m => m.sMOKUHYO, new { style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+                                    <div class="col-sm-10">
+                                        @Html.TextAreaFor(m => m.sMOKUHYO, 3, 30, htmlAttributes: new {
+                                                        @id = "sMOKUHYO",
+                                                        name = "sMOKUHYO",
+                                                        style = "width: 100%; max-width: 100%;",
+                                                        maxlength = "500",
+                                                        @class = "form-control fontsize",
+                                                        oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                                    })
+
+                                        @*@Html.ValidationMessageFor(model => model.sMOKUHYO, null, new { @class = "text-danger" })*@
+                                        <p id="mokuhyoErr" class="text-danger " style="font-size:12px;padding:0!important; margin:0!important"></p>
+
+                                    </div>
+                                </div>
+                                @*<div class="mb-1 row" style="font-size:12px;">
+                                    <label class="col-sm-2 col-form-label"></label>
+                                    <div class="col-sm-5" style="border:1px solid black;padding:0!important;">
+                                        <label class="col-sm-10 col-form-label" style="padding:0px 0px 0px 10px!important;">グループメンバー記入欄</label>
+                                    </div>
+                                    <div class="col-sm-5" style="border:1px solid black;padding:0!important;">
+                                        <label class="col-sm-10 col-form-label" style="padding:0px 0px 0px 10px!important;">リーダー記入欄</label>
+                                    </div>
+                                </div>*@
+                                <div class="mb-3 row">
+
+                                    @Html.LabelFor(m => m.Actiontask, new { style = " font-weight: normal !important;", @class = "col-sm-2 col-form-label" })
+
+                                    <div class="col-sm-5">
+                                        @Html.TextAreaFor(m => m.Actiontask, 5, 30, htmlAttributes: new {
+                                                       @id = "Actiontask",
+                                                       style = "width: 100%; max-width: 100%;",
+                                                       maxlength = "1000",
+                                                       @class = "form-control fontsize",
+                                                       oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                                   })
+                                        @*@Html.ValidationMessageFor(model => model.Actiontask, null, new { @class = "text-danger" })*@
+
+                                        <p id="c_ActionTaskErr" class="text-danger" style="font-size:12px; padding:0!important; margin:0!important" ></p>
+
+
+                                    </div>
+                                    <div class="col-sm-5 lead1on1" style="text-align:right">
+                                        @Html.TextAreaFor(m => m.Feedback, 5, 30, htmlAttributes: new{
+                                                     @id = "Feedback",
+                                                     style = "width: 100%; max-width: 100%;",
+                                                     maxlength = "1000",
+                                                     @class = "form-control fontsize",
+                                                    @placeholder ="リーダー記入欄",
+                                                     oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                                 })
+                                        @*@Html.ValidationMessageFor(model => model.Feedback, null, new { @class = "text-danger" })*@
+
+                                        <p id="l_FeedbackErr" class="text-danger" style="font-size:12px;padding:0!important; margin:0!important" ></p>
+
+                                    </div>
+
+                                </div>
+                                <div class="mb-3 row">
+
+                                    @Html.LabelFor(m => m.Trouble_tantousha, new { style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+
+                                    <div class="col-sm-5">
+                                        @Html.TextAreaFor(m => m.Trouble_tantousha, 5, 10, htmlAttributes: new{
+                                                   @id = "Trouble_tantousha",
+                                                   style = "width: 100%; max-width: 100%;",
+                                                   maxlength = "1000",
+                                                   @class = "form-control fontsize",
+                                                   oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                               })
+                                        @*@Html.ValidationMessageFor(model => model.Trouble_tantousha, null, new { @class = "text-danger" })*@
+
+                                        <p id="c_ProblemErr" class="text-danger" style="font-size:12px;padding:0!important; margin:0!important"></p>
+
+                                    </div>
+                                    <div class="col-sm-5 lead1on1" style="text-align:right">
+                                        @Html.TextAreaFor(m => m.Trouble_Leader, 5, 15, htmlAttributes: new {
+                                                         @id = "Trouble_Leader",
+                                                         style = "width: 100%; max-width: 100%;",
+                                                         maxlength = "1000",
+                                                         @class = "form-control fontsize",
+                                                         @placeholder ="リーダー記入欄",
+                                                         oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                                     })
+                                        @*@Html.ValidationMessageFor(model => model.Trouble_Leader, null, new { @class = "text-danger" })*@
+
+                                        <p id="l_ProblemErr" class="text-danger" style="font-size:12px;padding:0!important; margin:0!important"></p>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-3 row">
+
+                                    @Html.LabelFor(m => m.Awareness_tantousha, new { style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+
+                                    <div class="col-sm-5">
+                                        @Html.TextAreaFor(m => m.Awareness_tantousha, 5, 30, htmlAttributes: new {
+                                                     @id = "Awareness_tantousha",
+                                                     style = "width: 100%; max-width: 100%;",
+                                                     maxlength = "1000",
+                                                     @class = "form-control fontsize",
+                                                     oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                                   })
+                                        @*@Html.ValidationMessageFor(model => model.Awareness_tantousha, null, new { @class = "text-danger" })*@
+
+                                        <p id="c_AwarenessErr" class="text-danger" style="font-size:12px;"></p>
+
+                                    </div>
+                                    <div class="col-sm-5 lead1on1" style="text-align:right">
+                                        @Html.TextAreaFor(m => m.Awareness_Leader, 5, 30, htmlAttributes: new{
+                                                       @id = "Awareness_Leader",
+                                                       style = "width: 100%; max-width: 100%;",
+                                                       maxlength = "1000",
+                                                       @class = "form-control fontsize",
+                                                       @placeholder ="リーダー記入欄",
+                                                       oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                                   })
+                                        @*@Html.ValidationMessageFor(model => model.Awareness_Leader, null, new { @class = "text-danger" })*@
+
+                                        <p id="l_AwarenessErr" class="text-danger" style="font-size:12px;"></p>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-3 row">
+
+                                    @Html.LabelFor(m => m.Memo, new { @id = "memoLbl", style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+
+                                    <div class="col-sm-10">
+                                        @Html.TextAreaFor(m => m.Memo, 5, 30, htmlAttributes: new{
+                                                    @id = "memo",
+                                                    style = "width: 100%; max-width: 100%;",
+                                                    maxlength = "1000",
+                                                    @class = "form-control fontsize",
+                                                    oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                                })
+                                        <span style="font-size:12px;">※リーダーしか閲覧できません。</span>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="submit" id="saveBtn" class="SaveBtn btnmargin" name="OneOnOneBtn" value="hozon">一時保存</button>
+                            <button type="submit" id="confirmBtn" class="DefaultBtn btnmargin" name="OneOnOneBtn" value="comfirm" onclick="kakutei()"> </button>
+                            <button type="submit" id="backBtn" class="DefaultBtn btnmargin " name="OneOnOneBtn" value="back">戻る</button>
+
+                        </div>
+                        @Html.HiddenFor(m => m.cMOKUHYO, new { id = "cMOKUHYO", style = " position: absolute;" })
+                        @Html.HiddenFor(m => m.cTaishosha, new { id = "cTaishosha", style = " position: absolute;" })
+                        @Html.HiddenFor(m => m.SelectedYear, new { id = "year", style = " position: absolute;" })
+                        @Html.HiddenFor(m => m.CurrentYear, new { id = "thisyear", style = " position: absolute;" })
+                        @Html.HiddenFor(m => m.fpermit, new { id = "fpermit", style = " position: absolute;" })
+                        @Html.HiddenFor(m => m.fKAKUTEI, new { id = "fKAKUTEI", style = " position: absolute;" })
+                        @Html.HiddenFor(m => m.fKANRYOU, new { id = "fKANRYOU", style = " position: absolute;" })
+                        @Html.CheckBox("fSuperior", true, new { id = "fSuperior", style = " position: absolute;" })
+                        @Html.HiddenFor(m => m.konkiStartDate, new { id = "konkiStartDate", style = " position: absolute;" })
+                        @Html.HiddenFor(m => m.konkiEndDate, new { id = "konkiEndDate", style = " position: absolute;" })
+                        @Html.HiddenFor(m => m.PageIndex, new { id = "curPageindex", style = " position: absolute;" })
+                        @*}*@
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+        @*前回内容画面 、変更できません。読むのみ*@
+
+        <div class="modal" id="PrvModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg ">
+                <div class="modal-content fontsize ">
+                    @*overflow-auto*@
+                    <div class="modal-header text-center ">
+                        <h5 class="modal-title  w-100" id="staticBackdropLabel">前回内容</h5>
+                        <button id="premodalClose" type="button" class="btn-close close" data-bs-target="#myModal" data-bs-toggle="modal"></button>
+                    </div>
+
+                    <div style="overflow-y:auto;overflow-x:hidden">
+                        @*class="overflow-auto "*@
+                        <div class="modal-body ">
+
+                            <div class="row">
+                                <div class="mb-3 row">
+                                    @Html.LabelFor(m => m.dHIDUKE, new { @class = "col-sm-2 col-form-label ", style = " font-weight: normal !important; color:black;padding-top:3px;" })
+                                    @Html.TextBoxFor(m => m.prv_date, new { @id = "prv_date", @class = "col-sm-2 form-control fontsize", style = "width:130px;height:25px;margin-left:10px;", type = "date", @readonly = "true" })
+                                    @Html.LabelFor(m => m.dJISHIBI, new { @class = "col-sm-2 col-form-label jishibicss", style = " font-weight: normal !important;color:black;padding-top:3px;" })
+                                    @Html.TextBoxFor(m => m.prv_djishi, new { @id = "prv_djishi", @class = "col-sm-2  form-control fontsize", style = "width:130px;height:25px;margin-left:10px;", type = "date", @readonly = "true" })
+                                </div>
+
+                                <div class="mb-3 row">
+                                    @Html.LabelFor(m => m.sMOKUHYO, new { style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+
+                                    <div class="col-sm-10">
+
+                                        @Html.TextAreaFor(m => m.prv_tema, 3, 30, htmlAttributes: new {
+                                      @id = "prv_tema",
+                                      name = "sMOKUHYO",
+                                      style = "width: 100%; max-width: 100%;",
+                                      maxlength = "500",
+                                      @class = "form-control fontsize",
+                                      oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                      @readonly = "true"
+                                  })
+
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 row">
+                                    @Html.LabelFor(m => m.Actiontask, new { style = " font-weight: normal !important;", @class = "col-sm-2 col-form-label" })
+
+                                    <div class="col-sm-5">
+
+                                        @Html.TextAreaFor(m => m.prv_taskaction, 5, 30, htmlAttributes: new {
+                                           @id = "prv_taskaction",
+                                           style = "width: 100%; max-width: 100%;",
+                                           maxlength = "1000",
+                                           @class = "form-control fontsize",
+                                           oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                       @readonly = "true"
+                                       })
+
+                                    </div>
+                                    <div class="col-sm-5 lead1on1" style="text-align:right">
+
+                                        @Html.TextAreaFor(m => m.prv_feedback, 5, 30, htmlAttributes: new{
+                                      @id = "prv_feedback",
+                                      style = "width: 100%; max-width: 100%;",
+                                      maxlength = "1000",
+                                      @class = "form-control fontsize",
+                                      oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                      @readonly = "true"
+                                      })
+
+                                    </div>
+
+                                </div>
+                                <div class="mb-3 row">
+                                    @Html.LabelFor(m => m.Trouble_tantousha, new { style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+                                    <div class="col-sm-5">
+
+                                        @Html.TextAreaFor(m => m.prv_trouble, 5, 10, htmlAttributes: new{
+                                      @id = "prv_trouble",
+                                      style = "width: 100%; max-width: 100%;",
+                                      maxlength = "1000",
+                                      @class = "form-control fontsize",
+                                      oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                      @readonly = "true"
+                                  })
+
+                                    </div>
+                                    <div class="col-sm-5 lead1on1" style="text-align:right">
+
+                                        @Html.TextAreaFor(m => m.prv_trouble_L, 5, 15, htmlAttributes: new {
+                                      @id = "prv_trouble_L",
+                                      style = "width: 100%; max-width: 100%;",
+                                      maxlength = "1000",
+                                      @class = "form-control fontsize",
+                                      oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                      @readonly = "true"
+                                  })
+
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-3 row">
+                                    @Html.LabelFor(m => m.Awareness_tantousha, new { style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+                                    <div class="col-sm-5">
+
+                                        @Html.TextAreaFor(m => m.prv_awareness, 5, 30, htmlAttributes: new {
+                                      @id = "Awarenprv_awarenessess_tantousha",
+                                      style = "width: 100%; max-width: 100%;",
+                                      maxlength = "1000",
+                                      @class = "form-control fontsize",
+                                      oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                      @readonly = "true",@tabindex="-1"
+                                  })
+                                    </div>
+                                    <div class="col-sm-5 lead1on1" style="text-align:right">
+
+                                        @Html.TextAreaFor(m => m.prv_awareness_L, 5, 30, htmlAttributes: new{
+                                      @id = "prv_awareness_L",
+                                      style = "width: 100%; max-width: 100%;",
+                                      maxlength = "1000",
+                                      @class = "form-control fontsize",
+                                      oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                      @readonly = "true"
+                                  })
+
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-3 row">
+
+                                    @Html.LabelFor(m => m.Memo, new { @id = "memoLbl", style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+
+                                    <div class="col-sm-10">
+
+                                        @Html.TextAreaFor(m => m.prv_memo, 5, 30, htmlAttributes: new{
+                                      @id = "prv_memo",
+                                      style = "width: 100%; max-width: 100%;",
+                                      maxlength = "1000",
+                                      @class = "form-control fontsize",
+                                      oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                      @readonly = "true"
+                                  })
+                                        <span style="font-size:12px;">※リーダーしか閲覧できません。</span>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="submit" id="Pre_backBtn" class="DefaultBtn" data-bs-target="#myModal" data-bs-toggle="modal">戻る</button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
+    }
+</body>
+

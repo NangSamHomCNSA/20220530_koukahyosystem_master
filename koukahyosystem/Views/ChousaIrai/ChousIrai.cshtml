@@ -1,0 +1,372 @@
+﻿@*@model IEnumerable<koukahyosystem.Models.ChousIrai>
+
+    @{
+        ViewBag.Title = "ChousIrai";
+    }*@
+@model koukahyosystem.Models.ChousIrai
+@using System.Data
+@{
+    ViewBag.Title = "ChousIrai";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html>
+<head>
+    <style>
+        .btncss {
+            color: black;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
+            margin-left:10px;
+        }
+
+        .ajax-loader {
+            visibility: hidden;
+            width: 100%;
+            height: 100%;
+        }
+
+            .ajax-loader img {
+                position: relative;
+            }
+
+        .row {
+            /*text-align: center;*/
+            align-content: center;
+            vertical-align: central;
+        }
+        #ht {
+            height: 38px;
+        }
+
+        .headline {
+            line-height: 38px;
+            font-size: 18px;
+        }
+        @@media only screen and (min-width:750px){
+            .filter1on1{
+                text-align:center;
+            }
+        }
+        @@media only screen and (max-width:420px){
+            #ht {
+                height: 30px;
+            }
+
+            .headline {
+                line-height: 30px;
+                font-size: 14px;
+            }
+            .filter1on1 {
+                padding-left: 130px;
+                padding-right: 120px;
+            }
+            .btncss{
+                margin-left:0px;
+            }
+        }
+        @@media only screen and (max-width: 376px) {
+
+            .div2{
+                margin-left:0px;
+                margin-top:7px;
+            }
+            .filter1on1 {
+                padding-left: 120px;
+                padding-right:100px;
+            }
+            .btncss {
+                margin-left: 0px;
+            }
+        }
+    </style>
+</head>
+<body>
+    @if (Session["isAuthenticated"] != null)
+    {
+        using (Html.BeginForm("ChousIrai", "ChousaIrai", FormMethod.Post))
+        {
+            <div id='divElement' class="panel panel-info" align="center">
+                <input type="hidden" id="newsaveflag" name="newsaveflag" value="@Model.checkquest" />
+                <input type="submit" value="display" name="year_btn" class="button" style="display:none" />
+                <div class="panel-heading ht" style="background-color: rgb(34, 148, 172); width:100%" align="center">
+                    <h6 class="align-middle text-center headline" style="color:white ; ">社員満足度調査依頼</h6>
+                </div>
+                @*<div class="row" style="margin:10px;">
+                    <div class="col-sm-5"></div>
+                    <div class="col-sm-4" style="text-align:left;">
+                        <div class="row">
+                            <div class="col-auto mb-2">
+                                @Html.Label("年度", new { style = "color:black;font-weight: normal !important;margin-right:0px;" })
+                            </div>
+                            <div class="col-auto mb-2">
+                                @Html.TextBoxFor(model => model.RequestDate, new { @id = "txttoday", @tabindex = "-1", @type = "text", style = "width:60px;text-align:right;height:30px;", @readonly = "readonly", @class = "form form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3"></div>
+                </div>
+                <div class="row" style="margin:10px;">
+                    <div class="col-sm-5"></div>
+                    <div class="col-sm-4" style="text-align:left;">
+                        <div class="row">
+                            <div class="col-auto mb-2 ">
+                                @Html.Label("回数", new { style = "color:black;font-weight: normal !important;margin-right:10px;" })
+                            </div>
+                            <div class="col-auto mb-2">
+                                @Html.TextBoxFor(model => model.jiki, new { @id = "txtjiki", @tabindex = "-1", @type = "text", style = "width:50px;text-align:right;height:30px;", @readonly = "readonly", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3"></div>
+                </div>
+                <div class="row" style="margin:10px;">
+                    <div class="col-sm-5"></div>
+                    <div class="col-sm-4" style="text-align:left;">
+                        <div class="col-auto ">
+                            <button class="btncss DefaultBtn fontsize " type='submit' id="show" name="show" value="依頼" style="text-align:center; width:60px; height:30px;margin-left:10px " autofocus>依頼</button>
+                        </div>
+                    </div>
+                    <div class="col-sm-3"></div>
+                </div>*@
+                <div class="filter1on1">
+                    <div class="mb-2" style="display:inline-block;margin-right:10px;">
+                        <div class="row g-2">
+                            <div class="col-auto mb-2">
+                                @Html.Label("年度", new { style = "color:black;font-weight: normal !important;margin-right:10px;" })
+                            </div>
+                            <div class="col-auto mb-2">
+                                @Html.TextBoxFor(model => model.RequestDate, new { @id = "txttoday", @tabindex = "-1", @type = "text", style = "width:60px;text-align:right;height:30px;", @readonly = "readonly", @class = "form-control" })
+                            </div>
+                            <div class="col-auto mb-2 ">
+                                @Html.Label("回数", new { style = "color:black;font-weight: normal !important;margin-right:10px;" })
+                            </div>
+                            <div class="col-auto mb-2">
+                                @Html.TextBoxFor(model => model.jiki, new { @id = "txtjiki", @tabindex = "-1", @type = "text", style = "width:50px;text-align:right;height:30px;", @readonly = "readonly", @class = "form-control" })
+                            </div>
+                            <div class="col-auto mb-2">
+                                <button class="btncss DefaultBtn fontsize " type='submit' id="show" name="show" value="依頼" style="text-align:center; width:60px; height:30px;" autofocus>依頼</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id='loader' style='display: none; ' align="center">
+                <img src="@Url.Content("~/Img/pic/tenor.gif")" class="img-responsive" />
+            </div>
+        }
+    }
+    @*<script src=@Url.Content("//code.jquery.com/jquery-1.12.4.js")></script>
+    <script src=@Url.Content("//code.jquery.com/ui/1.12.4/jquery-ui.js")></script>*@
+    <script src=@Url.Content("~/Scripts/jquery-1.12.4.js")></script>
+    <script src=@Url.Content("~/Scripts/jquery-ui-1.10.4.js")></script>
+    <script>
+        function isSpecialKey(event) {
+
+            var regex = new RegExp("^[0-9]+$");
+            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+            if (!regex.test(key)) {
+
+                event.preventDefault();
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+
+
+    </script>
+    @if (TempData["com_msg"] != null)
+    {
+        <script type="text/javascript" src=@Url.Content("~/Scripts/jquery-1.12.4.min.js")></script>
+        <script>
+            $(document).ready(function () {
+                    var jikiname = document.getElementById('txtjiki').value;
+                    var year = document.getElementById('txttoday').value;
+                var flag = document.getElementById('newsaveflag').value;
+                var flag_kijun =@Model.checkkijun;
+                alert(flag_kijun)
+                if (flag_kijun == "1") {
+                     if (flag == "1") {
+                    var itemlist = JSON.stringify({ 'jikiname': jikiname, 'year': year });
+                    $.ajax({
+                    contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        type: "POST",
+                        url: '@Url.Action("save", "ChousaIrai")',
+                        data: itemlist
+                    }).done(function (result) {
+                        if (result == "yes") {
+                            if (confirm("前満足度調査をまだ評価してない社員があります。メールも送信できませんが、新しい依頼してよろしいでしょうか？")) {
+                                $.ajax({
+                                contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    type: "POST",
+                                    url: '@Url.Action("fsave", "ChousaIrai")',
+                                    data: itemlist,
+                                }).done(function (result) {
+                                    if (result == "yes") {
+                                        alert("依頼しました。")
+                                        var jcount = document.getElementById('txtjiki').value;
+                                        if (jcount != "4") {
+                                            jcount++
+                                            document.getElementById('txtjiki').value = jcount;
+                                        }
+                                    }
+                                }).fail(function (response) {
+                                    alert('Error: ' + response);
+                                });
+                            }
+                            else {
+                            }
+                        }
+
+                        if (result == "cancel") {
+                            if (confirm("メールは送信できませんが、新しい依頼してよろしいでしょうか？")) {
+                                $.ajax({
+                                contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    type: "POST",
+                                    url: '@Url.Action("fsave", "ChousaIrai")',
+                                    data: itemlist,
+                                }).done(function (result) {
+                                    if (result == "yes") {
+                                        alert("依頼しました。")
+                                        var jcount = document.getElementById('txtjiki').value;
+                                        if (jcount != "4") {
+                                            jcount++
+                                            document.getElementById('txtjiki').value = jcount;
+                                        }
+                                    }
+                                }).fail(function (response) {
+                                    alert('Error: ' + response);
+                                });
+                            }
+                            else {
+                            }
+                        }
+                    }).fail(function (response) {
+                        alert('Error: ' + response);
+                    });
+                }
+                else {
+                    alert("満足度調査設問マスタを入力してください。")
+                }
+                }
+                else {
+                    alert("満足度評価基準マスタを入力してください。")
+                }
+               
+            });
+        </script>
+
+    }
+
+    @if (TempData["check_msg"] != null)
+    {
+        <script type="text/javascript" src=@Url.Content("~/Scripts/jquery-1.12.4.min.js")></script>
+        <script>
+            $(document).ready(function () {
+                var jikiname = document.getElementById('txtjiki').value;
+                var year = document.getElementById('txttoday').value;
+                var flag = document.getElementById('newsaveflag').value;
+                var flag_kijun =@Model.checkkijun;
+                if (flag_kijun == "1") {
+                      if (flag == "1") {
+                    var itemlist = JSON.stringify({ 'jikiname': jikiname, 'year': year });
+                    $.ajax({
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        type: "POST",
+                        url: '@Url.Action("save", "ChousaIrai")',
+                        data: itemlist
+                    }).done(function (result) {
+                        if (result == "yes") {
+                            $('#divElement').show();
+                            $("#loader").hide();
+                            if (confirm("前満足度調査をまだ評価してない社員がありますが、新しい依頼してよろしいでしょうか？")) {
+                                $.ajax({
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    type: "POST",
+                                    url: '@Url.Action("fsave", "ChousaIrai")',
+                                    data: itemlist,
+                                    beforeSend: function () {
+                                        $('#divElement').hide();
+                                        $("#loader").show();
+                                    },
+                                    complete: function (data) {
+                                        $('#divElement').show();
+                                        $("#loader").hide();
+
+                                    }
+                                }).done(function (result) {
+                                    if (result == "yes") {
+                                        alert("依頼しました。")
+                                        var jcount = document.getElementById('txtjiki').value;
+                                        if (jcount != "4") {
+                                            jcount++
+                                            document.getElementById('txtjiki').value = jcount;
+                                        }
+                                    }
+                                }).fail(function (response) {
+                                    alert('Error: ' + response);
+                                });
+                            }
+                            else {
+                            }
+                        }
+
+                        if (result == "cancel") {
+                            $('#divElement').show();
+                            $("#loader").hide();
+                            $.ajax({
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                type: "POST",
+                                url: '@Url.Action("fsave", "ChousaIrai")',
+                                data: itemlist,
+                                beforeSend: function () {
+                                    $('#divElement').hide();
+                                    $("#loader").show();
+                                },
+                                complete: function (data) {
+                                    $('#divElement').show();
+                                    $("#loader").hide();
+
+                                }
+                            }).done(function (result) {
+                                if (result == "yes") {
+                                    alert("依頼しました。")
+                                    var jcount = document.getElementById('txtjiki').value;
+                                    if (jcount != "4") {
+                                        jcount++
+                                        document.getElementById('txtjiki').value = jcount;
+                                    }
+                                }
+                            }).fail(function (response) {
+                                alert('Error: ' + response);
+                            });
+                        }
+                    }).fail(function (response) {
+                        alert('Error: ' + response);
+                    });
+                }
+                else {
+                    alert("満足度調査設問マスタを入力してください。")
+                }
+                }
+                else {
+                    alert("満足度評価基準マスタを入力してください。")
+                }
+              
+            });
+        </script>
+    }
+</body>
+</html>
+

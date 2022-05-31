@@ -1,0 +1,453 @@
+﻿@*/*
+    * 作成者　: ルインマー
+     * 作成者　:テテ
+    * 日付：20200523
+    * 機能　：管理者画面
+    * その他PGからパラメータ：Session["curr_nendou"]
+    */*@
+@{
+    ViewBag.Title = "kanrisha";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/Common/commonstyle.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
+    <style>
+        button {
+            color: black;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border: 0.5px solid #555555;
+            border-radius: 4px;
+        }
+
+        .row {
+            text-align: center;
+            align-content: center;
+            vertical-align: central;
+        }
+
+        #ht {
+            height: 38px;
+        }
+
+        .headline {
+            line-height: 38px;
+            font-size: 18px;
+        }
+        .calign{
+            text-align:left;
+        }
+        @@media only screen and (max-width: 420px) {
+            #ht {
+                height: 30px;
+            }
+
+            .headline {
+                line-height: 30px;
+                font-size: 14px;
+            }
+            
+        }
+    </style>
+</head>
+@if (Session["isAuthenticated"] != null)
+{
+    <div id='divElement' class="panel panel-info" align="center">
+        <input type="hidden" id="selectyear" name="selectyear" value=@Model.selectcode />
+        <div id="ht" style="background-color: rgb(34, 148, 172); width:100%;">
+            <h6 class="text-center align-middle headline" style="color:white;">評価依頼画面</h6>
+        </div>
+        <div class="row" style="margin: 10px;">
+            <div class="col-sm-5"></div>
+            <div class="col-sm-4 calign">
+                <div class="row">
+                    <div class="col-auto">
+                        @Html.Label("年度", new { style = "color:black;font-weight: normal !important;margin-right:5px;" })
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-link preBtn" name="year_btn" value="<">
+                            <i class="fas fa-caret-left"></i>
+                        </button>
+                        @Html.DropDownList("Years", new SelectList(Model.yearList, "Value", "Text", Model.selectcode), new { @id = "sYear", onchange = "return dropdownchange()", @class = "btn btn-sm dropdown-toggle yeardropdown data-bs-toggle" })
+                        <button class="btn btn-link preBtn" name="year_btn" value=">" style="">
+                            <i class="fas fa-caret-right"></i>
+
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3"></div>
+        </div>
+        <div class="row" style="margin: 10px;">
+            
+            <div class="col-sm-5"></div>
+            <div class="col-sm-5 calign">
+                <div class="row">
+                    <div class="col-auto">
+                        @Html.Label("項目", new { style = "color:black;font-weight: normal !important;margin-right:5px;" })
+                    </div>
+                    <div class="col-auto">
+                        @Html.DropDownList("Status", new List<SelectListItem>
+               {
+                  new SelectListItem { Text = "360度一覧", Value = "1", Selected=true},
+                   new SelectListItem { Text = "360度評価", Value = "2"},
+                   new SelectListItem { Text = "360度評価個人別", Value = "3"},
+                   new SelectListItem { Text = "満足度個人別", Value = "4"},
+                   new SelectListItem { Text = "満足度グループ別", Value = "5"},
+                   new SelectListItem { Text = "満足度推移", Value = "6"},
+                   new SelectListItem { Text = "満足度改善要望事項", Value = "7"},
+                    new SelectListItem { Text = "考課表集計", Value = "8"},
+               }, new { style = "width:165px;Height: 30px;text-align:left;", onchange = "return OnChanged()", @class = "btn btn-sm dropdown-toggle yeardropdown data-bs-toggle" })
+                    </div>
+                </div>
+            
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+        <div class="row" style="margin: 10px;">
+            <div class="col-sm-5"></div>
+            <div class="col-sm-4 calign ">
+                <div class="row">
+                    <div class="col-auto">
+                        @Html.Label("回数", new { style = "color:black;font-weight: normal !important;margin-right:5px;" })
+                    </div>
+                    <div class="col-auto">
+                        <input value="" type="text" class="form-control" maxlength="1" style="text-align:right; width:50px;height:30px;"
+                               id="txt2" name="txt2" onkeypress="return isNumberKey(event)" disabled="true"
+                               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength); if (this.value != '1' && this.value !='2' && this.value !='3' && this.value !='4' && this.value !='5') this.value = ''; ">
+                        
+                    </div>
+                </div>
+                
+                
+            </div>
+            <div class="col-sm-3"></div>
+        </div>
+        <div class="row" style="margin: 10px;">
+            <div class="col-sm-5"></div>
+            <div class="col-sm-4 calign">
+                <button id="btnok" name="btnok" value="" onclick="btnok()" class="DefaultBtn fontsize" style="width:58px;height:29px;text-align:center;border-radius: 4px;" autofocus>出力</button>
+
+                <button id="btncancel" name="btncancel" value="" class="DefaultBtn fontsize" style="width:58px;height:29px;text-align:center;border-radius: 4px;"
+                        onclick="location.href='@Url.Action("Home", "Home")';return false;">
+                    戻る
+                </button>
+            </div>
+            <div class="col-sm-3"></div>
+        </div>
+
+    </div>
+
+
+    <div id='loader' style='display: none; ' align="center">
+        <img src="@Url.Content("~/Img/pic/tenor.gif")" class="img-responsive" />
+    </div>
+
+
+}
+    <script>
+
+        //$('#Status').change(function () {
+        //    var SelectedValue = $(this).val();
+        //    if (SelectedValue == "1") {
+        //        document.getElementById("txt2").disabled = true;
+        //        document.getElementById("txt2").value = "";
+        //    }
+        //    else if (SelectedValue == "2") {
+
+        //        document.getElementById("txt2").disabled = true;
+        //        document.getElementById("txt2").value = "";
+        //    }
+        //    else if (SelectedValue == "3") {
+        //        document.getElementById("txt2").disabled = false;
+        //    }
+        //});
+
+        function OnChanged(evt) {
+            var SelectedValue = $("#Status").val();
+            if (SelectedValue == "1") {
+                document.getElementById("txt2").disabled = true;
+                document.getElementById("txt2").value = "";
+            }
+            else if (SelectedValue == "2") {
+
+                document.getElementById("txt2").disabled = true;
+                document.getElementById("txt2").value = "";
+            }
+            else if (SelectedValue == "8") {//ナン 20210401
+
+                document.getElementById("txt2").disabled = true;
+                document.getElementById("txt2").value = "";
+            }
+            else /*if (SelectedValue == "3")*/ {
+                document.getElementById("txt2").disabled = false;
+            }
+        }
+    function isNumberKeys(event) {
+        var regex = new RegExp("^[0-9]+$");
+        var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+        if (!regex.test(key)) {
+
+            event.preventDefault();
+            return false;
+
+        }
+        else {
+
+            return true;
+
+        }
+
+    }
+    function isNumberKey(event) {
+
+        var regex = new RegExp("^[1-4]+$");
+        var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+        if (!regex.test(key)) {
+
+            event.preventDefault();
+            return false;
+
+        }
+        else {
+
+            return true;
+
+        }
+
+        }
+        function dropdownchange(evt) {
+            var ddtext = $("#sYear option:selected").text();
+            $("#selectyear").val(ddtext);
+        }
+    //$("body").on("change", "#sYear", function () {
+    //    var ddtext = $("#sYear option:selected").text();
+    //    $("#selectyear").val(ddtext);
+    //});
+
+    function btnprev() {
+        var eqcount = 0;
+        var year = document.getElementById('selectyear').value;
+        year--
+        var ddlist = document.getElementById("sYear");
+        for (var i = 0; i < ddlist.length; i++) {
+            if (ddlist.options[i].text == year) {
+                document.getElementById('selectyear').value = year;
+                ddlist.options[i].selected = "true";
+                eqcount++
+            }
+        }
+        if (eqcount == 0) {
+            for (var i = 0; i < ddlist.length; i++) {
+                document.getElementById('selectyear').value = ddlist.options[0].text;
+                ddlist.options[0].selected = "true";
+            }
+        }
+
+    }
+
+    function btnnext() {
+        var eqcount = 0;
+        var year = document.getElementById('selectyear').value;
+        year++
+        var ddlist = document.getElementById("sYear");
+        for (var i = 0; i < ddlist.length; i++) {
+            if (ddlist.options[i].text == year) {
+                document.getElementById('selectyear').value = year;
+                ddlist.options[i].selected = "true";
+                eqcount++
+            }
+        }
+        if (eqcount == 0) {
+            for (var i = 0; i < ddlist.length; i++) {
+                document.getElementById('selectyear').value = ddlist.options[i].text;
+                ddlist.options[i].selected = "true";
+            }
+        }
+    }
+
+    function btnok() {
+
+        var itemlist = [];
+        var itemlist1;
+        var itemlist2;
+        var itemlist3;
+        var year = document.getElementById('selectyear').value;
+        var txt = $("#Status").val();
+        var txt2 = document.getElementById('txt2').value;
+        var txt3 = $("#jiki").val();
+
+        if (year.length >= 1 && txt != "") {
+            if ($("#Status").val() == "8" )
+            {
+                
+                $.ajax({
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    type: "POST",
+                    url: '@Url.Action("ShukeiExport", "kanrisha")',
+                    data: '{year: ' + JSON.stringify(year) +'}',
+                    beforeSend: function () {
+                        $('#divElement').hide();
+                        $("#loader").show();
+                    },
+                    complete: function (data) {
+                        $('#divElement').show();
+                        $("#loader").hide();
+
+                    }
+                }).done(function (result) {
+                    if (result == "ok") {
+                        window.location = '@Url.Action("DownloadShukei", "kanrisha")';
+                    }
+                    else {
+                        alert("データがありません。")
+                    }
+
+                }).fail(function (response) {
+                    alert('Error: ' + response);
+                });
+            }
+            if ($("#Status").val() == "4" || $("#Status").val() == "5" || $("#Status").val() == "6" || $("#Status").val() == "7") {
+                itemlist += year + "/" + txt + "/" + txt2 + "/" + txt3;
+                itemlist = JSON.stringify({ 'itemlist': itemlist });
+                $.ajax({
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    type: "POST",
+                    url: '@Url.Action("ExcelExport", "kanrisha")',
+                    data: itemlist,
+                    beforeSend: function () {
+                        $('#divElement').hide();
+                        $("#loader").show();
+                    },
+                    complete: function (data) {
+                        $('#divElement').show();
+                        $("#loader").hide();
+
+                    }
+                }).done(function (result) {
+                    if (result == "ok") {
+                        window.location = '@Url.Action("DownloadManzokudo", "kanrisha")';
+                    }
+                    else {
+                        alert("データがありません。")
+                    }
+
+                }).fail(function (response) {
+                    alert('Error: ' + response);
+                });
+            }
+            if ($("#Status").val() == "3") {
+                itemlist += year + "/" + txt + "/" + txt2 + "/" + txt3;
+                itemlist = JSON.stringify({ 'itemlist': itemlist });
+                $.ajax({
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    type: "POST",
+                    url: '@Url.Action("ExcelExport", "kanrisha")',
+                    data: itemlist,
+                    beforeSend: function () {
+                        $('#divElement').hide();
+                        $("#loader").show();
+                    },
+                    complete: function (data) {
+                        $('#divElement').show();
+                        $("#loader").hide();
+
+                    }
+                }).done(function (result) {
+                    if (result == "ok") {
+                        window.location = '@Url.Action("Download", "kanrisha")';
+                    }
+                    else {
+                        alert("データがありません。")
+                    }
+
+                }).fail(function (response) {
+                    alert('Error: ' + response);
+                });
+            }
+            else if ($("#Status").val() == "2"){
+                itemlist1 = year ;
+                itemlist2 = txt;
+                itemlist3 = txt3;
+                itemlist = JSON.stringify({ 'itemlist1': itemlist1, 'itemlist2': itemlist2, 'itemlist3': itemlist3 });
+
+                $.ajax({
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    type: "POST",
+                    url: '@Url.Action("ExcelExports", "kanrisha")',
+                    data: itemlist,
+                    beforeSend: function () {
+                        $('#divElement').hide();
+                        $("#loader").show();
+                    },
+
+                    complete: function (data) {
+                        $("#loader").hide();
+                        $('#divElement').show();
+                    }
+
+                }).done(function (result)
+                 {
+                        if (result == "ok") {
+                        // window.location = "/kanrisha/Download";
+                        window.location = '@Url.Action("Downloads", "kanrisha")';
+                        }
+                        else {
+                        alert("データがありません。")
+                        }
+
+                    }).fail(function (response) {
+                    alert('Error: ' + response);
+                    });
+
+            }
+            else if ($("#Status").val() == "1"){
+                itemlist1 = year ;
+                itemlist2 = txt;
+                itemlist3 = txt3;
+                itemlist = JSON.stringify({ 'itemlist1': itemlist1, 'itemlist2': itemlist2, 'itemlist3': itemlist3 });
+
+                $.ajax({
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    type: "POST",
+                    url: '@Url.Action("IchiranExport", "kanrisha")',
+                    data: itemlist,
+                    beforeSend: function () {
+                        $('#divElement').hide();
+                        $("#loader").show();
+
+                    },
+
+                    complete: function (data) {
+                        $('#divElement').show();
+                        $("#loader").hide();
+                    }
+
+                }).done(function (result)
+                 {
+                        if (result == "ok") {
+                        // window.location = "/kanrisha/Download";
+                        window.location = '@Url.Action("IchiranDownload", "kanrisha")';
+                        }
+                        else {
+                        alert("データがありません。")
+                        }
+
+                    }).fail(function (response) {
+                    alert('Error: ' + response);
+                    });
+
+            }
+        }
+
+    }
+    </script>

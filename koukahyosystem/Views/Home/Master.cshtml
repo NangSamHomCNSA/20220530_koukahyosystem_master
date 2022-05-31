@@ -1,0 +1,227 @@
+﻿@{
+    ViewBag.Title = "Master";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/Common/commonstyle.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
+    <style>
+        FIELDSET {
+            margin: 8px;
+            border: 1px solid silver;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        LEGEND {
+            padding: 2px;
+            font-size: 17px;
+            display: inline-block;
+        }
+
+        .mastercss {
+            width: 80%;
+            margin: auto;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .tab-content {
+            height: 67vh;
+            overflow: auto;
+        }
+
+        button {
+            color: black;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border: 0.5px solid #555555;
+            border-radius: 4px;
+        }
+
+        #ht {
+            height: 38px;
+        }
+
+        .headline {
+            line-height: 38px;
+            font-size: 18px;
+        }
+
+        .tbcss {
+            margin-left: 10%;
+            margin-bottom: 22px;
+        }
+
+        .myCustomLink {
+            text-decoration: none;
+            color:black;
+        }
+
+        li .myCustomLink:hover {
+            color: rgb(34, 148, 172) !important;
+            text-decoration: underline !important;
+        }
+        @@media screen and (max-width: 768px) {
+            .mastercss {
+                width: 95%;
+                margin: auto;
+            }
+
+            .tbcss {
+                margin-left: 0%;
+            }
+        }
+
+        @@media (min-height: 758px) {
+            .tab-content {
+                height: 75.7vh;
+                overflow: auto;
+            }
+
+            .tbcss {
+                margin-left: 7.5%;
+            }
+        }
+
+        @@media only screen and (max-width:420px) {
+            #ht {
+                height: 30px;
+            }
+
+            .headline {
+                line-height: 30px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    @if (Session["isAuthenticated"] != null)
+    {
+        
+        <div class="panel panel-info">
+
+            <div class="panel-heading ht" style="background-color: rgb(34, 148, 172); width:100%">
+                            <h6 style="color:white;" class="headline align-middle text-center">各種マスタ</h6>
+            </div>
+            <div class="mastercss">
+
+                <div class="container">
+                        <div class="row">
+                            <div class="col-md-12" style="padding-top:10px;">
+                                <div class="card">
+                                    <div class="card-header">基本設定</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <ul style="list-style:none;">
+                                                    <li><i class="fas fa-caret-right" style="margin-right:10px;color:black;"></i>@Html.ActionLink("区分マスタ", "MasterKubun", "MasterKubun",null, new { @class = "myCustomLink fontsize" })</li>
+                                                    <li><i class="fas fa-caret-right" style="margin-right:10px;color:black;"></i>@Html.ActionLink("組織階層名", "MasterSoshikaiso", "MasterSoshikaiso",null, new { @class = "myCustomLink fontsize" })</li>
+                                                    <li><i class="fas fa-caret-right" style="margin-right:10px;color:black;"></i>@Html.ActionLink("第1階層マスタ", "MasterBusho", "MasterBusho",null, new { @class = "myCustomLink fontsize" }) </li>
+                                                    <li><i class="fas fa-caret-right" style="margin-right:10px;color:black;"></i>@Html.ActionLink("第2階層マスタ", "MasterGroup", "MasterGroup",null, new { @class = "myCustomLink fontsize" })</li>
+                                                    <li><i class="fas fa-caret-right" style="margin-right:10px;color:black;"></i>@Html.ActionLink("社員マスタ", "Shain", "Shain",null, new { @class = "myCustomLink fontsize" })</li>
+
+                                                </ul>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <ul style="list-style:none;">
+                                                    <li><i class="fas fa-caret-right" style="margin-right:10px;color:black;"></i>@Html.ActionLink("得点設定", "MasterHaiFu", "MasterHaiFu",null, new { @class = "myCustomLink fontsize" })</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6" style="padding-top:10px;">
+                                <div class="card">
+                                    <div class="card-header">基礎評価</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <ul style="list-style:none;">
+                                                    <li><i class="fas fa-caret-right" style="margin-right:10px;color:black;"></i>@Html.ActionLink("基礎評価設問", "MasterKiso", "MasterKiso",null, new { @class = "myCustomLink fontsize" })</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-auto"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6" style="margin-top:10px;">
+                                <div class="card">
+                                    <div class="card-header">目標評価</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <ul style="list-style:none;">
+                                                    <li><i class="fas fa-caret-right" style="margin-right:10px;color:black;"></i>@Html.ActionLink("採点方法設定", "MasterSaiten", "MasterSaiten",null, new { @class = "myCustomLink fontsize" })</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-auto"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6" style="padding-top:10px;">
+                                <div class="card">
+                                    <div class="card-header">満足度調査</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <ul style="list-style:none;">
+                                                    <li><i class="fas fa-caret-right" style="margin-right:10px;color:black;"></i>@Html.ActionLink("満足度調査設問", "MasterManzokudo", "MasterManzokudo",null, new { @class = "myCustomLink fontsize" })</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-auto">
+                                                <ul style="list-style:none;">
+                                                    <li><i class="fas fa-caret-right" style="margin-right:10px;color:black;"></i>@Html.ActionLink("満足度調査基準", "MasterManzokijun", "MasterManzokijun",null, new { @class = "myCustomLink fontsize" })</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6" style="padding-top:10px;">
+                                <div class="card">
+                                    <div class="card-header">360度評価</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-auto" style="display:inline-block;">
+                                                <ul style="list-style:none;">
+                                                    <li><i class="fas fa-caret-right" style="margin-right:10px;color:black;"></i>@Html.ActionLink("360度評価設問", "MasterHyoukaQuest", "MasterHyoukaQuest",null, new { @class = "myCustomLink fontsize" })</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-auto" style="display:inline-block;">
+                                                <ul style="list-style:none;">
+                                                    <li><i class="fas fa-caret-right" style="margin-right:10px;color:black;"></i>@Html.ActionLink("360度評価基準", "Master360kijun", "Master360kijun",null, new { @class = "myCustomLink fontsize" })</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-auto" style="display:inline-block;">
+                                                <ul style="list-style:none;">
+                                                    <li><i class="fas fa-caret-right" style="margin-right:10px;color:black;"></i>@Html.ActionLink("360度評価制限", "Master360hyoukaseigen", "Master360hyoukaseigen",null, new { @class = "myCustomLink fontsize" })</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    }
+</body>
+</html>

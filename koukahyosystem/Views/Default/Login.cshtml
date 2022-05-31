@@ -1,0 +1,127 @@
+﻿@*/*
+ * 作成者　: ナン
+ * 日付：20200424
+ */*@
+@model koukahyosystem.Models.LoginModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<head>
+    <link href="~/Content/Common/commonstyle.css" rel="stylesheet" />
+    <title></title>
+    
+</head>
+<body class="fontsize">
+
+    @if (TempData["com_msg"] != null)
+    {
+        <script type="text/javascript" src=@Url.Content("~/Scripts/jquery-1.12.4.min.js")></script>
+        <script>
+                $(document).ready(function(){
+
+                    alert('@TempData["com_msg"]');
+
+                });
+        </script>
+    }
+    @using (Html.BeginForm())
+    {      
+        
+        <div style="margin-left: auto; margin-right: auto;">
+            <table id="logintable" style="width:100%;">
+                <tr>
+                    <td class="loginleftside" >
+                        <form>
+                            <div class="text-center">
+                                <img id="img" height="100" width="130" src="~/Img/pic/comnet1.jpg">
+                            </div>
+                            <div class="form-group" style="width:285px;margin-left:auto;margin-right:auto;">
+                                <div class="mb-3" >
+
+                                    @Html.LabelFor(model => model.UserName, new { style = " font-weight: normal !important;", @class = "form-label" })
+
+                                    @Html.TextBoxFor(model => model.UserName, new { style = " font-weight: normal !important;width:100% ", maxlength = "50", autofocus = "autofocus", onkeypress = "isSpecialMailKey(event)", @class = "form-control fontsize" })
+                                    <div style="width:210px;margin-top:3px;">
+                                        @Html.ValidationMessageFor(model => model.UserName, null, new { @class = "text-danger fontsize" })
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    @Html.LabelFor(model => model.psd, new { style = " font-weight: normal !important;", @class = "form-label" })
+                                    @Html.TextBoxFor(model => model.psd, new { @id = "sPWD", @autocomplete = "new-password", type = "password", style = "width:100%", maxlength = "8", onkeypress = "isSpecialKeyPsw(event)", @class = "form-control fontsize" })
+                                    <div style="width:210px;margin-top:3px;">
+                                        @Html.ValidationMessageFor(model => model.psd, null, new { @class = "text-danger fontsize" })
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    @Html.CheckBoxFor(m => m.NameSave, false)
+                                    @Html.LabelFor(m => m.NameSave, new { style = " font-weight: normal !important;", @class = "form-label" })
+
+
+                                </div>
+                                <div class="mb-3">
+                                    <input type="submit" value="ログイン" class="DefaultBtn" />
+                                </div>
+                                <div class="errormsg">
+                                    
+                                    @Html.ValidationSummary(true, null, new { @class = "text-danger fontsize errormsg" })
+                                </div>
+                            </div>
+
+                        </form>
+                    </td>
+                    <td class="loginrightside">
+                        <div id="imgdiv" class="loginimg">
+                            <div id="content-desktop" class="contentdesktop">
+                                <img id="img" src="@Url.Content("~/Img/pic/appraisal_pic3.png")">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+       
+           
+              
+                }
+                <script type="text/javascript" src=@Url.Content("~/Scripts/jquery-1.12.4.min.js")></script>
+                <script type="text/javascript">
+
+                    function isSpecialMailKey(event) {
+
+                        var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+                        var Strval = /[A-Za-z0-9 ._^@@-]/g;
+                        var key = String.fromCharCode(event.which);
+                        if (!Strval.test(key)) {
+                            if (event.keyCode === 13) {
+                                $('#loginBtn').click();
+
+                            }
+                            else {
+                                event.preventDefault();
+                            }
+                            return false;
+                        }
+                    }
+                    function isSpecialKeyPsw(event) {
+
+                        var regex = new RegExp("^[a-zA-Z0-9]+$");
+                        var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+                        if (!regex.test(key)) {
+
+                            if (event.keyCode === 13) {
+                                $('#loginBtn').click();
+
+                            }
+                            else {
+                                event.preventDefault();
+                            }
+                            return false;
+                        }
+
+                    }
+                </script>
+
+</body>
+

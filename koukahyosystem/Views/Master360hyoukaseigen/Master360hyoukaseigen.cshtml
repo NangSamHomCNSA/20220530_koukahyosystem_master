@@ -1,0 +1,107 @@
+﻿
+@model koukahyosystem.Models.Master360hyoukaseigen
+
+@{
+    ViewBag.Title = "Master360hyoukaseigen";
+}
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/Common/commonstyle.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
+    <style></style>
+    <script type="text/javascript" src=@Url.Content("~/Scripts/jquery-1.12.4.min.js")></script>
+    <script type="text/javascript">
+        function isSpecialMailKey(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+
+        function SelectedIndexChanged() {
+            $('#Btn_display').click();
+        }
+    </script>
+</head>
+<body>
+    @if (Session["isAuthenticated"] != null)
+    {
+        <div id="div_main" class="panel panel-info">
+            @using (Html.BeginForm("Master360hyoukaseigen", "Master360hyoukaseigen", FormMethod.Post))
+            {
+                var btnstyle = "";
+                <div class="panel-heading text-center" style="background-color: rgb(34, 148, 172); width:100%;">
+                    <div class="container">
+                        <h4 class="text-center align-middle" style="color:white;line-height:33px;">360度評価制限</h4>
+                    </div>
+                </div>
+                <div class="div_year" style="margin-top:20px;">
+                    <div class="row">
+                        <div class="col-lg-3"></div>
+                        <div class="col-lg-6">
+                            <div class="row g-2 justify-content-sm-around">
+                                <div class="col-auto">
+                                    <input type="submit" value="display" id="Btn_display" name="year_btn" class="button" style="display:none" />
+                                    @Html.Label("年度", new { style = "color:black;font-weight: normal !important;margin-left:5px;margin-right:5px;" })
+                                    <button class="btn btn-link preBtn" name="year_btn" value="<">
+                                        <i class="fas fa-caret-left"></i>
+                                    </button>
+                                    @Html.DropDownListFor(m => m.cur_year, Model.YearList, new { @id = "year", onchange = "SelectedIndexChanged()", @class = "btn btn-sm dropdown-toggle yeardropdown data-bs-toggle" })
+                                    <button class="btn btn-link preBtn" name="year_btn" value=">" style="">
+                                        <i class="fas fa-caret-right"></i>
+
+                                    </button>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="row">
+                                        <div class="col-auto">
+                                            @Html.Label(" 制限", new { style = "color:black;font-weight:normal !important;" })
+                                        </div>
+                                        <div class="col-auto">
+                                            @if (Model.txt_disabled == "disabled")
+                                            {
+                                                @Html.TextBoxFor(model => model.SeigenName, new { @id = "txt_data", style = " font-weight: normal !important;width:190px;", maxlength = "2", onkeypress = "return isSpecialMailKey(event)", @class = "form-control fontsize", @disabled = "disabled" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(model => model.SeigenName, new { @id = "txt_data", style = " font-weight: normal !important;width:190px;", maxlength = "2", onkeypress = "return isSpecialMailKey(event)", @class = "form-control fontsize" })
+                                            }
+                                            <div style="width:210px;margin-top:3px;">
+                                                @Html.ValidationMessageFor(model => model.SeigenName, null, new { @class = "text-danger fontsize" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    @if (Model.txt_disabled == "disabled")
+                                    {
+                                        btnstyle = "cursor:not-allowed;opacity:0.6;";
+                                    }
+                                    <button id="save_btn" name="save_btn" value="保存" class="DefaultBtn fontsize" style="@btnstyle" @Model.txt_disabled>保存</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3"></div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @if (TempData["com_msg"] != null)
+    {
+        @*<script type="text/javascript" src=@Url.Content("~/Scripts/jquery-1.12.4.min.js")></script>*@
+        <script>
+            $(document).ready(function(){
+
+                alert('@TempData["com_msg"]');
+                 
+            });
+            
+        </script>
+    }
+</body>
+

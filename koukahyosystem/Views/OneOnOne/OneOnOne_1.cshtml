@@ -1,0 +1,904 @@
+﻿@model koukahyosystem.Models.OneOnOneModel
+
+@{
+    ViewBag.Title = "OneOnOne";
+    var grid = new WebGrid(source: Model.OneOnOneList, canPage: true, rowsPerPage: 10, ajaxUpdateContainerId: "gridContent");
+    if (Model.OneOnOneList.Count != 0)
+    {
+        grid.PageIndex = Model.pgindex;
+
+    }
+}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/Common/commonstyle.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
+    <style>
+
+        
+       
+
+        .webgrid- tabl {
+            width: 400px;
+            display: table;
+            border-collapse: separate;
+            border: solid 1px black;
+            background-color: white;
+            color: black;
+        }
+
+        .webgrid-table td, th {
+            padding: 3px 7px 2px;
+        }
+
+        .webgrid-header {
+            background-color: lightblue;
+            color: black;
+            padding-bottom: 4px;
+            padding-top: 5px;
+            text-align: center;
+        }
+
+        .webgrid-header a {
+            white-space: nowrap;
+            color: black;
+        }
+
+        .webgrid-footer {
+        }
+
+        .webgrid-row-style {
+            padding: 3px 7px 2px;
+        }
+
+        .webgrid-alternating-row {
+            background-color: #C1ECFA;
+            padding: 3px 7px 2px;
+        }
+
+        .webgrid-table thead th {
+            text-align: center;
+        }
+
+            .webgrid-table thead td:first-child,
+            .webgrid-table thead th:first-child,
+            .webgrid-table tbody td:first-child,
+            .webgrid-table tbody th:first-child {
+                width: 45px;
+                text-align: center;
+                border: solid 1px white;
+            }
+
+            .webgrid-table thead td:nth-child(2),
+            .webgrid-table thead th:nth-child(2),
+            .webgrid-table tbody td:nth-child(2),
+            .webgrid-table tbody th:nth-child(2) {
+                width: 70px;
+                border: solid 1px white;
+            }
+
+            .webgrid-table thead td:nth-child(3),
+            .webgrid-table thead th:nth-child(3),
+            .webgrid-table tbody td:nth-child(3),
+            .webgrid-table tbody th:nth-child(3) {
+                width: 80px;
+                border: solid 1px white;
+                display: none;
+            }
+
+            .webgrid-table thead td:nth-child(4),
+            .webgrid-table thead th:nth-child(4),
+            .webgrid-table tbody td:nth-child(4),
+            .webgrid-table tbody th:nth-child(4) {
+                width: 400px;
+                max-width: 400px;
+                word-wrap: break-word;
+                border: solid 1px white;
+            }
+
+            .webgrid-table thead td:nth-child(5),
+            .webgrid-table thead th:nth-child(5),
+            .webgrid-table tbody td:nth-child(5),
+            .webgrid-table tbody th:nth-child(5) {
+                width: 80px;
+                border: solid 1px white;
+                text-align: center;
+            }
+
+            .webgrid-table thead td:nth-child(6),
+            .webgrid-table thead th:nth-child(6),
+            .webgrid-table tbody td:nth-child(6),
+            .webgrid-table tbody th:nth-child(6) {
+                width: 80px;
+                border: solid 1px white;
+                text-align: center;
+            }
+
+            .webgrid-table thead td:nth-child(7),
+            .webgrid-table thead th:nth-child(7),
+            .webgrid-table tbody td:nth-child(7),
+            .webgrid-table tbody th:nth-child(7) {
+                width: 50px;
+                border: solid 1px white;
+                text-align: center;
+            }
+
+
+        .statuscss {
+            height: 8px;
+            font-size: 20px;
+            margin-left: 30%
+        }
+
+        .disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+
+        
+
+        @@media screen and (max-width: 1024px) {
+           
+
+            .datehidecss {
+                display: none;
+            }
+
+            
+            /*.modal-content {
+                width: auto;
+            }*/
+
+            .statuscss {
+                font-size: 16px;
+                height: 4px;
+                margin-left: 10%
+            }
+
+           
+        }
+
+        @@media screen and (max-width: 768px) {
+           
+
+          
+         
+            .datehidecss {
+                display: none;
+            }
+
+           
+         
+
+            /*.modal-content {
+                width: auto;
+            }*/
+
+            .statuscss {
+                font-size: 16px;
+                height: 4px;
+                margin-left: 10%
+            }
+
+          
+        /*}*/
+
+      
+        }
+        
+    </style>
+
+    <script src=@Url.Content("~/Scripts/jquery-1.12.4.min.js")></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            // active the button
+            //$('.modal').on('hidden.bs.modal', function (e) {
+            //    if ($('.modal').hasClass('in')) {
+            //        $('body').addClass('modal-open');
+            //        document.getElementById("prvDataBtn").focus();
+            //    }
+            //    else {
+            //        document.getElementById("Ken_sMOKUHYO").focus();
+            //    }
+
+            //});
+        });
+   
+
+    $(document).ready(function () {
+        //$('#PrvModal').modal('hide');
+
+        //保存できないときの確認メッセージ
+        if ('@Model.msg' != null && '@Model.msg' != "") {
+            alert('@Model.msg');
+        }
+
+        if ('@Model.status' == "") {
+            $('.statusclass').hide();
+        }
+
+        if ('@Model.fKANRYOU' == 'True' || '@Model.fpermit' == 'False') {
+
+            $('#dHIDUKE').attr("readonly", true);
+            $('#dHIDUKE').css("background-color", "whitesmoke");
+
+
+            $("#sMOKUHYO").attr("readonly", true);
+            $('#sMOKUHYO').css("background-color", "whitesmoke");
+
+            $('#Actiontask').attr("readonly", true);
+            $('#Actiontask').css("background-color", "whitesmoke");
+
+            $('#Trouble_tantousha').attr("readonly", true);
+            $('#Trouble_tantousha').css("background-color", "whitesmoke");
+
+            $('#Awareness_tantousha').attr("readonly", true);
+            $('#Awareness_tantousha').css("background-color", "whitesmoke");
+
+            //$('#saveBtn').css("background-color", "lightgray"); //保存ボタン
+            document.getElementById("saveBtn").disabled = true;
+            $('#saveBtn').addClass("disabled");
+            //$('#confirmBtn').css("background-color", "lightgray"); //確定ボタン
+            document.getElementById("confirmBtn").disabled = true;
+            $('#confirmBtn').addClass("disabled");
+
+
+        }
+
+        @*if ('@Model.fpermit' == 'False') {
+            document.getElementById("newBtn").disabled = true;
+            $('#newBtn').addClass("disabled");
+        }*@
+
+
+        if ('@Model.prv_date' == "") {
+            document.getElementById("prvDataBtn").disabled = true;
+            $('#prvDataBtn').addClass("disabled");
+
+        }
+
+
+        $('#saveBtn').css("background-color", "#9dccf1");
+        document.getElementById("Ken_sMOKUHYO").focus();
+
+        if ('@Model.fKAKUTEI' == 'False') {
+            $('#confirmBtn').css("background-color", "#C0E399");
+        }
+
+
+        $("#Trouble_Leader").attr("readonly", true);
+        $("#Trouble_Leader").css("background-color", "#FFFFCC");
+        $('#Trouble_Leader').prop('tabIndex', -1);
+
+        $("#Awareness_Leader").attr("readonly", true);
+        $("#Awareness_Leader").css("background-color", "#FFFFCC");
+        $('#Awareness_Leader').prop('tabIndex', -1);
+
+        $('#Feedback').attr("readonly", true);
+        $('#Feedback').css("background-color", "#FFFFCC");
+        $('#Feedback').prop('tabIndex', -1);
+
+        $('#Todo').attr("readonly", true);
+        $('#Todo').prop('tabIndex', -1);
+        $('#Todo').css("background-color", "#FFFFCC");
+
+        $('.hideclass').hide();
+        //$('.tiMobileclass').hide();
+        $("#btn_table").css('margin-top', '0px');
+
+        //document.getElementById("preBtn").focus();
+
+        var btn = '@Model.btnName';
+
+        if (btn.length == 2) {
+            $('#confirmBtn').css({ width: '60px' });
+        }
+        else if (btn.length == 3) {
+            $('#confirmBtn').css({ width: '70px' });
+        }
+        else if (btn.length == 4) {
+            $('#confirmBtn').css({ width: '80px' });
+        }
+
+        if ('@Model.fKAKUTEI' == 'True') {
+
+            if ($(window).width() < 768) {
+                $("#time_txtaea").tooltip();
+            }
+        }
+
+        $('#prv_date').prop('tabIndex', -1);
+        $('#prv_djishi').prop('tabIndex', -1);
+        $('#prv_tema').prop('tabIndex', -1);
+        $('#prv_taskaction').prop('tabIndex', -1);
+        $('#prv_trouble').prop('tabIndex', -1);
+        $('#prv_trouble_L').prop('tabIndex', -1);
+        $('#prv_awareness').prop('tabIndex', -1);
+        $('#prv_awareness_L').prop('tabIndex', -1);
+        $('#prv_feedback').prop('tabIndex', -1);
+        $('#prv_memo').prop('tabIndex', -1);
+
+            @*入力画面を表示するかどうかの範囲*@
+        if ('@Model.fpopup' == "True") {
+            
+            //$('#myModal').modal('show');
+            var myModal = new bootstrap.Modal(document.getElementById('myModal'));
+            myModal.show();
+            return true;
+        }
+        else {
+
+            //$('#myModal').modal('hide');
+            var myModal = new bootstrap.Modal(document.getElementById('myModal'));
+            myModal.hide();
+        }
+        /*検索条件、データ順番、ページネーションするとき実行される th a,*/
+        $('tfoot a').click(function () {
+
+            var page = this.href.match(/page=([0-9])+/)[1];
+            page = page - 1;
+            $("#pgindex").val(page);
+            $('#pageindex_btn').click();
+            return false;
+        });
+
+        $('th a').click(function () {
+            var link = this.href;
+            var linkArr = link.split('?');
+
+            if (linkArr.length == 2) {
+                var linkfir = linkArr[1].split('&');
+                if (linkfir.length == 2) {
+                    //sort
+                    var sortArr = linkfir[0].split('=');
+                    var sort = sortArr[sortArr.length - 1];
+                    $("#sort").val(sort);
+                    $('#sortOrder_btn').click();
+                    return false;
+
+                }
+            }
+        });
+
+
+    });
+
+    </script>
+
+    <script>
+
+
+        function SelectedIndexChanged() {
+            $('#searchBtn').click();
+        }
+
+        function editfunt(e) {
+
+            var cMOKUHYO = e.id;
+            $("#cMOKUHYO").val(cMOKUHYO);          
+            $("#fnew").val("false");
+
+        }
+
+        function kakutei() {
+
+            var input = $("<input />");
+            input.attr("type", "hidden").attr("name", "confirm_value");
+            if (confirm("「確認」するとリーダーに送信されます。以降は変更できなくなります。")) {
+                //input.val("OK");
+                $('#comfirmMsg').val('OK');
+
+            } else {
+                //input.val("キャンセル");
+                $('#comfirmMsg').val('キャンセル');
+                event.preventDefault();
+            }
+            $("form")[0].appendChild(input[0]);
+            return true;
+
+        }
+
+        function prvData() {
+            //$('#PrvModal').modal('show');
+            var myModal = new bootstrap.Modal(document.getElementById('PrvModal'))
+            myModal.show();            
+            return false;
+        }
+
+        function modal_backBtn() {
+
+            //$('#PrvModal').modal('hide');
+            var myModal = new bootstrap.Modal(document.getElementById('PrvModal'))
+            myModal.hide();
+            return false;
+        }
+
+    </script>
+</head>
+<body class="fontsize" >
+    @if (Session["isAuthenticated"] != null)
+    {
+              
+
+    <div class="panel panel-info">
+        @using (Html.BeginForm("OneOnOne", "OneOnOne", FormMethod.Post))
+        {
+            <div style="background-color: rgb(34, 148, 172); width:100%;height:33px;">
+                <h6 class="text-center align-middle" style="color:white;line-height:33px">@Model.GamenName</h6>
+            </div>
+
+
+            <div id="container" style="margin: 10px;">
+                <input type="submit" id="searchBtn" value="search" name="OneOnOneBtn" style="visibility:hidden;position:absolute" />
+                <div class="filter1on1">
+                    <div class="mb-2" style="display:inline-block;margin-right:10px; ">
+                        <div class="row g-3">
+                            <div class="col-auto" >
+                                @Html.Label("年度", new { @class = "lbl_year" })
+                            </div>
+                            <div class="col-auto" style="margin-top:11px;">
+                                <button id="preBtn" name="year_btn" class="btn btn-link preBtn" value="<">
+                                    <i class="fas fa-caret-left"></i>
+                                </button>
+                                @Html.DropDownListFor(m => m.cur_year, Model.YearList, new { @id = "year", style = "width:70px;", onchange = "SelectedIndexChanged()", @class = "btn btn-sm dropdown-toggle yeardropdown" })
+                                <button id="nextBtn" name="year_btn" class="btn btn-link preBtn" value=">">
+                                    <i class="fas fa-caret-right"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div  style="display:inline-block; ">
+                        <div class="row " >
+                            <div class="col-auto mb-2" >
+                                @Html.LabelFor(m => m.Ken_sMOKUHYO, new { @class = "col-sm-1 col-form-label", style = "width:auto;" })
+                            </div>
+                            <div class="col-auto mb-2" >
+
+                                @Html.TextBoxFor(m => m.Ken_sMOKUHYO, new{
+                                   @id = "Ken_sMOKUHYO",
+                                   style="width:250px;",
+                                        @class = "form-control fontsize",
+                                       maxlength = "30",
+                                       oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"})
+                            </div>
+                            <div class="col-auto mb-2" >
+
+                                <button type="submit" id="clearBtn" value="clear" name="OneOnOneBtn" class="DefaultBtn btnClear1on1 ">クリア</button>
+                                <button type="submit" id="searchBtn" value="search" name="OneOnOneBtn" class="DefaultBtn btnmargin">検索</button>
+                                <button type="submit" id="newBtn" value="create" name="OneOnOneBtn" class="DefaultBtn btnmargin newbtn1on1">ミーティング作成</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input type="submit" value="pgindex" id="pageindex_btn" name="OneOnOneBtn"  style=" position: absolute; visibility:hidden" />
+            <input type="submit" value="order" id="sortOrder_btn" name="OneOnOneBtn"  style=" position: absolute; visibility:hidden" />
+            @Html.HiddenFor(m => m.cMOKUHYO, new { id = "cMOKUHYO", style = " position: absolute;" })
+            @Html.HiddenFor(m => m.fnew, new { id = "fnew", style = " position: absolute;" })
+            @Html.HiddenFor(m => m.cur_year, new { id = "year", style = " position: absolute;" })
+            @Html.HiddenFor(m => m.fpermit, new { id = "fpermit", style = " position: absolute;" })
+            @Html.HiddenFor(m => m.fpopup, new { id = "fpopup", style = " position: absolute;" })
+            @Html.HiddenFor(m => m.fSuperior, new { id = "fSuperior", style = " position: absolute;" })
+            @*/*検索画面の順番とページ番号*/*@
+            @Html.HiddenFor(m => m.GamenName, new { id = "GamenName", style = " position: absolute;" })
+            @Html.HiddenFor(m => m.pgindex, new { id = "pgindex", style = " position: absolute;" })
+            @Html.HiddenFor(m => m.sort, new { id = "sort", style = " position: absolute;" })
+            @*@Html.HiddenFor(m => m.sortdir_num, new { id = "sortdir_num", style = " position: absolute;" })*@
+            @Html.HiddenFor(m => m.sortdir_date, new { id = "sortdir_date", style = " position: absolute;" })
+            @Html.HiddenFor(m => m.sortdir_staishosha, new { id = "sortdir_staishosha", style = " position: absolute;" })
+            @Html.HiddenFor(m => m.sortdir_sMokuhyo, new { id = "sortdir_sMokuhyo", style = " position: absolute;" })
+            @Html.HiddenFor(m => m.sortdir_kanryou, new { id = "sortdir_kanryou", style = " position: absolute;" })
+            @Html.HiddenFor(m => m.sortdir_djishibi, new { id = "sortdir_djishibi", style = " position: absolute;" })
+
+
+            <div id="gridContent" align="center" >
+
+                @grid.GetHtml(
+                    tableStyle: "webgrid-table",
+                    headerStyle: "webgrid-header",
+                    footerStyle: "webgrid-footer",
+                    alternatingRowStyle: "webgrid-alternating-row",
+                    rowStyle: "webgrid-row-style",
+                    columns: grid.Columns(
+                        grid.Column(header: "No.", format: @<text> <div>  @(item.WebGrid.Rows.IndexOf(item) + 1 + (grid.RowsPerPage * grid.PageIndex)) </div></text>)
+                                                                                      , grid.Column(columnName: "dHIDUKE", header: "送信日")
+                                                                                      , grid.Column(columnName: "cMOKUHYO", header: "目標番号")
+                                                                                      , grid.Column(columnName: "sMOKUHYO", header: "目標")
+                                                                                      , grid.Column(columnName: "fKANRYOU", header: "送信状態")
+                                                                                      //, grid.Column(columnName: "fKAKUTEI", header: "確定状態")
+                                                                                      , grid.Column(columnName: "dJISHIBI", header: "実施日")
+                                                            @*, grid.Column(" ", "　", canSort: false, format: @<text> @Html.ActionLink("読込", "OneOnOne", "OneOnOne"
+                                                            , new { cMOKUHYO = item.cMOKUHYO }, null)</text>)*@
+                                                            @*, grid.Column(" ", "　", canSort: false, format: @<button type="submit" id="EditBtn" value="Edit" name="OneOnOneBtn" class="button" style="text-align:center;border:none;">読込</button>)*@
+                                                            , grid.Column(" ", "　", canSort: false, format: @<text><button id="@item.cMOKUHYO" value="Edit" name="OneOnOneBtn" class="name buttonlink" onclick="editfunt(this)">読込</button></text>)
+                                                                                                                          ))
+            </div>
+
+        }
+
+
+
+        @*ミーティング作成画面*@
+        <div class="modal fade" id="myModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg ">
+                <div class="modal-content fontsize ">
+                    @*overflow-auto*@
+                    <div class="modal-header text-center ">
+                        <h5 class="modal-title  w-100" id="staticBackdropLabel">1on1ミーティング入力画面</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div style="overflow-y:auto;overflow-x:hidden">
+                        @*class="overflow-auto "*@
+                        <div class="mt-3  row">
+                            <div class="col">
+
+                            </div>
+                            <div class="col" style="text-align:center">
+                                @Html.Label(Model.status ?? "", new { @id = "status", Style = "align:center; color:blue;font-size:15px;font-weight: bold; "})
+                            </div>
+                            <div class="col " style=" text-align:right;padding-right:50px;">
+                                <button id="prvDataBtn" name="OneOnOneBtn" class="DefaultBtn" value="前回内容" onclick="prvData()">前回内容</button>
+                            </div>
+                        </div>
+                        @using (Html.BeginForm("OneOnOne", "OneOnOne", FormMethod.Post))
+                        {
+                        <div class="modal-body ">
+
+                            <div class="row">
+                                <div class="mb-3 row">
+                                    @Html.LabelFor(m => m.dHIDUKE, new { @class = "col-sm-2 col-form-label ", style = " font-weight: normal !important; color:black;padding-top:3px;" })
+                                    @Html.TextBoxFor(m => m.ApplyDate, new { @id = "dHIDUKE", @class = "col-sm-2 form-control fontsize", style = "width:130px !important;height:25px;margin-left:10px;", type = "date" })
+                                    @*@Html.EditorFor(m => m.dHIDUKE, new { @id = "dHIDUKE", style = "width:130px;!important;", type = "date" })*@
+                                    @Html.LabelFor(m => m.dJISHIBI, new { @class = "col-sm-2 col-form-label jishibicss", style = " font-weight: normal !important;color:black;padding-top:3px;" })
+                                    @Html.TextBoxFor(m => m.dJISHIBI, new { @id = "dJISHIBI", @class = "col-sm-2  form-control fontsize", style = "width:130px;height:25px;margin-left:10px;", type = "date", @readonly = "true" })
+                                </div>
+
+                                <div class="mb-3 row">
+                                    @Html.LabelFor(m => m.sMOKUHYO, new { style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+                                    <div class="col-sm-10">
+                                        @Html.TextAreaFor(m => m.sMOKUHYO, 3, 30, htmlAttributes: new {
+                                                        @id = "sMOKUHYO",
+                                                        name = "sMOKUHYO",
+                                                        style = "width: 100%; max-width: 100%;",
+                                                        maxlength = "500",
+                                                        @class = "form-control",
+                                                        oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                                    })
+                                        <div>
+                                            @Html.ValidationMessageFor(model => model.sMOKUHYO, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                @*<div class="mb-1 row" style="font-size:12px;">
+            <label class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-5" style="border:1px solid black;padding:0!important;">
+                <label class="col-sm-10 col-form-label" style="padding:0px 0px 0px 10px!important;">グループメンバー記入欄</label>
+            </div>
+            <div class="col-sm-5" style="border:1px solid black;padding:0!important;">
+                <label class="col-sm-10 col-form-label" style="padding:0px 0px 0px 10px!important;">リーダー記入欄</label>
+            </div>
+        </div>*@
+                                <div class="mb-3 row">
+
+                                    @Html.LabelFor(m => m.Actiontask, new { style = " font-weight: normal !important;", @class = "col-sm-2 col-form-label" })
+
+                                    <div class="col-sm-5">
+                                        @Html.TextAreaFor(m => m.Actiontask, 5, 30, htmlAttributes: new {
+                                                       @id = "Actiontask",
+                                                       style = "width: 100%; max-width: 100%;",
+                                                       maxlength = "1000",
+                                                       @class = "form-control fontsize",
+                                                       oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                                   })
+                                        @Html.ValidationMessageFor(model => model.Actiontask, null, new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-sm-5 lead1on1" style="text-align:right">
+                                        @Html.TextAreaFor(m => m.Feedback, 5, 30, htmlAttributes: new{
+                                                     @id = "Feedback",
+                                                     style = "width: 100%; max-width: 100%;",
+                                                     maxlength = "1000",
+                                                     @class = "form-control fontsize",
+                                                    @placeholder ="リーダー記入欄",
+                                                     oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                                 })
+                                        @Html.ValidationMessageFor(model => model.Feedback, null, new { @class = "text-danger" })
+
+                                    </div>
+
+                                </div>
+                                <div class="mb-3 row">
+
+                                    @Html.LabelFor(m => m.Trouble_tantousha, new { style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+
+                                    <div class="col-sm-5">
+                                        @Html.TextAreaFor(m => m.Trouble_tantousha, 5, 10, htmlAttributes: new{
+                                                   @id = "Trouble_tantousha",
+                                                   style = "width: 100%; max-width: 100%;",
+                                                   maxlength = "1000",
+                                                   @class = "form-control fontsize",
+                                                   oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                               })
+                                        @Html.ValidationMessageFor(model => model.Trouble_tantousha, null, new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-sm-5 lead1on1" style="text-align:right">
+                                        @Html.TextAreaFor(m => m.Trouble_Leader, 5, 15, htmlAttributes: new {
+                                                         @id = "Trouble_Leader",
+                                                         style = "width: 100%; max-width: 100%;",
+                                                         maxlength = "1000",
+                                                         @class = "form-control fontsize",
+                                                         @placeholder ="リーダー記入欄",
+                                                         oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                                     })
+                                        @Html.ValidationMessageFor(model => model.Trouble_Leader, null, new { @class = "text-danger" })
+
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-3 row">
+
+                                    @Html.LabelFor(m => m.Awareness_tantousha, new { style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+
+                                    <div class="col-sm-5">
+                                        @Html.TextAreaFor(m => m.Awareness_tantousha, 5, 30, htmlAttributes: new {
+                                                     @id = "Awareness_tantousha",
+                                                     style = "width: 100%; max-width: 100%;",
+                                                     maxlength = "1000",
+                                                     @class = "form-control fontsize",
+                                                     oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                                   })
+                                        @Html.ValidationMessageFor(model => model.Awareness_tantousha, null, new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-sm-5 lead1on1" style="text-align:right">
+                                        @Html.TextAreaFor(m => m.Awareness_Leader, 5, 30, htmlAttributes: new{
+                                                       @id = "Awareness_Leader",
+                                                       style = "width: 100%; max-width: 100%;",
+                                                       maxlength = "1000",
+                                                       @class = "form-control fontsize",
+                                                       @placeholder ="リーダー記入欄",
+                                                       oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                                   })
+                                        @Html.ValidationMessageFor(model => model.Awareness_Leader, null, new { @class = "text-danger" })
+
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-3 row hideclass">
+
+                                    @Html.LabelFor(m => m.Memo, new { @id = "memoLbl", style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+
+                                    <div class="col-sm-10">
+                                        @Html.TextAreaFor(m => m.Memo, 5, 30, htmlAttributes: new{
+                                                    @id = "memo",
+                                                    style = "width: 100%; max-width: 100%;",
+                                                    maxlength = "1000",
+                                                    @class = "form-control fontsize",
+                                                    oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+
+                                                })
+                                        <span style="font-size:12px;">※リーダーしか閲覧できません。</span>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="submit" id="saveBtn" class="SaveBtn btnmargin" name="OneOnOneBtn" value="hozon">一時保存</button>
+                            <button type="submit" id="confirmBtn" class="kanhyouBtn btnmargin" name="OneOnOneBtn" value="comfirm" onclick="kakutei()"> @Model.btnName</button>
+                            <button type="submit" id="backBtn" class="DefaultBtn btnmargin " name="OneOnOneBtn" value="back">戻る</button>
+
+                        </div>
+                            @Html.HiddenFor(m => m.cMOKUHYO, new { id = "cMOKUHYO", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.fnew, new { id = "fnew", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.cur_year, new { id = "year", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.comfirmMsg, new { id = "comfirmMsg", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.fpermit, new { id = "fpermit", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.fKAKUTEI, new { id = "fKAKUTEI", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.fKANRYOU, new { id = "fKANRYOU", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.fSuperior, new { id = "fSuperior", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.Ken_taishosha, new { id = "Ken_taishosha", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.Ken_sMOKUHYO, new { id = "Ken_sMOKUHYO", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.Ken_fKAKUTEI, new { id = "fpopup", style = " position: absolute;" })
+                            @*/*検索画面の順番とページ番号*/*@
+                            @Html.HiddenFor(m => m.GamenName, new { id = "GamenName", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.pgindex, new { id = "pgindex", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.sort, new { id = "sort", style = " position: absolute;" })
+                            @*@Html.HiddenFor(m => m.sortdir_num, new { id = "sortdir_num", style = " position: absolute;" })*@
+                            @Html.HiddenFor(m => m.sortdir_date, new { id = "sortdir_date", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.sortdir_staishosha, new { id = "sortdir_staishosha", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.sortdir_sMokuhyo, new { id = "sortdir_sMokuhyo", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.sortdir_kanryou, new { id = "sortdir_kanryou", style = " position: absolute;" })
+                            @Html.HiddenFor(m => m.sortdir_djishibi, new { id = "sortdir_djishibi", style = " position: absolute;" })
+                        }
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+        @*前回内容画面 、変更できません。読むのみ*@
+       
+        <div class="modal fade" id="PrvModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg ">
+                <div class="modal-content fontsize ">
+                    @*overflow-auto*@
+                    <div class="modal-header text-center ">
+                        <h5 class="modal-title  w-100" id="staticBackdropLabel">前回内容</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div style="overflow-y:auto;overflow-x:hidden">
+                        @*class="overflow-auto "*@                                               
+                        <div class="modal-body ">
+
+                            <div class="row">
+                                <div class="mb-3 row">
+                                    @Html.LabelFor(m => m.dHIDUKE, new { @class = "col-sm-2 col-form-label ", style = " font-weight: normal !important; color:black;padding-top:3px;" })
+                                    @Html.TextBoxFor(m => m.prv_date, new { @id = "prv_date", @class = "col-sm-2 form-control fontsize", style = "width:130px;height:25px;margin-left:10px;", type = "date", @readonly = "true" })
+                                    @Html.LabelFor(m => m.dJISHIBI, new { @class = "col-sm-2 col-form-label jishibicss", style = " font-weight: normal !important;color:black;padding-top:3px;" })
+                                    @Html.TextBoxFor(m => m.prv_djishi, new { @id = "prv_djishi", @class = "col-sm-2  form-control fontsize", style = "width:130px;height:25px;margin-left:10px;", type = "date", @readonly = "true" })
+                                </div>
+
+                                <div class="mb-3 row">
+                                    @Html.LabelFor(m => m.sMOKUHYO, new { style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+
+                                    <div class="col-sm-10">
+
+                                        @Html.TextAreaFor(m => m.prv_tema, 3, 30, htmlAttributes: new {
+                                      @id = "prv_tema",
+                                      name = "sMOKUHYO",
+                                      style = "width: 100%; max-width: 100%;",
+                                      maxlength = "500",
+                                      @class = "form-control fontsize",
+                                      oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                      @readonly = "true"
+                                  })
+
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 row">
+                                    @Html.LabelFor(m => m.Actiontask, new { style = " font-weight: normal !important;", @class = "col-sm-2 col-form-label" })
+
+                                    <div class="col-sm-5">
+
+                                        @Html.TextAreaFor(m => m.prv_taskaction, 5, 30, htmlAttributes: new {
+                                           @id = "prv_taskaction",
+                                           style = "width: 100%; max-width: 100%;",
+                                           maxlength = "1000",
+                                           @class = "form-control fontsize",
+                                           oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                       @readonly = "true"
+                                       })
+
+                                    </div>
+                                    <div class="col-sm-5 lead1on1" style="text-align:right">
+
+                                        @Html.TextAreaFor(m => m.prv_feedback, 5, 30, htmlAttributes: new{
+                                      @id = "prv_feedback",
+                                      style = "width: 100%; max-width: 100%;",
+                                      maxlength = "1000",
+                                      @class = "form-control fontsize",
+                                      oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                      @readonly = "true"
+                                      })
+
+                                    </div>
+
+                                </div>
+                                <div class="mb-3 row">
+                                    @Html.LabelFor(m => m.Trouble_tantousha, new { style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+                                    <div class="col-sm-5">
+
+                                        @Html.TextAreaFor(m => m.prv_trouble, 5, 10, htmlAttributes: new{
+                                      @id = "prv_trouble",
+                                      style = "width: 100%; max-width: 100%;",
+                                      maxlength = "1000",
+                                      @class = "form-control fontsize",
+                                      oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                      @readonly = "true"
+                                  })
+
+                                    </div>
+                                    <div class="col-sm-5 lead1on1" style="text-align:right">
+
+                                        @Html.TextAreaFor(m => m.prv_trouble_L, 5, 15, htmlAttributes: new {
+                                      @id = "prv_trouble_L",
+                                      style = "width: 100%; max-width: 100%;",
+                                      maxlength = "1000",
+                                      @class = "form-control fontsize",
+                                      oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                      @readonly = "true"
+                                  })
+
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-3 row">
+                                    @Html.LabelFor(m => m.Awareness_tantousha, new { style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+                                    <div class="col-sm-5">
+
+                                        @Html.TextAreaFor(m => m.prv_awareness, 5, 30, htmlAttributes: new {
+                                      @id = "Awarenprv_awarenessess_tantousha",
+                                      style = "width: 100%; max-width: 100%;",
+                                      maxlength = "1000",
+                                      @class = "form-control fontsize",
+                                      oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                      @readonly = "true",@tabindex="-1"
+                                  })
+                                    </div>
+                                    <div class="col-sm-5 lead1on1" style="text-align:right">
+
+                                        @Html.TextAreaFor(m => m.prv_awareness_L, 5, 30, htmlAttributes: new{
+                                      @id = "prv_awareness_L",
+                                      style = "width: 100%; max-width: 100%;",
+                                      maxlength = "1000",
+                                      @class = "form-control fontsize",
+                                      oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                      @readonly = "true"
+                                  })
+
+                                    </div>
+
+                                </div>
+
+                                @*<div class="mb-3 row hideclass">
+
+                                    @Html.LabelFor(m => m.Memo, new { @id = "memoLbl", style = " font-weight: normal !important;color:black;", @class = "col-sm-2 col-form-label" })
+
+                                    <div class="col-sm-10">
+
+                                        @Html.TextAreaFor(m => m.prv_memo, 5, 30, htmlAttributes: new{
+                                      @id = "prv_memo",
+                                      style = "width: 100%; max-width: 100%;",
+                                      maxlength = "1000",
+                                      @class = "form-control fontsize",
+                                      oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);",
+                                      @readonly = "true"
+                                  })
+                                        <span style="font-size:12px;">※リーダーしか閲覧できません。</span>
+                                    </div>
+
+
+                                </div>*@
+                            </div>
+                        </div>
+                            <div class="modal-footer">
+                                
+                                <button type="button" class="DefaultBtn" data-bs-dismiss="modal" aria-label="Close">戻る</button>
+                            </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        </div>
+        }
+</body>
+
+

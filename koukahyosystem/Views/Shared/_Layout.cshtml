@@ -1,0 +1,216 @@
+﻿@*/*
+    * 変更者　: ナン　20200424
+    * 変更者　: ルインマー 20200523
+    * 変更者　: ナン　 20200523
+    */*@
+<!DOCTYPE html>
+<html>
+<head>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="~/Content/Common/commonstyle.css" rel="stylesheet" />
+    <link href="~/Content/fontawesome.min.css" rel="stylesheet" />
+
+
+</head>
+<body style="margin:0px; padding:0px;">
+    @if (Session["isAuthenticated"] != null)
+    {
+        <div>
+            <nav class="navbar navbar-expand-sm bg-light fixed-top navheightcss" style="padding:0; z-index:100;background-color:#cdeefd!important">
+                <span class="homeNavClick" style="cursor:pointer;display:none;" id="openNav" onclick="openHomeMenu()">&#9776;</span>
+
+                <div style="margin-left:auto;margin-right:50px;">
+
+                    <div class="dropdown">
+                        <img class="profileimg" style="object-fit: cover;  " src="@Url.Content("~/Img/"+Session["sPATH_GAZO"])" />
+                        <button class="dropbtn dropdown-toggle px-sm-0 px-1 bg-transparent" style=" border:none; color:black;" onclick="profilemenu()">
+
+
+                            @Session["Name"]<span class="ms-1 d-none d-sm-inline"> </span>
+                        </button>
+                        <div class="dropdown-content" id="myDropdown">
+                            @Html.ActionLink("プロフィール", "newProfile", "Shain", null, new { @style = "color:black;font-size: 14px;" })
+                            @Html.ActionLink("ログアウト", "LogOut", "Home", null, new { @style = "color:black;font-size: 14px;" })
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+
+        <div class="container-fluid" style="margin:50px 0px 0px 0px; padding:0px 0px 10px 0px!important;">
+           
+                <ul class="ullist" id="HomeMenu">
+
+                    <li class="homelink">@Html.ActionLink("ホーム", "Home", "Home", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                    <li class="menulist"><button class="dropdown-btn nav-link dropdown-toggle mb-0" style="color:black;"> マイメニュー <span class="ms-1 d-none d-sm-inline mb-0"></span></button></li>
+                    @*//1on1ミーティング *@
+                    <li class="titlelist titlecss">@Html.ActionLink("1on1ミーティング", "Onenew", "Onenew", null, new { style = "color:black;", @class = "text-decoration-none" })</li>
+                    @*考課表*@
+                    @*<li class="titlelist"> <button class="dropdown-btn">目標評価 <b class="caret"></b></button></li>*@
+                    <li class="titlelist "> <button class="dropdown-btn nav-link dropdown-toggle  " style="color:black;">目標評価<span class="d-none d-sm-inline px-1"></span></button></li>
+                    <li class="subtitlelist"> @Html.ActionLink("目標設定", "TemaNyuuryoku", "KoukaTema", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                    <li class="subtitlelist">@Html.ActionLink("重要タスク", "TaskNyuuryoku", "JyuyouTask", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                    @*//基礎評価*@
+                    <li class="titlelist titlecss">  @Html.ActionLink("基礎評価", "Kisohyouka", "Kisohyouka", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                    @*//360度評価*@
+                    @*<li class="titlelist"> <button class="dropdown-btn">360度評価 <b class="caret"></b></button></li>*@
+                    <li class="titlelist"> <button class=" dropdown-btn nav-link dropdown-toggle " style="color:black;">360度評価<span class="ms-1 d-none d-sm-inline px-1"></span></button></li>
+                    <li class="subtitlelist">@Html.ActionLink("評価依頼画面", "HyoukaIrai", "HyoukaIrai", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                    <li class="subtitlelist"> @Html.ActionLink("評価画面", "HyoukaSaitem", "HyoukaSaitem", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                    <li class="subtitlelist">@Html.ActionLink("採点確認画面", "saitenkakuninTab", "saitenkakuninTab", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+
+                    @*評価者*@
+                    @if ((bool)Session["fHyoukasha"] == true)
+                    {
+                        <br />
+                        <br />
+                        @*<li class="titlelist"><button class="dropdown-btn"> 評価者メニュー<b class="caret"></b></button></li>*@
+                        <li class="titlelist"> <button class="dropdown-btn nav-link dropdown-toggle px-sm-0 px-1" style="color:black;">評価者メニュー<span class="ms-1 d-none d-sm-inline "> </span></button></li>
+                        <li class="subtitlelist">@Html.ActionLink("1on1確認", "OneOnOneKakunin", "Onenew", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                        <li class="subtitlelist">@Html.ActionLink("目標設定確認", "TemaKakunin", "KoukaTema", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                        <li class="subtitlelist">@Html.ActionLink("重要タスク確認", "TaskKuakunin", "JyuyouTask", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                        <li class="subtitlelist">@Html.ActionLink("基礎評価確認", "KisohyoukaLeader", "Kisohyouka", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                        <li class="subtitlelist">@Html.ActionLink("データ出力", "LeaderExport", "LeaderExport", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                        <li class="subtitlelist">@Html.ActionLink("集計表", "ShukeiHyou", "ShukeiHyou", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+
+                    }
+
+                    @*満足度調査*@
+                    @if ((bool)Session["fKANRISYA"] == false)
+                    {
+                        <br />
+                        <br />
+                        <li class="menulist">@Html.ActionLink("社員満足度調査", "Manzokudochousa", "Manzokudochousa", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+
+                    }
+                    @if ((bool)Session["fKANRISYA"] == true)
+                    {
+                        <br />
+                        <br />
+                        @*<li class="titlelist"><button class="dropdown-btn">管理者メニュー<b class="caret"></b></button></li>*@
+                        <li class="titlelist"> <button class="nav-link dropdown-toggle px-sm-0 px-1 dropdown-btn " style="color:black;padding-top:0!important; padding-bottom:0!important">管理者メニュー<span class="ms-1 d-none d-sm-inline"> </span></button></li>
+                        <li class="subtitlelist">@Html.ActionLink("集計表", "KanrishaShukei", "ShukeiHyou", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                        <li class="subtitlelist">@Html.ActionLink("データ出力", "kanrisha", "kanrisha", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                        <li class="subtitlelist">@Html.ActionLink("社員満足度調査依頼", "ChousIrai", "ChousaIrai", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                        <li class="subtitlelist">@Html.ActionLink("各種マスタ", "Master", "Home", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+
+                    }
+                </ul>
+
+            @if ((bool)Session["fKANRISYA"] == true)
+            {
+                <input type="text" id="txt_shain" name="txt_shain" value="1" style="width:0px;text-align:center;display:none" />
+            }
+            else
+            {
+                <input type="text" id="txt_shain" name="txt_shain" value="2" style="width:0px;text-align:center;display:none" />
+            }
+        </div>
+
+        <div class="mainscreen container-fluid" id="main" >
+
+            <div class="gamenbody mw-100" id="bodypart" >
+                @RenderBody()
+            </div>
+
+            <footer>
+                <p>&copy; 2020 CIC システムアプリケーション</p>
+            </footer>
+        </div>
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
+    }
+    else
+    {
+        <div id="loginContentContainer" class="container body-content">
+            @RenderBody()
+            @*<footer>
+                    <p>&copy; @DateTime.Now.Year - マイ ASP.NET アプリケーション</p>
+                </footer>*@
+        </div>
+    }
+    <script>
+        function myFunction(x) {
+
+            if (x.matches) { // If media query matches
+                // document.body.style.backgroundColor = "yellow";
+                if (document.getElementById("HomeMenu") != null) {
+
+                    document.getElementById("HomeMenu").style.display = "none";
+                    document.getElementById("openNav").style.display = "inline-block";
+                    //document.getElementById("bodypart").style.paddingLeft = "20px";
+
+
+                }
+
+            } else {
+                if (document.getElementById("HomeMenu") != null) {
+                    document.getElementById("HomeMenu").style.display = "block";
+                    //document.getElementById("bodypart").style.paddingLeft = "0px";
+
+                    //if (document.getElementById("txt_shain").value == "1") {
+
+                    //    document.getElementById("HomeMenu").style.width = "201px";
+                    //}
+                    //else {
+
+                    //    document.getElementById("HomeMenu").style.width = "176px";
+                    //}
+
+                    document.getElementById("openNav").style.display = "none";
+
+                }
+            }
+        }
+
+        var x = window.matchMedia("(max-width: 768px)")
+        myFunction(x)
+        x.addListener(myFunction)
+    </script>
+
+    <script>
+
+        function openHomeMenu() {
+            /*if (document.getElementById("HomeMenu").style.display == "block") {
+                document.getElementById("HomeMenu").style.display = "none";
+
+            }
+            else {
+                document.getElementById("HomeMenu").style.display = "block";
+                if (document.getElementById("txt_shain").value == "1") {
+
+                    document.getElementById("mySidenav").style.width = "201px";
+                }
+                else {
+                    document.getElementById("main").style.marginLeft = "176px";
+                    document.getElementById("HomeMenu").style.width = "176px";
+                }
+            }*/
+
+            if (document.getElementById("HomeMenu").style.display == "none") {
+                document.getElementById("HomeMenu").style.display = "block";
+                document.getElementById("main").style.marginLeft = "210px";
+            }
+            else {
+                document.getElementById("HomeMenu").style.display = "none";
+                document.getElementById("main").style.marginLeft = "0";
+                //alert('0');
+            }
+
+        }
+
+        function profilemenu() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+    </script>
+
+
+</body>
+</html>
+
