@@ -30,7 +30,7 @@ namespace koukahyosystem.Controllers
         string nlowerlimit = "";
         Models.HomeModel homeMdl = new Models.HomeModel();
         string selectedyear = "";
-        // Models.Home home = new Models.Home();
+        // Models.Home home = new Models.Home(); test home
         public ActionResult Index()
         {
             return View();
