@@ -9,7 +9,7 @@ namespace koukahyosystem.Controllers
 {
     public class DateController : Controller
     {
-        // GET: Date test date date 2
+        // GET: Date 
         //public ActionResult Index()
         //{
         //    return View();
