@@ -11,42 +11,35 @@
 
 <html>
 <head>
-    
+    <link href="~/Content/Common/commonstyle.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width" />
     <style>
 
-        button {
-            display: inline-block;
-            padding: 5px 5px;
-            color: black;
-            font-size: 13px;
-            text-align: center;
-            text-decoration: none;
-            border: 0.5px solid #555555;
-            border-radius: 4px;
+
+        .kisocss th, td {
+            border: 1px solid black;
         }
 
-        table,th,td
-        {
-            border:1px solid black;
+        .kisocss th, td {
+            width: 50px
         }
-        th,td{
-            width:50px
+
+        .no {
+            width: 25px;
+            text-align: center;
         }
-        .no{
-            width:25px;
-            text-align:center;
-        }
-        
+
         input {
             width: 20px;
             text-align: right;
         }
-        .div-scroller{
-           overflow:scroll;
+
+        .div-scroller {
+            overflow: scroll;
         }
-        
-        .scroll thead th {
+
+        .kisocss thead th {
             background-color: rgb(189, 233, 242);
             /*position: -webkit-sticky;*/
             position: sticky;
@@ -56,75 +49,46 @@
             background-clip: padding-box;
         }
 
-        .first-col {
-            width: 25px;
-            min-width:25px;
-            position: sticky;
-            /*position: -webkit-sticky;*/
-            left: 0;
-            background-color: #fff;
-            border: 1px solid black;
-            background-clip: padding-box;
-            text-align: center;
-        }
-
-        .second-col {
-            position: sticky;
-            /*position: -webkit-sticky;*/
-            width: auto;
-            min-width: 172px;
-            max-width: 300px;
-            left: 20px;
-            background-color: #fff;
-            border: 1px solid black;
-            background-clip: padding-box;
-            word-wrap: break-word;
-        }
-
-        .scroll thead th:nth-of-type(1) {
-            background-color: rgb(189, 233, 242);
-            left: 0;
-            z-index: 3;
-            border: 1px solid black;
-        }
-
-        .scroll thead th:nth-of-type(2) {
-            background-color: rgb(189, 233, 242);
-            /*left: 20px;*/
-            z-index: 3;
-            border: 1px solid black;
-        }
+       
 
         .mth_btn {
             width: 50px;
             text-align: center;
+            margin:3px 3px 3px 3px;
+           
         }
+
         .btn_save {
             text-align: center;
             width: 70px;
             height: 35px;
             background-color: #9dccf1;
-           margin-right:28px;
-           margin-bottom:5px;
-           margin-top:5px;
-           float:right;
+            margin-right: 28px;
+            margin-bottom: 5px;
+            margin-top: 5px;
+            float: right;
         }
+
         .btn_disable {
             opacity: 0.6;
             cursor: not-allowed;
         }
-        .lbl_year{
-            font-weight:normal;
-            margin-left:28px;
-            margin-right:5px;
-        }
-        p {
+
+       
+
+        /*p {
             text-align: left;
             margin-left: 28px;
         }
-        .table_div{
-            margin:20px 10px;
+
+        .table_div {
+            margin: 20px 10px;
         }
+        */
+
+        
+       
+
     </style>
     <style>
         @@media only screen and (max-width: 767px) {
@@ -132,585 +96,728 @@
             #hz_p {
                 float: left
             }
-            .btn_save{
-                margin-left:28px;
-                float:unset;
+
+            .btn_save {
+                margin-left: 28px;
+                float: unset;
             }
+
             p {
                 margin-left: 0px;
             }
-            .second-col{
-                max-width:172px;
+
+            .second-col {
+                max-width: 172px;
             }
+            
+            
         }
     </style>
 </head>
-<body>
+<body class="fontsize">
     @if (Session["isAuthenticated"] != null)
     {
-        <div id='divElement' class="panel panel-info">
-            @using (Html.BeginForm("Kisohyouka", "Kisohyouka", FormMethod.Post))
+    <div class="panel panel-info">
+        @using (Html.BeginForm("Kisohyouka", "Kisohyouka", FormMethod.Post))
+        {
+            var r_count_mth = 0;
+
+            if (Model.shinsei_tableList_month != null)
             {
-                var r_count_mth = 0;
-                
-                if (Model.shinsei_tableList_month != null)
-                {
-                    r_count_mth = Model.shinsei_tableList_month.Count - 1;
-                }
-                var r_count_yr = 0;
-                if (Model.shinsei_tableList_year != null)
-                {
-                    r_count_yr = Model.shinsei_tableList_year.Count - 1;
-                }
-                <div class="panel-heading" style="background-color: rgb(34, 148, 172); width:100%;text-align:center">
-                    <h4 style="color:white">基礎評価</h4>
+                r_count_mth = Model.shinsei_tableList_month.Count - 1;
+            }
+            var r_count_yr = 0;
+            if (Model.shinsei_tableList_year != null)
+            {
+                r_count_yr = Model.shinsei_tableList_year.Count - 1;
+            }
+
+            <div id="headertitle" style="background-color: rgb(34, 148, 172); width:100%;">
+                <h6 class="text-center align-middle headline" style="color:white;">基礎評価</h6>
+            </div>
+
+
+            <div class="row mt-2 ">
+                <div class="col-xs-9 col-sm-9 col-md-7 col-lg-8 mb-2 justify-content-start" style="margin-left:0!important;margin-right:0!important">
+                    @Html.Label("年度", new { @class = "lbl_year" })
+                    <button id="btnPrevious" name="btnPrevious" value=@Model.year class="btn btn-link preBtn">
+                        <i class="fas fa-caret-left"></i>
+                    </button>
+                    @Html.DropDownListFor(m => m.year, Model.yearList, new { @id = "year", style = "width:70px;", onchange = "return OnChanged()", @class = "btn btn-sm dropdown-toggle yeardropdown" })
+                    <button id="btnNext" name="btnNext" class="btn btn-link preBtn" value=@Model.year>
+                        <i class="fas fa-caret-right"></i>
+                    </button>
+
+                    @Html.Label("月", new { @class = "lbl_year KisoFilterMobile", style = "margin:0px 10px 0px 10px;!important;" })
+                    @Html.DropDownListFor(m => m.curMonth, Model.Mo_monthlist, new { @id = "curMonth", style = "width:60px;", onchange = "return OnChanged()", @class = " btn btn-sm dropdown-toggle yeardropdown KisoFilterMobile fontsize" })
+
                 </div>
+                
+                <div class=" col-xs-4 col-sm-4 col-md-5 col-lg-4  mb-2 kisoBtn" style="margin-left:0!important;margin-right:0!important">
+                    <button type="submit" id="btn_hozone" name="btn_hozone" value="hozone" class="btn SaveBtn KisoSavebtn" autofocus>一時保存</button>
+                    <button type="submit" id="btn_Mohozone" name="btn_Mohozone" value="hozone" class="btn SaveBtn KisoFilterMobile " autofocus>一時保存</button> @*added by nan 20220602*@
+                </div>
+            </div>
+           
+          
 
-                <div class="table_div">
-                    <div style="margin:10px">
-                        @Html.Label("年度", new { @class = "lbl_year" })
-                        <button id="btnPrevious" name="btnPrevious" value=@Model.year style="width:29px;height:29px;" > < </button>
-                        @Html.DropDownListFor(m => m.year, Model.yearList, new { @id = "year", style = "width:70px;Height:22px;", onchange = "return OnChanged()" })
-                        <button id="btnNext" name="btnNext" value=@Model.year style="width:29px;height:29px;"> > </button>
-                        <button id="btnSearch" name="btnSearch" value="add" style="position: absolute; visibility:hidden">add</button>
-                        
-                        <button type="submit" id="btn_hozone" name="btn_hozone" value="hozone" class="button btn_save" autofocus>一時保存</button>
-                    </div>
+            <div class="table_div">
+                @*<div style="margin:10px">
 
-                    @if (Model.show_table == "show")
-                    {
+            <button id="btnPrevious" name="btnPrevious" value=@Model.year style="width:29px;height:29px;"> < </button>
+            @Html.DropDownListFor(m => m.year, Model.yearList, new { @id = "year", style = "width:70px;Height:22px;", onchange = "return OnChanged()" })
+            <button id="btnNext" name="btnNext" value=@Model.year style="width:29px;height:29px;"> > </button>
+            <button id="btnSearch" name="btnSearch" value="add" style="position: absolute; visibility:hidden">add</button>
+
+            <button type="submit" id="btn_hozone" name="btn_hozone" value="hozone" class="button btn_save" autofocus>一時保存</button>
+        </div>*@
+                <button id="btnSearch" name="btnSearch" value="add" style="position: absolute; visibility:hidden">add</button>
+                @if (Model.show_table == "show")
+                {
                     <div align="center">
-                        <div>
+                        <!--<div>
                             <p>
                                 @Model.markLabel
                                 @*成長するために実施するべきテーマ(基礎評価)360点満点*@
-                                @Html.TextBoxFor(model => model.txt_kijun, new {@id="kj_type", style = "width:50px;text-align:center;!important;background-color:white;color: black !important;visibility:hidden;position:absolute;" })
-                                @Html.TextBoxFor(model => model.txt_mark, new {@id="kijunMark", style = "width:50px;text-align:center;!important;background-color:white;color: black !important;visibility:hidden;position:absolute;" })
-                            
+                                @Html.TextBoxFor(model => model.txt_kijun, new { @id = "kj_type", style = "width:50px;text-align:center;!important;background-color:white;color: black !important;visibility:hidden;position:absolute;" })
+                                @Html.TextBoxFor(model => model.txt_mark, new { @id = "kijunMark", style = "width:50px;text-align:center;!important;background-color:white;color: black !important;visibility:hidden;position:absolute;" })
+
                             </p>
+                        </div>-->
+                        <div class="d-flex justify-content-center" style="margin:0px 0px 5px 0px;">
+                            @Model.markLabel
+                            @*成長するために実施するべきテーマ(基礎評価)360点満点*@
+                            @Html.TextBoxFor(model => model.txt_kijun, new { @id = "kj_type", style = "width:50px;text-align:center;!important;background-color:white;color: black !important;visibility:hidden;position:absolute;" })
+                            @Html.TextBoxFor(model => model.txt_mark, new { @id = "kijunMark", style = "width:50px;text-align:center;!important;background-color:white;color: black !important;visibility:hidden;position:absolute;" })
                         </div>
-                        <div style="overflow:auto">
-                            @if (Model.txt_kijun == "月別")
-                            {
-                                <table id="hyouka_table" class="scroll" @*align="center"*@>
-                                    <thead>
-                                        <tr>
-                                            <th class="sticky-col first-col"></th>
-                                            <th class="sticky-col second-col"></th>
-                                            <th style="display:none;"></th>
-                                            @foreach (var mth in Model.monthList)
-                                            {
-                                                <th style="text-align:center">@mth</th>
-                                            }
-                                            @*<th style="text-align:center">4月</th>
-                                            <th style="text-align:center">5月</th>
-                                            <th style="text-align:center">6月</th>
-                                            <th style="text-align:center">7月</th>
-                                            <th style="text-align:center">8月</th>
-                                            <th style="text-align:center">9月</th>
-                                            <th style="text-align:center">10月</th>
-                                            <th style="text-align:center">11月</th>
-                                            <th style="text-align:center">12月</th>
-                                            <th style="text-align:center">1月</th>
-                                            <th style="text-align:center">2月</th>
-                                            <th style="text-align:center">3月</th>*@
-                                            <th width="50px" style="text-align:center">小計</th>
-                                        </tr>
+                       
+                        <div>
+                            <div style="overflow:auto;">
+                                @if (Model.txt_kijun == "月別")
+                                {
+                                    <div class="kisoDesk">
+                                        <table id="hyouka_table" class="kisocss" @*align="center"*@>
+                                            <thead>
+                                                <tr>
+                                                    <th class="sticky-col first-col" style="width:20px;"></th>
+                                                    <th class="sticky-col second-col"></th>
+                                                    <th style="display:none;"></th>
+                                                    @foreach (var mth in Model.monthList)
+                                                    {
+                                                        <th style="text-align:center">@mth</th>
+                                                    }
+                                                    @*<th style="text-align:center">4月</th>
+                            <th style="text-align:center">5月</th>
+                            <th style="text-align:center">6月</th>
+                            <th style="text-align:center">7月</th>
+                            <th style="text-align:center">8月</th>
+                            <th style="text-align:center">9月</th>
+                            <th style="text-align:center">10月</th>
+                            <th style="text-align:center">11月</th>
+                            <th style="text-align:center">12月</th>
+                            <th style="text-align:center">1月</th>
+                            <th style="text-align:center">2月</th>
+                            <th style="text-align:center">3月</th>*@
+                                                    <th width="50px" style="text-align:center">小計</th>
+                                                </tr>
 
-                                    </thead>
-                                    <tbody>
+                                            </thead>
+                                            <tbody>
 
-                                        @for (int i = 0; i < Model.shinsei_tableList_month.Count - 1; i++)
-                                        {
-                                            var rid = i + 1;
-
-                                        <tr>
-                                            <td class="sticky-col first-col">
-                                                @Model.shinsei_tableList_month[i].no_value
-                                            </td>
-
-                                            <td class="sticky-col second-col" style="text-align:left;width:300px;">@Model.shinsei_tableList_month[i].question</td>
-
-                                            <td class="no" style="display:none;">
-                                                @Html.TextBoxFor(model => model.shinsei_tableList_month[i].question_code, new { style = "width:25px;text-align:center;border:none!important;background-color:white;color: black !important;" })
-
-                                            </td>
-
-                                            @foreach (var mth in Model.monthList)
-                                            {
-                                                if (mth == "1月")
+                                                @for (int i = 0; i < Model.shinsei_tableList_month.Count - 1; i++)
                                                 {
-                                                    <td>
+                                                    var rid = i + 1;
 
-                                                        @Html.TextBoxFor(model => model.shinsei_tableList_month[i].one,
-                                                      new
-                                                      {
-                                                          @class = "fullwidth_halfwidth",
-                                                          @type = "tel",
-                                                          @id = rid + "r_txt1",
-                                                          style = "ime-mode:inactive;width:100%",
-                                                          maxlength = 2,
-                                                          onkeyup = "sum(id)",
-                                                          onkeypress = "isSpecialKey(event)",
-                                                          oninput = "sum(id)"
-                                                      })
-                                                    </td>
+                                                    <tr>
+                                                        <td class="sticky-col first-col" style="width:20px;">
+                                                            @Model.shinsei_tableList_month[i].no_value
+                                                        </td>
+
+                                                        <td class="sticky-col second-col" style="text-align:left;width:300px;">@Model.shinsei_tableList_month[i].question</td>
+
+                                                        <td class="no" style="display:none;">
+                                                            @Html.TextBoxFor(model => model.shinsei_tableList_month[i].question_code, new { style = "width:25px;text-align:center;border:none!important;background-color:white;color: black !important;" })
+
+                                                        </td>
+
+                                                        @foreach (var mth in Model.monthList)
+                                                        {
+                                                            if (mth == "1月")
+                                                            {
+                                                                <td>
+
+                                                                    @Html.TextBoxFor(model => model.shinsei_tableList_month[i].one,
+                                                                  new
+                                                                  {
+                                                                      @class = "fullwidth_halfwidth",
+                                                                      @type = "tel",
+                                                                      @id = rid + "r_txt1",
+                                                                      style = "ime-mode:inactive;width:100%",
+                                                                      maxlength = 2,
+                                                                      onkeyup = "sum(id)",
+                                                                      onkeypress = "isSpecialKey(event)",
+                                                                      oninput = "sum(id)"
+                                                                  })
+                                                                </td>
+                                                            }
+                                                            if (mth == "2月")
+                                                            {
+                                                                <td>
+
+                                                                    @Html.TextBoxFor(model => model.shinsei_tableList_month[i].two,
+                                                                 new
+                                                                 {
+                                                                     @class = "fullwidth_halfwidth",
+                                                                     @type = "tel",
+                                                                     @id = rid + "r_txt2",
+                                                                     style = "ime-mode:inactive;width:100%",
+                                                                     maxlength = 2,
+                                                                     onkeyup = "sum(id)",
+                                                                     onkeypress = "isSpecialKey(event)",
+                                                                     oninput = "sum(id)"
+                                                                 })
+                                                                </td>
+                                                            }
+                                                            if (mth == "3月")
+                                                            {
+                                                                <td>
+
+                                                                    @Html.TextBoxFor(model => model.shinsei_tableList_month[i].three,
+                                                                 new
+                                                                 {
+                                                                     @class = "fullwidth_halfwidth",
+                                                                     @type = "tel",
+                                                                     @id = rid + "r_txt3",
+                                                                     style = "ime-mode:inactive;width:100%",
+                                                                     maxlength = 2,
+                                                                     onkeyup = "sum(id)",
+                                                                     onkeypress = "isSpecialKey(event)",
+                                                                     oninput = "sum(id)"
+                                                                 })
+                                                                </td>
+                                                            }
+                                                            if (mth == "4月")
+                                                            {
+                                                                <td>
+
+                                                                    @Html.TextBoxFor(model => model.shinsei_tableList_month[i].four,
+                                                                   new
+                                                                   {
+                                                                       @class = "fullwidth_halfwidth",
+                                                                       @type = "tel",
+                                                                       @id = rid + "r_txt4",
+                                                                       style = "ime-mode:inactive;width:100%",
+                                                                       maxlength = 2,
+                                                                       onkeyup = "sum(id)",
+                                                                       onkeypress = "isSpecialKey(event)",
+                                                                       oninput = "sum(id)"
+                                                                   })
+                                                                </td>
+                                                            }
+                                                            if (mth == "5月")
+                                                            {
+                                                                <td>
+
+                                                                    @Html.TextBoxFor(model => model.shinsei_tableList_month[i].five,
+                                                                   new
+                                                                   {
+                                                                       @class = "fullwidth_halfwidth",
+                                                                       @type = "tel",
+                                                                       @id = rid + "r_txt5",
+                                                                       style = "ime-mode:inactive;width:100%",
+                                                                       maxlength = 2,
+                                                                       onkeyup = "sum(id)",
+                                                                       onkeypress = "isSpecialKey(event)",
+                                                                       oninput = "sum(id)"
+                                                                   })
+                                                                </td>
+                                                            }
+                                                            if (mth == "6月")
+                                                            {
+                                                                <td>
+
+                                                                    @Html.TextBoxFor(model => model.shinsei_tableList_month[i].six,
+                                                                   new
+                                                                   {
+                                                                       @class = "fullwidth_halfwidth",
+                                                                       @type = "tel",
+                                                                       @id = rid + "r_txt6",
+                                                                       style = "ime-mode:inactive;width:100%",
+                                                                       maxlength = 2,
+                                                                       onkeyup = "sum(id)",
+                                                                       onkeypress = "isSpecialKey(event)",
+                                                                       oninput = "sum(id)"
+                                                                   })
+                                                                </td>
+                                                            }
+                                                            if (mth == "7月")
+                                                            {
+                                                                <td>
+
+                                                                    @Html.TextBoxFor(model => model.shinsei_tableList_month[i].seven,
+                                                                   new
+                                                                   {
+                                                                       @class = "fullwidth_halfwidth",
+                                                                       @type = "tel",
+                                                                       @id = rid + "r_txt7",
+                                                                       style = "ime-mode:inactive;width:100%",
+                                                                       maxlength = 2,
+                                                                       onkeyup = "sum(id)",
+                                                                       onkeypress = "isSpecialKey(event)",
+                                                                       oninput = "sum(id)"
+                                                                   })
+                                                                </td>
+                                                            }
+                                                            if (mth == "8月")
+                                                            {
+                                                                <td>
+
+                                                                    @Html.TextBoxFor(model => model.shinsei_tableList_month[i].eight,
+                                                                   new
+                                                                   {
+                                                                       @class = "fullwidth_halfwidth",
+                                                                       @type = "tel",
+                                                                       @id = rid + "r_txt8",
+                                                                       style = "ime-mode:inactive;width:100%",
+                                                                       maxlength = 2,
+                                                                       onkeyup = "sum(id)",
+                                                                       onkeypress = "isSpecialKey(event)",
+                                                                       oninput = "sum(id)"
+                                                                   })
+                                                                </td>
+                                                            }
+                                                            if (mth == "9月")
+                                                            {
+                                                                <td>
+
+                                                                    @Html.TextBoxFor(model => model.shinsei_tableList_month[i].nine,
+                                                                  new
+                                                                  {
+                                                                      @class = "fullwidth_halfwidth",
+                                                                      @type = "tel",
+                                                                      @id = rid + "r_txt9",
+                                                                      style = "ime-mode:inactive;width:100%",
+                                                                      maxlength = 2,
+                                                                      onkeyup = "sum(id)",
+                                                                      onkeypress = "isSpecialKey(event)",
+                                                                      oninput = "sum(id)"
+                                                                  })
+                                                                </td>
+                                                            }
+                                                            if (mth == "10月")
+                                                            {
+                                                                <td>
+
+                                                                    @Html.TextBoxFor(model => model.shinsei_tableList_month[i].ten,
+                                                                  new
+                                                                  {
+                                                                      @class = "fullwidth_halfwidth",
+                                                                      @type = "tel",
+                                                                      @id = rid + "r_txt10",
+                                                                      style = "ime-mode:inactive;width:100%",
+                                                                      maxlength = 2,
+                                                                      onkeyup = "sum(id)",
+                                                                      onkeypress = "isSpecialKey(event)",
+                                                                      oninput = "sum(id)"
+                                                                  })
+                                                                </td>
+                                                            }
+                                                            if (mth == "11月")
+                                                            {
+                                                                <td>
+
+                                                                    @Html.TextBoxFor(model => model.shinsei_tableList_month[i].eleven,
+                                                                  new
+                                                                  {
+                                                                      @class = "fullwidth_halfwidth",
+                                                                      @type = "tel",
+                                                                      @id = rid + "r_txt11",
+                                                                      style = "ime-mode:inactive;width:100%",
+                                                                      maxlength = 2,
+                                                                      onkeyup = "sum(id)",
+                                                                      onkeypress = "isSpecialKey(event)",
+                                                                      oninput = "sum(id)"
+                                                                  })
+                                                                </td>
+                                                            }
+                                                            if (mth == "12月")
+                                                            {
+                                                                <td>
+
+                                                                    @Html.TextBoxFor(model => model.shinsei_tableList_month[i].twelve,
+                                                                  new
+                                                                  {
+                                                                      @class = "fullwidth_halfwidth",
+                                                                      @type = "tel",
+                                                                      @id = rid + "r_txt12",
+                                                                      style = "ime-mode:inactive;width:100%",
+                                                                      maxlength = 2,
+                                                                      onkeyup = "sum(id)",
+                                                                      onkeypress = "isSpecialKey(event)",
+                                                                      oninput = "sum(id)"
+                                                                  })
+                                                                </td>
+                                                            }
+                                                        }
+
+                                                        <td width="50px" style="text-align:right">
+
+                                                            @Html.TextBoxFor(model => model.shinsei_tableList_month[i].total, new { @id = rid + "total_val", style = "ime-mode:disabled;width:100%;border:none!important;background-color:white;outline: none;", @readonly = "readonly", @tabIndex = "-1" })
+
+                                                        </td>
+                                                    </tr>
                                                 }
-                                                if (mth == "2月")
-                                                {
-                                                    <td>
 
-                                                        @Html.TextBoxFor(model => model.shinsei_tableList_month[i].two,
-                                                     new
-                                                     {
+                                                <tr>
+
+                                                    <td class="sticky-col first-col" style="height:30px">@Model.shinsei_tableList_month[r_count_mth].no_value</td>
+
+                                                    <td class="sticky-col second-col">@Model.shinsei_tableList_month[r_count_mth].question</td>
+
+                                                    <td class="no" style="display:none;"></td>
+
+                                                    @foreach (var mth in Model.monthList)
+                                                    {
+                                                        if (mth == "1月")
+                                                        {
+                                                            <td id="10col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].one</td>
+                                                        }
+                                                        if (mth == "2月")
+                                                        {
+                                                            <td id="11col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].two</td>
+                                                        }
+                                                        if (mth == "3月")
+                                                        {
+                                                            <td id="12col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].three</td>
+                                                        }
+                                                        if (mth == "4月")
+                                                        {
+                                                            <td id="1col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].four</td>
+                                                        }
+                                                        if (mth == "5月")
+                                                        {
+                                                            <td id="2col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].five</td>
+                                                        }
+                                                        if (mth == "6月")
+                                                        {
+                                                            <td id="3col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].six</td>
+                                                        }
+                                                        if (mth == "7月")
+                                                        {
+                                                            <td id="4col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].seven</td>
+                                                        }
+                                                        if (mth == "8月")
+                                                        {
+                                                            <td id="5col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].eight</td>
+                                                        }
+                                                        if (mth == "9月")
+                                                        {
+                                                            <td id="6col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].nine</td>
+                                                        }
+                                                        if (mth == "10月")
+                                                        {
+                                                            <td id="7col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].ten</td>
+                                                        }
+                                                        if (mth == "11月")
+                                                        {
+                                                            <td id="8col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].eleven</td>
+                                                        }
+                                                        if (mth == "12月")
+                                                        {
+                                                            <td id="9col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].twelve</td>
+                                                        }
+                                                    }
+
+                                                    <td id="all_total" width="50px" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].total</td>
+                                                </tr>
+
+                                                <tr>
+
+                                                    <td class="sticky-col first-col"></td>
+
+                                                    <td class="sticky-col second-col" style="text-align:center;">完了</td>
+
+                                                    <td class="no" style="display:none;"></td>
+
+                                                    @foreach (var mth in Model.monthList)
+                                                    {
+                                                        if (mth == "1月")
+                                                        {
+                                                            <td>
+                                                                <button id="btn_1" name="tableButton" value="1mth" type="submit" class="kanhyouBtn mth_btn"></button>
+                                                            </td>
+                                                        }
+                                                        if (mth == "2月")
+                                                        {
+                                                            <td>
+                                                                <button id="btn_2" name="tableButton" value="2mth" type="submit" class="kanhyouBtn mth_btn"></button>
+                                                            </td>
+                                                        }
+                                                        if (mth == "3月")
+                                                        {
+                                                            <td>
+                                                                <button id="btn_3" name="tableButton" value="3mth" type="submit" class="kanhyouBtn mth_btn"></button>
+                                                            </td>
+                                                        }
+                                                        if (mth == "4月")
+                                                        {
+                                                            <td>
+                                                                <button id="btn_4" name="tableButton" value="4mth" type="submit" class="kanhyouBtn mth_btn"></button>
+
+                                                            </td>
+                                                        }
+                                                        if (mth == "5月")
+                                                        {
+                                                            <td>
+                                                                <button id="btn_5" name="tableButton" value="5mth" type="submit" class="kanhyouBtn mth_btn"></button>
+                                                            </td>
+                                                        }
+                                                        if (mth == "6月")
+                                                        {
+                                                            <td>
+                                                                <button id="btn_6" name="tableButton" value="6mth" type="submit" class="kanhyouBtn mth_btn"></button>
+                                                            </td>
+                                                        }
+                                                        if (mth == "7月")
+                                                        {
+                                                            <td>
+                                                                <button id="btn_7" name="tableButton" value="7mth" type="submit" class="kanhyouBtn mth_btn"></button>
+                                                            </td>
+                                                        }
+                                                        if (mth == "8月")
+                                                        {
+                                                            <td>
+                                                                <button id="btn_8" name="tableButton" value="8mth" type="submit" class="kanhyouBtn mth_btn"></button>
+                                                            </td>
+                                                        }
+                                                        if (mth == "9月")
+                                                        {
+                                                            <td>
+                                                                <button id="btn_9" name="tableButton" value="9mth" type="submit" class="kanhyouBtn mth_btn"></button>
+                                                            </td>
+                                                        }
+                                                        if (mth == "10月")
+                                                        {
+                                                            <td>
+                                                                <button id="btn_10" name="tableButton" value="10mth" type="submit" class="kanhyouBtn mth_btn"></button>
+                                                            </td>
+                                                        }
+                                                        if (mth == "11月")
+                                                        {
+                                                            <td>
+                                                                <button id="btn_11" name="tableButton" value="11mth" type="submit" class="kanhyouBtn mth_btn"></button>
+                                                            </td>
+                                                        }
+                                                        if (mth == "12月")
+                                                        {
+                                                            <td>
+                                                                <button id="btn_12" name="tableButton" value="12mth" type="submit" class="kanhyouBtn mth_btn"></button>
+                                                            </td>
+                                                        }
+                                                    }
+
+                                                    <td width="50px"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    @*for mobile*@
+                                    <div class="kisoMobile" style="margin-bottom:10px;">
+
+                                        <table id="kisomo_tbl" class="kisomocss">
+
+                                            <tbody>
+                                                @for (int i = 0; i < Model.MoMthList.Count - 1; i++)
+                                                {
+                                                    <tr>
+                                                        <td style="display:none">
+                                                            @Html.TextBoxFor(m => m.MoMthList[i].Mo_qstCode, new { style = "width:50px;height:30px!important", @class = "form-control fontsize" })
+                                                        </td>
+                                                        <td>
+                                                            <div class="row">
+
+                                                                <div class="col-12 mb-1">
+                                                                    @Model.MoMthList[i].Mo_qst
+
+                                                                </div>
+                                                                <div class="col-6 mb-1">
+                                                                    @Html.TextBoxFor(m => m.MoMthList[i].Mo_mark, new { style = "width:50px;height:30px!important",@id="moMark_txt",  @class = "form-control fontsize",
+                                                                   oninput = "value = value.replace(/[０-９]/g,s => String.fromCharCode(s.charCodeAt(0) - 65248)).replace(/\\D/g,'');"
+                                                               })
+                                                                </div>
+
+                                                            </div>
+
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                <tr>
+                                                    <td style="display:none;"></td>
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-5 d-flex justify-content-start" style="margin:7px 0px 0px 0px;">
+                                                                @Html.LabelFor(m => m.goukei)
+                                                                @Html.Label("", Model.goukei, new { @id = "goukei_lbl" })
+                                                            </div>
+                                                            <div class="col-6 d-flex justify-content-start" style="margin:3px 0px 3px 0px;">
+                                                                <button class="kanhyouBtn btn_MoShinsei" id="btn_MoShinsei" name="btn_MoShinsei">申請</button>
+                                                            </div>
+                                                        </div>
+
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+
+                                    </div>
+
+                                }
+                                else//year
+                                {
+                                    @*<table id="hyouka_table_year" class="kisocss">
+                                        <thead>
+                                            <tr>
+                                                <th class="sticky-col first-col" style="width:20px;"></th>
+                                                <th class="sticky-col second-col"></th>
+                                                <th style="display:none;"></th>
+                                                <th style="text-align:center">点数</th>
+                                            </tr>
+
+                                        </thead>
+                                        <tbody>
+
+                                            @for (int i = 0; i < Model.shinsei_tableList_year.Count - 1; i++)
+                                            {
+                                                var rid = i + 1;
+
+                                                <tr>
+                                                    <td class="sticky-col first-col" style="width:20px;">
+                                                        @Model.shinsei_tableList_year[i].no_value
+                                                    </td>
+
+                                                    <td class="sticky-col second-col" style="text-align:left;width:300px;">@Model.shinsei_tableList_year[i].question</td>
+
+                                                    <td class="no" style="display:none;">
+                                                        @Html.TextBoxFor(model => model.shinsei_tableList_year[i].question_code, new { style = "width:25px;text-align:center;border:none!important;background-color:white;color: black !important;" })
+
+                                                    </td>
+
+                                                    <td>
+                                                       
+
+                                                        @Html.TextBoxFor(model => model.shinsei_tableList_year[i].year_value, new
+                                                        {
                                                          @class = "fullwidth_halfwidth",
                                                          @type = "tel",
-                                                         @id = rid + "r_txt2",
-                                                         style = "ime-mode:inactive;width:100%",
+                                                         @id = "txt_year"+rid,
                                                          maxlength = 2,
-                                                         onkeyup = "sum(id)",
+                                                         onkeyup = "edValueKeyPress(id)",
                                                          onkeypress = "isSpecialKey(event)",
-                                                         oninput = "sum(id)"
-                                                     })
-                                                    </td>
-                                                }
-                                                if (mth == "3月")
-                                                {
-                                                    <td>
-
-                                                        @Html.TextBoxFor(model => model.shinsei_tableList_month[i].three,
-                                                     new
-                                                     {
-                                                         @class = "fullwidth_halfwidth",
-                                                         @type = "tel",
-                                                         @id = rid + "r_txt3",
+                                                         oninput = "edValueKeyPress(id)",
+                                                         // oninput = "if (this.value != '') this.style.borderColor= '';(!validity.rangeOverflow||(value=999)) && (!validity.rangeUnderflow||(value=1)) &&(!validity.stepMismatch || (value = parseInt(this.value)));if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength)",
                                                          style = "ime-mode:inactive;width:100%",
-                                                         maxlength = 2,
-                                                         onkeyup = "sum(id)",
-                                                         onkeypress = "isSpecialKey(event)",
-                                                         oninput = "sum(id)"
-                                                     })
+                                                        })
                                                     </td>
-                                                }
-                                                if (mth == "4月")
-                                                {
-                                                    <td>
-
-                                                        @Html.TextBoxFor(model => model.shinsei_tableList_month[i].four,
-                                                       new
-                                                       {
-                                                           @class = "fullwidth_halfwidth",
-                                                           @type = "tel",
-                                                           @id = rid + "r_txt4",
-                                                           style = "ime-mode:inactive;width:100%",
-                                                           maxlength = 2,
-                                                           onkeyup = "sum(id)",
-                                                           onkeypress = "isSpecialKey(event)",
-                                                           oninput = "sum(id)"
-                                                       })
-                                                    </td>
-                                                }
-                                                if (mth == "5月")
-                                                {
-                                                    <td>
-
-                                                        @Html.TextBoxFor(model => model.shinsei_tableList_month[i].five,
-                                                       new
-                                                       {
-                                                           @class = "fullwidth_halfwidth",
-                                                           @type = "tel",
-                                                           @id = rid + "r_txt5",
-                                                           style = "ime-mode:inactive;width:100%",
-                                                           maxlength = 2,
-                                                           onkeyup = "sum(id)",
-                                                           onkeypress = "isSpecialKey(event)",
-                                                           oninput = "sum(id)"
-                                                       })
-                                                    </td>
-                                                }
-                                                if (mth == "6月")
-                                                {
-                                                    <td>
-
-                                                        @Html.TextBoxFor(model => model.shinsei_tableList_month[i].six,
-                                                       new
-                                                       {
-                                                           @class = "fullwidth_halfwidth",
-                                                           @type = "tel",
-                                                           @id = rid + "r_txt6",
-                                                           style = "ime-mode:inactive;width:100%",
-                                                           maxlength = 2,
-                                                           onkeyup = "sum(id)",
-                                                           onkeypress = "isSpecialKey(event)",
-                                                           oninput = "sum(id)"
-                                                       })
-                                                    </td>
-                                                }
-                                                if (mth == "7月")
-                                                {
-                                                    <td>
-
-                                                        @Html.TextBoxFor(model => model.shinsei_tableList_month[i].seven,
-                                                       new
-                                                       {
-                                                           @class = "fullwidth_halfwidth",
-                                                           @type = "tel",
-                                                           @id = rid + "r_txt7",
-                                                           style = "ime-mode:inactive;width:100%",
-                                                           maxlength = 2,
-                                                           onkeyup = "sum(id)",
-                                                           onkeypress = "isSpecialKey(event)",
-                                                           oninput = "sum(id)"
-                                                       })
-                                                    </td>
-                                                }
-                                                if (mth == "8月")
-                                                {
-                                                    <td>
-
-                                                        @Html.TextBoxFor(model => model.shinsei_tableList_month[i].eight,
-                                                       new
-                                                       {
-                                                           @class = "fullwidth_halfwidth",
-                                                           @type = "tel",
-                                                           @id = rid + "r_txt8",
-                                                           style = "ime-mode:inactive;width:100%",
-                                                           maxlength = 2,
-                                                           onkeyup = "sum(id)",
-                                                           onkeypress = "isSpecialKey(event)",
-                                                           oninput = "sum(id)"
-                                                       })
-                                                    </td>
-                                                }
-                                                if (mth == "9月")
-                                                {
-                                                    <td>
-
-                                                        @Html.TextBoxFor(model => model.shinsei_tableList_month[i].nine,
-                                                      new
-                                                      {
-                                                          @class = "fullwidth_halfwidth",
-                                                          @type = "tel",
-                                                          @id = rid + "r_txt9",
-                                                          style = "ime-mode:inactive;width:100%",
-                                                          maxlength = 2,
-                                                          onkeyup = "sum(id)",
-                                                          onkeypress = "isSpecialKey(event)",
-                                                          oninput = "sum(id)"
-                                                      })
-                                                    </td>
-                                                }
-                                                if (mth == "10月")
-                                                {
-                                                    <td>
-
-                                                        @Html.TextBoxFor(model => model.shinsei_tableList_month[i].ten,
-                                                      new
-                                                      {
-                                                          @class = "fullwidth_halfwidth",
-                                                          @type = "tel",
-                                                          @id = rid + "r_txt10",
-                                                          style = "ime-mode:inactive;width:100%",
-                                                          maxlength = 2,
-                                                          onkeyup = "sum(id)",
-                                                          onkeypress = "isSpecialKey(event)",
-                                                          oninput = "sum(id)"
-                                                      })
-                                                    </td>
-                                                }
-                                                if (mth == "11月")
-                                                {
-                                                    <td>
-
-                                                        @Html.TextBoxFor(model => model.shinsei_tableList_month[i].eleven,
-                                                      new
-                                                      {
-                                                          @class = "fullwidth_halfwidth",
-                                                          @type = "tel",
-                                                          @id = rid + "r_txt11",
-                                                          style = "ime-mode:inactive;width:100%",
-                                                          maxlength = 2,
-                                                          onkeyup = "sum(id)",
-                                                          onkeypress = "isSpecialKey(event)",
-                                                          oninput = "sum(id)"
-                                                      })
-                                                    </td>
-                                                }
-                                                if (mth == "12月")
-                                                {
-                                                    <td>
-
-                                                        @Html.TextBoxFor(model => model.shinsei_tableList_month[i].twelve,
-                                                      new
-                                                      {
-                                                          @class = "fullwidth_halfwidth",
-                                                          @type = "tel",
-                                                          @id = rid + "r_txt12",
-                                                          style = "ime-mode:inactive;width:100%",
-                                                          maxlength = 2,
-                                                          onkeyup = "sum(id)",
-                                                          onkeypress = "isSpecialKey(event)",
-                                                          oninput = "sum(id)"
-                                                      })
-                                                    </td>
-                                                }
+                                                </tr>
                                             }
-
-                                            <td width="50px" style="text-align:right">
-
-                                                @Html.TextBoxFor(model => model.shinsei_tableList_month[i].total, new { @id = rid + "total_val", style = "ime-mode:disabled;width:100%;border:none!important;background-color:white;outline: none;", @readonly = "readonly", @tabIndex = "-1" })
-
-                                            </td>
-                                        </tr>
-                                        }
-
-                                        <tr>
-
-                                            <td class="sticky-col first-col" style="height:30px">@Model.shinsei_tableList_month[r_count_mth].no_value</td>
-
-                                            <td class="sticky-col second-col">@Model.shinsei_tableList_month[r_count_mth].question</td>
-
-                                            <td class="no" style="display:none;"></td>
-
-                                            @foreach (var mth in Model.monthList)
-                                            {
-                                                if (mth == "1月")
-                                                {
-                                                    <td id="10col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].one</td>
-                                                }
-                                                if (mth == "2月")
-                                                {
-                                                    <td id="11col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].two</td>
-                                                }
-                                                if (mth == "3月")
-                                                {
-                                                    <td id="12col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].three</td>
-                                                }
-                                                if (mth == "4月")
-                                                {
-                                                    <td id="1col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].four</td>
-                                                }
-                                                if (mth == "5月")
-                                                {
-                                                    <td id="2col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].five</td>
-                                                }
-                                                if (mth == "6月")
-                                                {
-                                                    <td id="3col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].six</td>
-                                                }
-                                                if (mth == "7月")
-                                                {
-                                                    <td id="4col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].seven</td>
-                                                }
-                                                if (mth == "8月")
-                                                {
-                                                    <td id="5col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].eight</td>
-                                                }
-                                                if (mth == "9月")
-                                                {
-                                                    <td id="6col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].nine</td>
-                                                }
-                                                if (mth == "10月")
-                                                {
-                                                    <td id="7col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].ten</td>
-                                                }
-                                                if (mth == "11月")
-                                                {
-                                                    <td id="8col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].eleven</td>
-                                                }
-                                                if (mth == "12月")
-                                                {
-                                                    <td id="9col_id" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].twelve</td>
-                                                }
-                                            }
-
-                                            <td id="all_total" width="50px" style="text-align:right">@Model.shinsei_tableList_month[r_count_mth].total</td>
-                                        </tr>
-
-                                        <tr>
-
-                                            <td class="sticky-col first-col"></td>
-
-                                            <td class="sticky-col second-col" style="text-align:center;">完了</td>
-
-                                            <td class="no" style="display:none;"></td>
-
-                                            @foreach (var mth in Model.monthList)
-                                            {
-                                                if (mth == "1月")
-                                                {
-                                                    <td>
-                                                        <button id="btn_1" name="tableButton" value="1mth" type="submit" class="button mth_btn"></button>
-                                                    </td>
-                                                }
-                                                if (mth == "2月")
-                                                {
-                                                    <td>
-                                                        <button id="btn_2" name="tableButton" value="2mth" type="submit" class="button mth_btn"></button>
-                                                    </td>
-                                                }
-                                                if (mth == "3月")
-                                                {
-                                                    <td>
-                                                        <button id="btn_3" name="tableButton" value="3mth" type="submit" class="button mth_btn"></button>
-                                                    </td>
-                                                }
-                                                if (mth == "4月")
-                                                {
-                                                    <td>
-                                                        <button id="btn_4" name="tableButton" value="4mth" type="submit" class="button mth_btn"></button>
-
-                                                    </td>
-                                                }
-                                                if (mth == "5月")
-                                                {
-                                                    <td>
-                                                        <button id="btn_5" name="tableButton" value="5mth" type="submit" class="button mth_btn"></button>
-                                                    </td>
-                                                }
-                                                if (mth == "6月")
-                                                {
-                                                    <td>
-                                                        <button id="btn_6" name="tableButton" value="6mth" type="submit" class="button mth_btn"></button>
-                                                    </td>
-                                                }
-                                                if (mth == "7月")
-                                                {
-                                                    <td>
-                                                        <button id="btn_7" name="tableButton" value="7mth" type="submit" class="button mth_btn"></button>
-                                                    </td>
-                                                }
-                                                if (mth == "8月")
-                                                {
-                                                    <td>
-                                                        <button id="btn_8" name="tableButton" value="8mth" type="submit" class="button mth_btn"></button>
-                                                    </td>
-                                                }
-                                                if (mth == "9月")
-                                                {
-                                                    <td>
-                                                        <button id="btn_9" name="tableButton" value="9mth" type="submit" class="button mth_btn"></button>
-                                                    </td>
-                                                }
-                                                if (mth == "10月")
-                                                {
-                                                    <td>
-                                                        <button id="btn_10" name="tableButton" value="10mth" type="submit" class="button mth_btn"></button>
-                                                    </td>
-                                                }
-                                                if (mth == "11月")
-                                                {
-                                                    <td>
-                                                        <button id="btn_11" name="tableButton" value="11mth" type="submit" class="button mth_btn"></button>
-                                                    </td>
-                                                }
-                                                if (mth == "12月")
-                                                {
-                                                    <td>
-                                                        <button id="btn_12" name="tableButton" value="12mth" type="submit" class="button mth_btn"></button>
-                                                    </td>
-                                                }
-                                            }
-
-                                            <td width="50px"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            }
-                            else//year
-                            {
-                                <table id="hyouka_table_year" class="scroll">
-                                    <thead>
-                                        <tr>
-                                            <th class="sticky-col first-col"></th>
-                                            <th class="sticky-col second-col"></th>
-                                            <th style="display:none;"></th>
-                                            <th style="text-align:center">点数</th>
-                                        </tr>
-
-                                    </thead>
-                                    <tbody>
-
-                                        @for (int i = 0; i < Model.shinsei_tableList_year.Count - 1; i++)
-                                        {
-                                            var rid = i + 1;
 
                                             <tr>
-                                                <td class="sticky-col first-col">
-                                                    @Model.shinsei_tableList_year[i].no_value
+
+                                                <td class="sticky-col first-col" style="height:30px">@Model.shinsei_tableList_year[r_count_yr].no_value</td>
+
+                                                <td class="sticky-col second-col">@Model.shinsei_tableList_year[r_count_yr].question</td>
+
+                                                <td class="no" style="display:none;"></td>
+
+                                                <td id="yearTotal" style="text-align:right">
+                                                    
+
+                                                    @Model.shinsei_tableList_year[r_count_yr].year_value
                                                 </td>
 
-                                                <td class="sticky-col second-col" style="text-align:left;width:300px;">@Model.shinsei_tableList_year[i].question</td>
+                                            </tr>
 
-                                                <td class="no" style="display:none;">
-                                                    @Html.TextBoxFor(model => model.shinsei_tableList_year[i].question_code, new { style = "width:25px;text-align:center;border:none!important;background-color:white;color: black !important;" })
+                                            <tr>
 
-                                                </td>
+                                                <td class="sticky-col first-col"></td>
 
+                                                <td class="sticky-col second-col" style="text-align:center;">完了</td>
+
+                                                <td class="no" style="display:none;"></td>
                                                 <td>
-                                                    @*@Html.TextBoxFor(m => m.shinsei_tableList_year[i].year_value,
-                                                   new {
-                                                       @type = "tel",
-                                                       @id = "txt_year"+rid,
-                                                       style = "ime-mode:inactive;width:100%",
-                                                       oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);if (this.value != '0' && this.value != '1' && this.value != '2' && this.value != '3') this.value = '';",
-                                                       @class = "fullwidth-halfwidth",
-                                                       @onkeyup = "sum(id)",
-                                                       @onkeypress = "return isSpecialKey(event)", maxlength = 2 })*@
-
-                                                    @Html.TextBoxFor(model => model.shinsei_tableList_year[i].year_value, new
-                                                    {
-                                                     @class = "fullwidth_halfwidth",
-                                                     @type = "tel",
-                                                     @id = "txt_year"+rid,
-                                                     maxlength = 2,
-                                                     onkeyup = "edValueKeyPress(id)",
-                                                     onkeypress = "isSpecialKey(event)",
-                                                     oninput = "edValueKeyPress(id)",
-                                                     // oninput = "if (this.value != '') this.style.borderColor= '';(!validity.rangeOverflow||(value=999)) && (!validity.rangeUnderflow||(value=1)) &&(!validity.stepMismatch || (value = parseInt(this.value)));if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength)",
-                                                     style = "ime-mode:inactive;width:100%",
-                                                    })
+                                                    <button id="btn_yr" name="tableButton" value="btnyear" type="submit" class="kanhyouBtn mth_btn"></button>
                                                 </td>
                                             </tr>
-                                        }
+                                        </tbody>
+                                    </table>*@
 
-                                        <tr>
+                                    <table id="hyouka_table_year" class="kisomocss kisoyeartbl"  align="center" >
+                                        @*<thead>
+                                            <tr>
+                                              
+                                                <th style="display:none;"></th>
+                                                <th ></th>
+                                            </tr>
 
-                                            <td class="sticky-col first-col" style="height:30px">@Model.shinsei_tableList_year[r_count_yr].no_value</td>
+                                        </thead>*@
+                                        <tbody>
+                                            @for (int i = 0; i < Model.shinsei_tableList_year.Count - 1; i++)
+                                            {
+                                                var rid = i + 1;
+                                                <tr>
+                                                    <td style="display:none">
+                                                        @Html.TextBoxFor(m => m.shinsei_tableList_year[i].question_code, new { style = "width:50px;height:30px!important", @class = "form-control fontsize" })                                                        
+                                                    </td>
+                                                    <td>
+                                                        <div class="row">
 
-                                            <td class="sticky-col second-col">@Model.shinsei_tableList_year[r_count_yr].question</td>
+                                                            <div class="col-12 mb-1">
+                                                                @Model.shinsei_tableList_year[i].no_value     @Model.shinsei_tableList_year[i].question @*&nbsp;*@
 
-                                            <td class="no" style="display:none;"></td>
+                                                            </div>
+                                                            <div class="col-6 mb-1">
+                                                                @Html.TextBoxFor(m => m.shinsei_tableList_year[i].year_value, new { style = "width:50px;height:30px!important",
+                                                               @id = "txt_year" + rid,  @class = "form-control fontsize",
+                                                               oninput = "value = value.replace(/[０-９]/g,s => String.fromCharCode(s.charCodeAt(0) - 65248)).replace(/\\D/g,'');"
+                                                           })
+                                                            </div>
 
-                                            <td id="yearTotal" style="text-align:right">
-                                                @*@Html.TextBoxFor(model => model.shinsei_tableList_year[r_count_yr].year_value)*@
+                                                        </div>
 
-                                                @Model.shinsei_tableList_year[r_count_yr].year_value
-                                            </td>
+                                                    </td>
+                                                </tr>
+                                            }
+                                            <tr>
+                                                <td style="display:none;"></td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-5 d-flex justify-content-start" style="margin:7px 0px 0px 0px;">
+                                                            @Html.LabelFor(m => m.goukei)
+                                                            @Html.Label("", Model.Yeargoukei, new { @id = "Yeargoukei_lbl" })
+                                                        </div>
+                                                        <div class="col-6 d-flex justify-content-start" style="margin:3px 0px 3px 0px;">
+                                                            <button class="kanhyouBtn" id="btn_yr" name="tableButton" value="btnyear"></button>
+                                                        </div>
+                                                    </div>
 
-                                        </tr>
+                                                </td>
+                                            </tr>
+                                        </tbody>
 
-                                        <tr>
+                                    </table>
+                                   
+                                }
 
-                                            <td class="sticky-col first-col"></td>
-
-                                            <td class="sticky-col second-col" style="text-align:center;">完了</td>
-
-                                            <td class="no" style="display:none;"></td>
-                                            <td>
-                                                <button id="btn_yr" name="tableButton" value="btnyear" type="submit" class="button mth_btn"></button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            }
+                            </div>
 
                         </div>
+
                     </div>
-                    }
-                </div>
-            }
-        </div>
+                }
+            </div>
+        }
+    </div>
     }
 
     <script src="@Url.Content("~/Scripts/jquery-1.12.4.min.js")"></script>
@@ -821,9 +928,10 @@
                     }
 
                     var tr = document.getElementById("hyouka_table").rows.length - 2;
+                  
                     //alert("tr:" + tr);
                     if ('@Model.disable_mth4' == "disable") {
-
+                        
                         for (i = 1; i < tr; i++) {
                             document.getElementById(i + "r_txt4").readOnly = true;
                             document.getElementById(i + "r_txt4").tabIndex = "-1";
@@ -838,6 +946,7 @@
                         document.getElementById("btn_4").disabled = false;
                     }
                     if ('@Model.disable_mth5' == "disable") {
+                        
                         for (i = 1; i < tr; i++) {
                             document.getElementById(i + "r_txt5").readOnly = true;
                             document.getElementById(i + "r_txt5").tabIndex = "-1";
@@ -851,7 +960,7 @@
                         document.getElementById("btn_5").disabled = false;
                     }
                     if ('@Model.disable_mth6' == "disable") {
-
+                        
                         for (i = 1; i < tr; i++) {
                             document.getElementById(i + "r_txt6").readOnly = true;
                             document.getElementById(i + "r_txt6").tabIndex = "-1";
@@ -865,7 +974,7 @@
                         document.getElementById("btn_6").disabled = false;
                     }
                     if ('@Model.disable_mth7' == "disable") {
-
+                       
                         for (i = 1; i < tr; i++) {
                             document.getElementById(i + "r_txt7").readOnly = true;
                             document.getElementById(i + "r_txt7").tabIndex = "-1";
@@ -879,7 +988,7 @@
                         document.getElementById("btn_7").disabled = false;
                     }
                     if ('@Model.disable_mth8' == "disable") {
-
+                       
                         for (i = 1; i < tr; i++) {
                             document.getElementById(i + "r_txt8").readOnly = true;
                             document.getElementById(i + "r_txt8").tabIndex = "-1";
@@ -893,7 +1002,7 @@
                         document.getElementById("btn_8").disabled = false;
                     }
                     if ('@Model.disable_mth9' == "disable") {
-
+                       
                         for (i = 1; i < tr; i++) {
                             document.getElementById(i + "r_txt9").readOnly = true;
                             document.getElementById(i + "r_txt9").tabIndex = "-1";
@@ -907,7 +1016,7 @@
                         document.getElementById("btn_9").disabled = false;
                     }
                     if ('@Model.disable_mth10' == "disable") {
-
+                       
                         for (i = 1; i < tr; i++) {
                             document.getElementById(i + "r_txt10").readOnly = true;
                             document.getElementById(i + "r_txt10").tabIndex = "-1";
@@ -922,6 +1031,7 @@
                     }
 
                     if ('@Model.disable_mth11' == "disable") {
+                       
                         for (i = 1; i < tr; i++) {
                             document.getElementById(i + "r_txt11").readOnly = true;
                             document.getElementById(i + "r_txt11").tabIndex = "-1";
@@ -935,6 +1045,7 @@
                         document.getElementById("btn_11").disabled = false;
                     }
                     if ('@Model.disable_mth12' == "disable") {
+                        
                         for (i = 1; i < tr; i++) {
                             document.getElementById(i + "r_txt12").readOnly = true;
                             document.getElementById(i + "r_txt12").tabIndex = "-1";
@@ -948,6 +1059,7 @@
                         document.getElementById("btn_12").disabled = false;
                     }
                     if ('@Model.disable_mth1' == "disable") {
+                        
                         for (i = 1; i < tr; i++) {
                             document.getElementById(i + "r_txt1").readOnly = true;
                             document.getElementById(i + "r_txt1").tabIndex = "-1";
@@ -961,6 +1073,7 @@
                         document.getElementById("btn_1").disabled = false;
                     }
                     if ('@Model.disable_mth2' == "disable") {
+                        
                         for (i = 1; i < tr; i++) {
                             document.getElementById(i + "r_txt2").readOnly = true;
                             document.getElementById(i + "r_txt2").tabIndex = "-1";
@@ -974,6 +1087,7 @@
                         document.getElementById("btn_2").disabled = false;
                     }
                     if ('@Model.disable_mth3' == "disable") {
+                        
                         for (i = 1; i < tr; i++) {
                             document.getElementById(i + "r_txt3").readOnly = true;
                             document.getElementById(i + "r_txt3").tabIndex = "-1";
@@ -987,6 +1101,35 @@
                         document.getElementById("btn_3").disabled = false;
                     }
 
+                    //added by nan 20220602 start mobile responsive
+                    var oTable = document.getElementById("kisomo_tbl");
+                    var rowLength = oTable.rows.length;                   
+                    var curMonth  = $('#curMonth').find(":selected").text();
+                    var shinseiVal = [];
+                    var disCol = '@Model.shinseiStr';
+                    if (disCol.includes(curMonth)) {
+                        $("#btn_Mohozone").prop("disabled", true);
+                        for (var i = 0; i < rowLength; i++) {
+                            var oCells = oTable.rows.item(i).cells;
+                            if (i < rowLength - 1) {
+                                $(oCells.item(1).children[0].children[1].children[0]).attr('readonly', true);
+                                $(oCells.item(1).children[0].children[1].children[0]).attr('tabIndex', '-1');
+                                $(oCells.item(1).children[0].children[1].children[0]).css('backgroundColor', 'whitesmoke');
+                            }
+                            else {
+                                $(oCells.item(1).children[0].children[1].children[0]).prop("disabled", true);
+                                $(oCells.item(1).children[0].children[1].children[0]).css('opacity', '0.6');
+                                $(oCells.item(1).children[0].children[1].children[0]).css('cursor', 'not-allowed');
+                            }
+
+                        }
+
+                    }
+                    else {
+                        $('#btn_Mohozone').prop('disabled', false);
+                    }
+                    
+
                 }
                 else {//year
                    
@@ -999,14 +1142,23 @@
                         document.getElementById("btn_yr").innerHTML = "申請";
                         document.getElementById("btn_yr").style.backgroundColor = "#C0E399";
                     }
-                    var tr = document.getElementById("hyouka_table_year").rows.length - 2;
+                  
+                    var tr = document.getElementById("hyouka_table_year").rows.length ;
 
                     if ('@Model.disable_txtyear' == "disable") {
+                        var sumgoukei = 0;
                         for (i = 1; i < tr; i++) {
                             document.getElementById("txt_year" + i).readOnly = true;
                             document.getElementById("txt_year" + i).tabIndex = "-1";
                             document.getElementById("txt_year" + i).style.backgroundColor = "whitesmoke";
+                            
+                            if (document.getElementById("txt_year" + i).value != "") {
+                                sumgoukei += parseInt(document.getElementById("txt_year" + i).value);
+                            }
+
                         }
+                        
+                        document.getElementById("Yeargoukei_lbl").text = sumgoukei;
                         document.getElementById("btn_yr").disabled = true;
                         document.getElementById("btn_yr").style.opacity = "0.6";
                         document.getElementById("btn_yr").style.cursor = "not-allowed";
@@ -1014,6 +1166,8 @@
                     else {
                         document.getElementById("btn_yr").disabled = false;
                     }
+
+                   
                 }
             }
             
@@ -1025,6 +1179,70 @@
             else {
                 document.getElementById("btn_hozone").disabled = false;
             }
+
+            //20220530 nan added
+            //申請する場合は点数は空白なるかとかの確認
+            //$("#btn_MoShinsei").click(function () {                
+            //    var oTable = document.getElementById("kisomo_tbl"); 
+            //    var rowLength = oTable.rows.length - 1;                
+                            
+            //    var fcheck = false;
+            //    for (var i = 0; i < rowLength ; i++)
+            //    {
+            //        var oCells = oTable.rows.item(i).cells;                    
+            //        var tensu = oCells.item(1).children[0].children[1].children[0].value;
+                   
+            //       if (tensu == "") {
+            //            fcheck = true;
+            //            $(oCells.item(1).children[0].children[1].children[0]).css('borderColor', '#f3172d');
+            //            //break;
+            //        }
+            //        else {
+            //            $(oCells.item(1).children[0].children[1].children[0]).css('borderColor', '');
+            //        }
+            //    }                
+            //    if (fcheck == true) {
+            //        event.preventDefault();
+            //    }
+               
+
+            //});
+
+            //document.getElementById('kisomo_tbl').addEventListener('change', function () {
+            //    alert('aa');
+            //});
+            $("#kisomo_tbl").on('change keyup paste mouseup', function () {
+                
+                var oTable = document.getElementById("kisomo_tbl");
+                var rowLength = oTable.rows.length - 1;
+
+                var sumgoukei = 0;
+                for (var i = 0; i < rowLength; i++) {
+                    var oCells = oTable.rows.item(i).cells;
+                    var tensu = oCells.item(1).children[0].children[1].children[0].value;
+                    if (tensu != "") {
+                        var sumgoukei = parseInt(tensu) + sumgoukei ;                       
+                    }
+                }
+                $("#goukei_lbl").text(sumgoukei);
+            });
+
+            $("#hyouka_table_year").on('change keyup paste mouseup', function () {
+             
+                var oTable = document.getElementById("hyouka_table_year");
+                var rowLength = oTable.rows.length - 1;
+
+                var sumgoukei = 0;
+                for (var i = 0; i < rowLength; i++) {
+                    var oCells = oTable.rows.item(i).cells;
+                    var tensu = oCells.item(1).children[0].children[1].children[0].value;
+                    if (tensu != "") {
+                        var sumgoukei = parseInt(tensu) + sumgoukei;
+                    }
+                }
+                $("#Yeargoukei_lbl").text(sumgoukei);
+            });
+           
         });
     </script>
 
@@ -1539,6 +1757,16 @@
             var btnName = document.getElementById("btn_yr").innerHTML;
             return checkFun(btnName);
         });
+        //added by nan 20220602
+        $('#btn_MoShinsei').click(function () {
+           
+            var oTable = document.getElementById("kisomo_tbl");
+            var rowidx = oTable.rows.length - 1;           
+            var oCells = oTable.rows.item(rowidx).cells;
+            var btnText = oCells.item(1).children[0].children[1].children[0].innerHTML;            
+            
+            return checkFun(btnText);
+        });
 
         function checkFun(btn_name) {
             if (btn_name == "申請") {
@@ -1569,8 +1797,10 @@
 
         $('#btn_hozone').click(function (event) {
             
-            var tabel = document.getElementsByTagName("table")[1];
-            var rows = document.getElementsByTagName("table")[1].rows.length - 1;
+            //var tabel = document.getElementsByTagName("table")[1];
+            //var rows = document.getElementsByTagName("table")[1].rows.length - 1;
+            var tabel = document.getElementById("hyouka_table")[1];
+            var rows = document.getElementById("hyouka_table")[1].rows.length - 1;
             var count = 0;
             for (i = 0; i < rows; i++) {
                 var inputs = tabel.rows.item(i).getElementsByTagName("input");

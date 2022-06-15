@@ -431,9 +431,9 @@
                     cell4.innerHTML = c_cMOKUHYO;
                     cell5.innerHTML = s_sMOKUHYO;
                     cell6.innerHTML = d_dJISHIBI;
-                    cell7.innerHTML = '<a href="#" id="' + c_cMOKUHYO + '" onclick="EditOneonOne(this,'+ c_cTAISHOSHA + ')">読込</a>';
+                    cell7.innerHTML = '<a href="#" id="' + c_cMOKUHYO + '" onclick="EditOneonOne(this,\'' + c_cTAISHOSHA + '\')">読込</a>';
 
-
+                  
                     $("#OneKakuninLists tr:even").css("background-color", "#cdeefd");
                     rownum++;
                 }
@@ -479,6 +479,7 @@
                         $('#Ken_sMOKUHYO').val(response.Ken_sMOKUHYO);
                         $("#Ken_fKAKUTEI").prop("checked", response.Ken_fKAKUTEI);
                         $('#curPageindex').val(response.curPageIndex);
+                        $('#Ken_taishosha').focus();
                         RefreshData(response.oneononelist);
                         Pager(response.pagination, response.curPageIndex);
                     },
@@ -602,6 +603,7 @@
             else {
                 fkakuteiVal = false;
             }
+          
             $("#cTaishosha").val(ctaishosha);
             
             $.ajax({
@@ -620,7 +622,7 @@
                     $('#cTaishosha').val(ctaishosha);
                     $('#fKAKUTEI').val(response.jyoutai);
                     $('#fKANRYOU').val(response.kanryou);
-                    
+                    $('#prvDataBtn').focus();
 
                     //送信日
                     $("#dHIDUKE").val(response.applyDate);
@@ -763,7 +765,7 @@
             <h6 class="text-center align-middle" style="color:white;line-height:33px">1on1ミーティング画面</h6>
         </div>*@
         <div id="headertitle" style="background-color: rgb(34, 148, 172); width:100%;">
-            <h6 class="text-center align-middle headline" style="color:white;">1on1確認画面</h6>
+            <h6 class="text-center align-middle headline" style="color:white;">1on1ミーティング画面</h6>
         </div>
 
 
@@ -834,8 +836,8 @@
                             </div>
                             <div class="col-auto ">
 
-                                <button type="submit" id="clearBtn" value="clear" name="OneOnOneBtn" class="DefaultBtn btnClear1on1 " style="margin-top:0!important">クリア</button>
-                                <button type="submit" id="searchBtn" value="search" name="OneOnOneBtn" class="DefaultBtn btnmargin" style="margin-top:0!important">検索</button>
+                                <button type="submit" id="clearBtn" value="clear" name="OneOnOneBtn" class="btn DefaultBtn btnClear1on1 " style="margin-top:0!important">クリア</button>
+                                <button type="submit" id="searchBtn" value="search" name="OneOnOneBtn" class="btn DefaultBtn btnmargin" style="margin-top:0!important">検索</button>
 
                             </div>
                         </div>
@@ -929,7 +931,7 @@
                                 <p id="status" style=" color:blue;font-size:16px;font-weight: bold; "></p>
                             </div>
                             <div class="col prebtn " style=" text-align:right;">
-                                <button id="prvDataBtn" name="OneOnOneBtn" class="DefaultBtn" value="前回内容" data-bs-toggle="modal" data-bs-target="#PrvModal">前回内容</button>
+                                <button id="prvDataBtn" name="OneOnOneBtn" class="btn DefaultBtn" value="前回内容" data-bs-toggle="modal" data-bs-target="#PrvModal">前回内容</button>
 
                             </div>
                         </div>
@@ -1114,9 +1116,9 @@
                         </div>
                         <div class="modal-footer">
 
-                            <button type="submit" id="saveBtn" class="SaveBtn btnmargin" name="OneOnOneBtn" value="hozon">一時保存</button>
-                            <button type="submit" id="confirmBtn" class="DefaultBtn btnmargin" name="OneOnOneBtn" value="comfirm" onclick="kakutei()"> </button>
-                            <button type="submit" id="backBtn" class="DefaultBtn btnmargin " name="OneOnOneBtn" value="back">戻る</button>
+                            <button type="submit" id="saveBtn" class="btn SaveBtn btnmargin" name="OneOnOneBtn" value="hozon">一時保存</button>
+                            <button type="submit" id="confirmBtn" class="btn DefaultBtn btnmargin" name="OneOnOneBtn" value="comfirm" onclick="kakutei()"> </button>
+                            <button type="submit" id="backBtn" class="btn DefaultBtn btnmargin " name="OneOnOneBtn" value="back">戻る</button>
 
                         </div>
                         @Html.HiddenFor(m => m.cMOKUHYO, new { id = "cMOKUHYO", style = " position: absolute;" })

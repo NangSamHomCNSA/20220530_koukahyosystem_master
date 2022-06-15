@@ -43,63 +43,64 @@
 
         <div class="container-fluid" style="margin:50px 0px 0px 0px; padding:0px 0px 10px 0px!important;">
            
-                <ul class="ullist" id="HomeMenu">
+            <ul class="ullist" id="HomeMenu">
 
-                    <li class="homelink">@Html.ActionLink("ホーム", "Home", "Home", null, new { style = "color:black", @class = "text-decoration-none" })</li>
-                    <li class="menulist"><button class="dropdown-btn nav-link dropdown-toggle mb-0" style="color:black;"> マイメニュー <span class="ms-1 d-none d-sm-inline mb-0"></span></button></li>
-                    @*//1on1ミーティング *@
-                    <li class="titlelist titlecss">@Html.ActionLink("1on1ミーティング", "Onenew", "Onenew", null, new { style = "color:black;", @class = "text-decoration-none" })</li>
-                    @*考課表*@
-                    @*<li class="titlelist"> <button class="dropdown-btn">目標評価 <b class="caret"></b></button></li>*@
-                    <li class="titlelist "> <button class="dropdown-btn nav-link dropdown-toggle  " style="color:black;">目標評価<span class="d-none d-sm-inline px-1"></span></button></li>
-                    <li class="subtitlelist"> @Html.ActionLink("目標設定", "TemaNyuuryoku", "KoukaTema", null, new { style = "color:black", @class = "text-decoration-none" })</li>
-                    <li class="subtitlelist">@Html.ActionLink("重要タスク", "TaskNyuuryoku", "JyuyouTask", null, new { style = "color:black", @class = "text-decoration-none" })</li>
-                    @*//基礎評価*@
-                    <li class="titlelist titlecss">  @Html.ActionLink("基礎評価", "Kisohyouka", "Kisohyouka", null, new { style = "color:black", @class = "text-decoration-none" })</li>
-                    @*//360度評価*@
-                    @*<li class="titlelist"> <button class="dropdown-btn">360度評価 <b class="caret"></b></button></li>*@
-                    <li class="titlelist"> <button class=" dropdown-btn nav-link dropdown-toggle " style="color:black;">360度評価<span class="ms-1 d-none d-sm-inline px-1"></span></button></li>
-                    <li class="subtitlelist">@Html.ActionLink("評価依頼画面", "HyoukaIrai", "HyoukaIrai", null, new { style = "color:black", @class = "text-decoration-none" })</li>
-                    <li class="subtitlelist"> @Html.ActionLink("評価画面", "HyoukaSaitem", "HyoukaSaitem", null, new { style = "color:black", @class = "text-decoration-none" })</li>
-                    <li class="subtitlelist">@Html.ActionLink("採点確認画面", "saitenkakuninTab", "saitenkakuninTab", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                <li class="homelink">@Html.ActionLink("ホーム", "Home", "Home", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                <li class="menulist"><button class="dropdown-btn nav-link dropdown-toggle mb-0" style="color:black;"> マイメニュー <span class="ms-1 d-none d-sm-inline mb-0"></span></button></li>
+                @*//1on1ミーティング *@
+                <li class="titlelist titlecss">@Html.ActionLink("1on1ミーティング", "Onenew", "Onenew", null, new { style = "color:black;", @class = "text-decoration-none" })</li>
+                @*考課表*@
+                @*<li class="titlelist"> <button class="dropdown-btn">目標評価 <b class="caret"></b></button></li>*@
+                <li class="titlelist "> <button class="dropdown-btn nav-link dropdown-toggle  " style="color:black;">目標評価<span class="d-none d-sm-inline px-1"></span></button></li>
+                <li class="subtitlelist"> @Html.ActionLink("目標設定", "TemaNyuuryoku", "KoukaTema", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                <li class="subtitlelist">@Html.ActionLink("重要タスク", "TaskNyuuryoku", "JyuyouTask", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                @*//基礎評価*@
+                <li class="titlelist titlecss">  @Html.ActionLink("基礎評価", "Kisohyouka", "Kisohyouka", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                @*//360度評価*@
+                @*<li class="titlelist"> <button class="dropdown-btn">360度評価 <b class="caret"></b></button></li>*@
+                <li class="titlelist"> <button class=" dropdown-btn nav-link dropdown-toggle " style="color:black;">360度評価<span class="ms-1 d-none d-sm-inline px-1"></span></button></li>
+                <li class="subtitlelist">@Html.ActionLink("評価依頼画面", "HyoukaIrai", "HyoukaIrai", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                <li class="subtitlelist"> @Html.ActionLink("評価画面", "HyoukaSaitem", "HyoukaSaitem", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                <li class="subtitlelist">@Html.ActionLink("採点確認画面", "saitenkakuninTab", "saitenkakuninTab", null, new { style = "color:black", @class = "text-decoration-none" })</li>
 
-                    @*評価者*@
-                    @if ((bool)Session["fHyoukasha"] == true)
-                    {
-                        <br />
-                        <br />
-                        @*<li class="titlelist"><button class="dropdown-btn"> 評価者メニュー<b class="caret"></b></button></li>*@
-                        <li class="titlelist"> <button class="dropdown-btn nav-link dropdown-toggle px-sm-0 px-1" style="color:black;">評価者メニュー<span class="ms-1 d-none d-sm-inline "> </span></button></li>
-                        <li class="subtitlelist">@Html.ActionLink("1on1確認", "OneOnOneKakunin", "Onenew", null, new { style = "color:black", @class = "text-decoration-none" })</li>
-                        <li class="subtitlelist">@Html.ActionLink("目標設定確認", "TemaKakunin", "KoukaTema", null, new { style = "color:black", @class = "text-decoration-none" })</li>
-                        <li class="subtitlelist">@Html.ActionLink("重要タスク確認", "TaskKuakunin", "JyuyouTask", null, new { style = "color:black", @class = "text-decoration-none" })</li>
-                        <li class="subtitlelist">@Html.ActionLink("基礎評価確認", "KisohyoukaLeader", "Kisohyouka", null, new { style = "color:black", @class = "text-decoration-none" })</li>
-                        <li class="subtitlelist">@Html.ActionLink("データ出力", "LeaderExport", "LeaderExport", null, new { style = "color:black", @class = "text-decoration-none" })</li>
-                        <li class="subtitlelist">@Html.ActionLink("集計表", "ShukeiHyou", "ShukeiHyou", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                @*評価者*@
+                @if ((bool)Session["fHyoukasha"] == true)
+                {
+                    <br />
+                    <br />
+                    @*<li class="titlelist"><button class="dropdown-btn"> 評価者メニュー<b class="caret"></b></button></li>*@
+                    <li class="titlelist"> <button class="dropdown-btn nav-link dropdown-toggle px-sm-0 px-1" style="color:black;">評価者メニュー<span class="ms-1 d-none d-sm-inline "> </span></button></li>
+                    <li class="subtitlelist">@Html.ActionLink("1on1確認", "OneOnOneKakunin", "Onenew", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                    <li class="subtitlelist">@Html.ActionLink("目標設定確認", "TemaKakunin", "KoukaTema", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                    <li class="subtitlelist">@Html.ActionLink("重要タスク確認", "TaskKuakunin", "JyuyouTask", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                    <li class="subtitlelist">@Html.ActionLink("基礎評価確認", "KisohyoukaLeader", "Kisohyouka", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                    <li class="subtitlelist">@Html.ActionLink("データ出力", "LeaderExport", "LeaderExport", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                    <li class="subtitlelist">@Html.ActionLink("集計表", "ShukeiHyou", "ShukeiHyou", null, new { style = "color:black", @class = "text-decoration-none" })</li>
 
-                    }
+                }
 
-                    @*満足度調査*@
-                    @if ((bool)Session["fKANRISYA"] == false)
-                    {
-                        <br />
-                        <br />
-                        <li class="menulist">@Html.ActionLink("社員満足度調査", "Manzokudochousa", "Manzokudochousa", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                @*満足度調査*@
+                @if ((bool)Session["fKANRISYA"] == false)
+                {
+                    <br />
+                    <br />
+                    <li class="menulist">@Html.ActionLink("社員満足度調査", "Manzokudochousa", "Manzokudochousa", null, new { style = "color:black", @class = "text-decoration-none" })</li>
 
-                    }
-                    @if ((bool)Session["fKANRISYA"] == true)
-                    {
-                        <br />
-                        <br />
-                        @*<li class="titlelist"><button class="dropdown-btn">管理者メニュー<b class="caret"></b></button></li>*@
-                        <li class="titlelist"> <button class="nav-link dropdown-toggle px-sm-0 px-1 dropdown-btn " style="color:black;padding-top:0!important; padding-bottom:0!important">管理者メニュー<span class="ms-1 d-none d-sm-inline"> </span></button></li>
-                        <li class="subtitlelist">@Html.ActionLink("集計表", "KanrishaShukei", "ShukeiHyou", null, new { style = "color:black", @class = "text-decoration-none" })</li>
-                        <li class="subtitlelist">@Html.ActionLink("データ出力", "kanrisha", "kanrisha", null, new { style = "color:black", @class = "text-decoration-none" })</li>
-                        <li class="subtitlelist">@Html.ActionLink("社員満足度調査依頼", "ChousIrai", "ChousaIrai", null, new { style = "color:black", @class = "text-decoration-none" })</li>
-                        <li class="subtitlelist">@Html.ActionLink("各種マスタ", "Master", "Home", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                }
+                @if ((bool)Session["fKANRISYA"] == true)
+                {
+                    <br />
+                    <br />
+                    @*<li class="titlelist"><button class="dropdown-btn">管理者メニュー<b class="caret"></b></button></li>*@
+                    <li class="titlelist"> <button class="nav-link dropdown-toggle px-sm-0 px-1 dropdown-btn " style="color:black;padding-top:0!important; padding-bottom:0!important">管理者メニュー<span class="ms-1 d-none d-sm-inline"> </span></button></li>
+                    <li class="subtitlelist">@Html.ActionLink("1on1確認表", "OneOnOneKakuninHyou", "OneOnOneKakuninHyou", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                    <li class="subtitlelist">@Html.ActionLink("集計表", "KanrishaShukei", "ShukeiHyou", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                    <li class="subtitlelist">@Html.ActionLink("データ出力", "kanrisha", "kanrisha", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                    <li class="subtitlelist">@Html.ActionLink("社員満足度調査依頼", "ChousIrai", "ChousaIrai", null, new { style = "color:black", @class = "text-decoration-none" })</li>
+                    <li class="subtitlelist">@Html.ActionLink("各種マスタ", "Master", "Home", null, new { style = "color:black", @class = "text-decoration-none" })</li>
 
-                    }
-                </ul>
+                                    }
+            </ul>
 
             @if ((bool)Session["fKANRISYA"] == true)
             {

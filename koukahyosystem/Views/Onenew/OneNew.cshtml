@@ -132,7 +132,7 @@
                         $("#year").val(response.cur_year);
                         $('#Ken_sMOKUHYO').val(response.KensMOKUHYO);
                         $('#cMOKUHYO').val(response.newId);
-
+                        $('#prvDataBtn').focus();
                     },
                     failure: function (response) {
                         //alert(response.responseText);
@@ -152,9 +152,8 @@
                 var yyyy = today.getFullYear();
                 today = yyyy + '-' + mm + '-' + dd;
 
-                //確認状態
-                $("#status").val("");
-
+                //確認状態              
+                $("#status").text("");
                 //送信日
                 $("#dHIDUKE").val(today);
                 document.getElementById('ApplyDateErr').innerText = "";
@@ -225,6 +224,31 @@
                 $('#Feedback').attr("readonly", true);
                 $('#Feedback').css("background-color", "#FFFFCC");
                 $('#Feedback').prop('tabIndex', -1);
+
+                $('#dHIDUKE').attr("readonly", false);
+                $('#dHIDUKE').css("background-color", "white");
+
+
+                $("#sMOKUHYO").attr("readonly", false);
+                $('#sMOKUHYO').css("background-color", "white");
+
+                $('#Actiontask').attr("readonly", false);
+                $('#Actiontask').css("background-color", "white");
+
+                $('#Trouble_tantousha').attr("readonly", false);
+                $('#Trouble_tantousha').css("background-color", "white");
+
+                $('#Awareness_tantousha').attr("readonly", false);
+                $('#Awareness_tantousha').css("background-color", "white");
+
+                //保存ボタン
+                $('#saveBtn').prop('disabled', false); //disable clicked button
+                $('#confirmBtn').removeClass('disabled');
+
+                //確定ボタン
+                $("#confirmBtn").html("確認依頼");
+                $('#confirmBtn').prop('disabled', false); //disable clicked button
+                $('#confirmBtn').removeClass('disabled');
 
                 var myModal = new bootstrap.Modal(document.getElementById('myModal'));
                 myModal.show();
@@ -510,6 +534,7 @@
                         $("#year").val(response.cur_year);
                         $('#Ken_sMOKUHYO').val(response.Ken_sMOKUHYO);
                         $('#curPageindex').val(response.curPageIndex);
+                        $('#Ken_sMOKUHYO').focus();
                         RefreshData(response.oneononelist);
                         Pager(response.pagination, response.curPageIndex);
                     },
@@ -640,8 +665,8 @@
                     $("#year").val(response.cur_year);
                     $('#Ken_sMOKUHYO').val(response.Ken_sMOKUHYO)
                     $('#cMOKUHYO').val(response.cMokuhyou);
-
-
+                    //  $('#prvDataBtn').focus();
+                    document.getElementById("prvDataBtn").focus();
                     //送信日
                     $("#dHIDUKE").val(response.applyDate);
                     document.getElementById('ApplyDateErr').innerText = "";
@@ -925,13 +950,13 @@
                         </div>
                     </div>
 
-                    <div class="mb-2" style="display:inline-block; ">
-                        <div class="row ">                            
-                            <div class="col-auto">
+                    <div class="mb-2" style="display:inline-block;margin-left:10px; ">
+                        <div class="row " >                            
+                            <div class="col-auto" >
 
-                                <button type="submit" id="clearBtn" value="clear" name="OneOnOneBtn" class="DefaultBtn btnClear1on1" style="margin-top:0!important">クリア</button>
-                                <button type="submit" id="searchBtn" value="search" name="OneOnOneBtn" class="DefaultBtn btnmargin" style="margin-top:0!important">検索 </button>
-                                <button type="submit" id="newBtn" value="create" name="OneOnOneBtn" class="DefaultBtn btnmargin newbtn1on1" style="margin-top:0!important">ミーティング作成</button>
+                                <button type="submit" id="clearBtn" value="clear" name="OneOnOneBtn" class="btn DefaultBtn btnClear1on1" style="margin-bottom:3px;">クリア</button>
+                                <button type="submit" id="searchBtn" value="search" name="OneOnOneBtn" class="btn DefaultBtn btnmargin" style="margin-bottom:3px;">検索 </button>
+                                <button type="submit" id="newBtn" value="create" name="OneOnOneBtn" class="btn DefaultBtn btnmargin newbtn1on1" style="margin-bottom:3px">ミーティング作成</button>
                             </div>
                         </div>
                     </div>
@@ -1020,7 +1045,7 @@
                                 <p id="status" style=" color:blue;font-size:16px;font-weight: bold; "></p>
                             </div>
                             <div class="col prebtn " style=" text-align:right;">
-                                <button id="prvDataBtn" name="OneOnOneBtn" class="DefaultBtn" value="前回内容" data-bs-toggle="modal" data-bs-target="#PrvModal">前回内容</button>
+                                <button id="prvDataBtn" name="OneOnOneBtn" class="btn DefaultBtn" value="前回内容" data-bs-toggle="modal" data-bs-target="#PrvModal">前回内容</button>
 
                             </div>
                         </div>
@@ -1205,9 +1230,9 @@
                         </div>
                         <div class="modal-footer">
 
-                            <button type="submit" id="saveBtn" class="SaveBtn btnmargin" name="OneOnOneBtn" value="hozon">一時保存</button>
-                            <button type="submit" id="confirmBtn" class="kanhyouBtn btnmargin" name="OneOnOneBtn" value="comfirm" onclick="kakutei()"> </button>
-                            <button type="submit" id="backBtn" class="DefaultBtn btnmargin " name="OneOnOneBtn" value="back">戻る</button>
+                            <button type="submit" id="saveBtn" class="btn SaveBtn btnmargin" name="OneOnOneBtn" value="hozon">一時保存</button>
+                            <button type="submit" id="confirmBtn" class="btn kanhyouBtn btnmargin" name="OneOnOneBtn" value="comfirm" onclick="kakutei()"> </button>
+                            <button type="submit" id="backBtn" class=" btn DefaultBtn btnmargin " name="OneOnOneBtn" value="back">戻る</button>
 
                         </div>
                         @Html.HiddenFor(m => m.cMOKUHYO, new { id = "cMOKUHYO", style = " position: absolute;" })
@@ -1216,7 +1241,7 @@
                         @Html.HiddenFor(m => m.fpermit, new { id = "fpermit", style = " position: absolute;" })
                         @Html.HiddenFor(m => m.fKAKUTEI, new { id = "fKAKUTEI", style = " position: absolute;" })
                         @Html.HiddenFor(m => m.fKANRYOU, new { id = "fKANRYOU", style = " position: absolute;" })
-                        @Html.CheckBox("fSuperior", false, new { id = "fSuperior", style = " position: absolute;" })
+                        @Html.CheckBox("fSuperior", false, new { id = "fSuperior", style = " position: absolute;visibility:hidden" })
                         @Html.HiddenFor(m => m.konkiStartDate, new { id = "konkiStartDate", style = " position: absolute;" })
                         @Html.HiddenFor(m => m.konkiEndDate, new { id = "konkiEndDate", style = " position: absolute;" })
                         @Html.HiddenFor(m => m.PageIndex, new { id = "curPageindex", style = " position: absolute;" })

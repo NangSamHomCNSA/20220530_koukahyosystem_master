@@ -15,6 +15,7 @@
 * 
 * その他PGからパラメータ：
 
+  変更：20220602 nan モバイルレスポンシブ対応
 */
 using MySql.Data.MySqlClient;
 using System;
@@ -50,12 +51,17 @@ namespace koukahyosystem.Controllers
         string kubun_code = "";
         bool can_showTable = false;
         string mark_label = "";
+
+        Models.KisohyoukaModel kisomodel = new Models.KisohyoukaModel();
+        string mo_shinsei = "";
+        string mo_kakutei = "";
         #endregion
 
         #region get Kisohyouka
         public ActionResult Kisohyouka()
         {
             Models.KisohyoukaModel val = new Models.KisohyoukaModel();
+            val.Mo_monthlist = new List<SelectListItem>(); //added by nan 20220602
             if (Session["isAuthenticated"] != null)
             {
                 string kijun_val = "";
@@ -397,6 +403,35 @@ namespace koukahyosystem.Controllers
                     val.show_table = "notshow";
                     val.savebtn_disable = "disable";//20210224
                 }
+
+                //added by nan 20220602 start
+                val.Yeargoukei = "";
+                val.goukei = "";
+                if (kijun_val == "月別")
+                {
+
+                    kisomodel = val;
+                    ReadMobileData();
+                    val.curMonth = kisomodel.curMonth;
+                    val.Mo_monthlist = kisomodel.Mo_monthlist;
+                    val.MoMthList = MoMthList(logid, pg_year, kubun_code);
+                    val.goukei = kisomodel.goukei;
+
+                }
+                else if (kijun_val == "年間")
+                {
+                    val.Yeargoukei = kisomodel.Yeargoukei;
+                }
+                else
+                {
+                    kisomodel = val;
+                    ReadMobileData();
+                    val.curMonth = kisomodel.curMonth;
+                    val.Mo_monthlist = kisomodel.Mo_monthlist;
+                    
+                 
+                }
+                //added by nan 20220602 end
             }
             else
             {
@@ -435,6 +470,9 @@ namespace koukahyosystem.Controllers
         public ActionResult KisohyoukaLeader(string id)
         {
             Models.KisohyoukaModel val = new Models.KisohyoukaModel();
+            var ShainList = new List<SelectListItem>(); // 20220602 added by nan  
+            val.Mo_shainList= new List<SelectListItem>(); // 20220602 added by nan  
+            val.Mo_monthlist = new List<SelectListItem>(); // 20220602 added by nan
             if (Session["isAuthenticated"] != null)
             {
                 PgName = "seichou";
@@ -496,6 +534,16 @@ namespace koukahyosystem.Controllers
                     string k_year = mkisotenCheck(kb, pg_year);//20210316
 
                     kijun_val = kijunValue(kb, k_year);//20210324
+
+                    // 20220602 added by nan start 
+                   
+                    ShainList.Add(new SelectListItem
+                    {
+                          Value = dr_getShain["cSHAIN"].ToString(),
+                          Text = dr_getShain["sSHAIN"].ToString()
+                    });
+                                       
+                    // 20220602 added by nan end 
 
                     chk_currentyrQue = mkisoCheck(kb, pg_year);
                     if (chk_currentyrQue == 0)
@@ -686,6 +734,8 @@ namespace koukahyosystem.Controllers
                     kubun_code = get_kubun(allow_tab);//get tab shain kubun
 
                     Session["showColor"] = allow_tab;
+
+                    
                     //val.showTab = true;
                     val.showTab = "show";
 
@@ -970,6 +1020,9 @@ namespace koukahyosystem.Controllers
                         }
 
                         val.monthList = getDate.kisoKisyutsuki();
+
+                        
+
                     }
                     else//year
                     {
@@ -1065,6 +1118,34 @@ namespace koukahyosystem.Controllers
                 }
                 val.year = pg_year;
                 Session["homeYear"] = null;
+
+                //added by nan 20220602 start
+                val.Yeargoukei = "";
+                val.goukei = "";
+                if (val.tabList != null)                    
+                {                   
+                    kisomodel = val;
+                    ReadMobileData();
+                   
+                    val.Mo_shainList = ShainList;
+                    val.curShain = allow_tab;
+
+                    if (kijun_val == "月別")
+                    {
+                        val.curMonth = kisomodel.curMonth;
+                        val.Mo_monthlist = kisomodel.Mo_monthlist;
+                        val.MoMthList = MoMthList(allow_tab, pg_year, kubun_code);
+                        val.goukei = kisomodel.goukei;                       
+
+                    }
+                    if (kijun_val == "年間")
+                    {
+                        val.curMonth = "";
+                        val.Yeargoukei = kisomodel.Yeargoukei;                       
+                    }
+                    ModelState.Clear();
+                }
+                //added by nan 20220602 end
             }
             else
             {
@@ -1603,6 +1684,7 @@ namespace koukahyosystem.Controllers
         #region shinseiTableValues_year
         private List<Models.yearTable_lists> shinseiTableValues_year(string id, string year, string kubun)
         {
+            int sumgoukei = 0;// 20220602 added by nan 
             int check_count = 0;
             int mcheck_count = 0;
             List<string> que_list = new List<string>();
@@ -1797,9 +1879,16 @@ namespace koukahyosystem.Controllers
                             System.Data.DataTable dt_seichou1 = new System.Data.DataTable();
                             readData = new SqlDataConnController();
                             dt_seichou1 = readData.ReadData(seichou_Query);
+                            sumgoukei = 0;
                             foreach (DataRow dr_seichou1 in dt_seichou1.Rows)
                             {
                                 yr_val = dr_seichou1["nTEN"].ToString();
+                                int tensu = 0;
+                                if (yr_val != "")
+                                {
+                                    tensu = int.Parse(yr_val);
+                                }
+                                sumgoukei = sumgoukei + tensu ; 
                             }
                             //no = Convert.ToInt32(que);
                             no++;
@@ -1823,9 +1912,16 @@ namespace koukahyosystem.Controllers
                         System.Data.DataTable dt_column1 = new System.Data.DataTable();
                         readData = new SqlDataConnController();
                         dt_column1 = readData.ReadData(column_total);
+                        sumgoukei = 0;
                         foreach (DataRow dr_column1 in dt_column1.Rows)
                         {
                             yr_val = dr_column1["nTEN"].ToString();
+                            int tensu = 0;
+                            if (yr_val != "")
+                            {
+                                tensu = int.Parse(yr_val);
+                            }
+                            sumgoukei = sumgoukei + tensu;
                         }
 
                         year_val.Add(new Models.yearTable_lists
@@ -1847,6 +1943,7 @@ namespace koukahyosystem.Controllers
             {
 
             }
+            kisomodel.Yeargoukei= sumgoukei.ToString();
             return year_val;
         }
         #endregion
@@ -2230,6 +2327,7 @@ namespace koukahyosystem.Controllers
         #region shinseiLeaderValues_year
         private List<Models.yearTable_lists> shinseiLeaderValues_year(string tab_id, string year, string kubun)
         {
+            int sumgoukei = 0;// 20220602 added by nan 
             int check_count = 0;
             List<string> que_list = new List<string>();
             List<string> mth_list = new List<string>();
@@ -2399,6 +2497,12 @@ namespace koukahyosystem.Controllers
 
                             //year_val = dr_seichou1["rTOTAL"].ToString();
                             year_val = dr_seichou1["nTEN"].ToString();
+                            int tensuu = 0;
+                            if (year_val != "")
+                            {
+                                tensuu = int.Parse(year_val);
+                            }
+                            sumgoukei = sumgoukei + tensuu;
                         }
 
                         no++;
@@ -2431,6 +2535,12 @@ namespace koukahyosystem.Controllers
                     {
                         //year_val = dr_column["rTOTAL"].ToString();
                         year_val = dr_column["nTEN"].ToString();
+                        int tensuu = 0;
+                        if (year_val != "")
+                        {
+                            tensuu = int.Parse(year_val);
+                        }
+                        sumgoukei = sumgoukei + tensuu;
                     }
 
                     years_list.Add(new Models.yearTable_lists
@@ -2446,6 +2556,7 @@ namespace koukahyosystem.Controllers
             {
 
             }
+            kisomodel.goukei = sumgoukei.ToString();
             return years_list;
         }
         #endregion
@@ -2454,6 +2565,8 @@ namespace koukahyosystem.Controllers
         [HttpPost]
         public ActionResult Kisohyouka(Models.KisohyoukaModel val, string kakutei_confirm, string hozone_confirm)
         {
+           
+            val.Mo_monthlist = new List<SelectListItem>(); //added by nan 20220602
             PgName = "seichou";
 
             if (Session["isAuthenticated"] != null)
@@ -2669,6 +2782,34 @@ namespace koukahyosystem.Controllers
 
                         ModelState.Clear();
 
+                    }
+                    else if (Request["btn_Mohozone"] != null) { // 20220602 added by nan 
+                        kisomodel.curMonth = val.curMonth;
+                        kisomodel.MoMthList = val.MoMthList;
+                        kisomodel.year = val.year;
+                        mo_shinsei = "0";
+                        mo_kakutei = "0";
+                        hyoukasha = "";
+                       bool f_save =  SaveKisoMo(logid, pg_year, kubun_code, hyoukasha);
+                        if (f_save == true)
+                        {
+                            can_showTable = true;
+                        }
+
+                    }
+                    else if (Request["btn_MoShinsei"] != null)
+                    { // 20220602 added by nan 
+                        kisomodel.curMonth = val.curMonth;
+                        kisomodel.MoMthList = val.MoMthList;
+                        kisomodel.year = val.year;
+                        mo_shinsei = "1";
+                        mo_kakutei = "0";
+                        hyoukasha = "";
+                        bool f_save = SaveKisoMo(logid, pg_year, kubun_code, hyoukasha);
+                        if (f_save == true)
+                        {
+                            can_showTable = true;
+                        }
                     }
 
 
@@ -3212,6 +3353,30 @@ namespace koukahyosystem.Controllers
                     val.txt_mark = "";
                 }
                 val.year = pg_year;
+                //added by nan 20220602 start
+                val.Yeargoukei = "";
+                val.goukei = "";
+                if (kijun_val　== "月別")
+                {
+                    
+                      kisomodel = val;
+                      ReadMobileData();                     
+                      val.Mo_monthlist = kisomodel.Mo_monthlist;
+                      val.shinseiStr = kisomodel.shinseiStr;
+                      val.kakuteiStr = kisomodel.kakuteiStr;
+                      val.MoMthList = MoMthList(logid, pg_year, kubun_code);
+                      val.goukei = kisomodel.goukei;
+                      ModelState.Clear();
+                    
+                }
+                if (kijun_val == "年間")
+                {
+                    
+                     val.Yeargoukei = kisomodel.Yeargoukei;
+                     ModelState.Clear();
+                    
+                }
+                //added by nan 20220602 end
             }
             else
             {
@@ -5227,6 +5392,10 @@ namespace koukahyosystem.Controllers
         public ActionResult KisohyoukaLeader(Models.KisohyoukaModel val,string kakutei_confirm, string hozone_confirm)
         {
             PgName = "seichou";
+           
+            val.Mo_shainList = new List<SelectListItem>(); // 20220602 added by nan  
+            val.Mo_monthlist = new List<SelectListItem>(); // 20220602 added by nan
+
             if (Session["isAuthenticated"] != null)
             {
                 int mcheck_count = 0;
@@ -5285,7 +5454,7 @@ namespace koukahyosystem.Controllers
                         string tb_name = dr_getShain["cSHAIN"].ToString();
 
                         string kb = get_kubun(tb_name);
-
+                       
                         #region kijun
                         //string kijunQuery1 = "SELECT sKIJUN FROM m_kisoten " +
                         //    "where cKUBUN='" + kb + "' and dNENDOU='" + pg_year + "';";//20210324
@@ -5506,6 +5675,12 @@ namespace koukahyosystem.Controllers
                             allow_tab = btnName[0];
                         }
                         val.tabList = tabValues(btnName);
+                        //20220602 added by nan start
+                        if (selected_tabId == "")
+                        {
+                            selected_tabId = val.curShain;
+                        }
+                        //20220602 added by nan end
                         selected_tabId = allow_tab;
                         Session["showColor"] = allow_tab;
                         kubun_code = get_kubun(allow_tab);//get tab kubun
@@ -5593,7 +5768,7 @@ namespace koukahyosystem.Controllers
                         string tb_name = dr_getShain["cSHAIN"].ToString();
 
                         string kb = get_kubun(tb_name);
-
+                       
                         #region kijun
                         //string kijunQuery1 = "SELECT sKIJUN FROM m_kisoten " +
                         //    "where cKUBUN='" + kb + "' and dNENDOU='" + pg_year + "';";//20210324
@@ -5689,7 +5864,20 @@ namespace koukahyosystem.Controllers
                         val.tabList = tabValues(btnName);
 
                         selected_tabId = Request["tabButton"];
+                        //20220602 added by nan start
+                        if (selected_tabId == "")
+                        {
+                            selected_tabId = val.curShain;
+                        }
+                        //20220602 added by nan end
+
                         Session["showColor"] = selected_tabId;
+                        //20220602 added by nan start
+                        if (selected_tabId == "")
+                        {
+                            selected_tabId = val.curShain;
+                        }
+                        //20220602 added by nan end
                         kubun_code = get_kubun(selected_tabId);//get selected tab kubun
 
                         chk_currentyrQue = mkisoCheck(kubun_code, pg_year);
@@ -5775,7 +5963,7 @@ namespace koukahyosystem.Controllers
                         string tb_name = dr_shain["cSHAIN"].ToString();
 
                         string kb = get_kubun(tb_name);
-
+                       
                         #region kijun
                         //string kijunQuery1 = "SELECT sKIJUN FROM m_kisoten where cKUBUN='" + kb + "' and dNENDOU='" + pg_year + "';";
 
@@ -5867,6 +6055,12 @@ namespace koukahyosystem.Controllers
 
                     val.tabList = tabValues(btnName);
                     selected_tabId = Request["tabName"];
+                    //20220602 added by nan start
+                    if (selected_tabId == "")
+                    {
+                        selected_tabId = val.curShain;
+                    }
+                    //20220602 added by nan end
                     Session["showColor"] = selected_tabId;
                     kubun_code = get_kubun(selected_tabId);//get selected tab kubun
 
@@ -6018,7 +6212,8 @@ namespace koukahyosystem.Controllers
                         string tb_name = dr_shain["cSHAIN"].ToString();
 
                         string kb = get_kubun(tb_name);
-
+                       
+                        // 20220602 added by nan end 
                         #region kijun
                         //string kijunQuery1 = "SELECT sKIJUN FROM m_kisoten where cKUBUN='" + kb + "' and dNENDOU='" + pg_year + "';";
 
@@ -6111,7 +6306,14 @@ namespace koukahyosystem.Controllers
                     val.tabList = tabValues(btnName);
 
                     selected_tabId = Request["tabName"];
+                    //20220602 added by nan start
+                    if (selected_tabId == "")
+                    {
+                        selected_tabId = val.curShain;
+                    }
+                    //20220602 added by nan end
                     Session["showColor"] = selected_tabId;
+
                     kubun_code = get_kubun(selected_tabId);//get selected tab kubun
 
                     chk_currentyrQue = mkisoCheck(kubun_code, pg_year);
@@ -6182,6 +6384,27 @@ namespace koukahyosystem.Controllers
                         val.shinsei_tableList_year = after_leader_kakutei_values_year(val.shinsei_tableList_year, kakutei, selected_tabId, pg_year, kubun_code);
 
                     }
+                }
+
+                else if (Request["btn_Mohozone"] != null)
+                { // 20220602 added by nan 
+                    kisomodel.curMonth = val.curMonth;
+                    kisomodel.MoMthList = val.MoMthList;
+                    kisomodel.year = val.year;
+                    mo_shinsei = "1";
+                    mo_kakutei = "0";
+                    string hyoukasha = logid;
+                    SaveKisoMo(val.curShain, pg_year, kubun_code, hyoukasha);
+                }
+                else if (Request["btn_MoShinsei"] != null)
+                { // 20220602 added by nan 
+                    kisomodel.curMonth = val.curMonth;
+                    kisomodel.MoMthList = val.MoMthList;
+                    kisomodel.year = val.year;
+                    mo_shinsei = "1";
+                    mo_kakutei = "1";
+                    string hyoukasha = logid;
+                    SaveKisoMo(val.curShain, pg_year, kubun_code, hyoukasha);
                 }
 
                 chk_currentyrQue = mkisoCheck(kubun_code, pg_year);
@@ -6556,7 +6779,34 @@ namespace koukahyosystem.Controllers
                 ModelState.Clear();
                 val.year = pg_year;
 
-                
+                //added by nan 20220602 start
+                val.Yeargoukei = "";
+                val.goukei = "";
+                if (val.tabList != null)
+                {
+                    kisomodel = val;
+                    ReadMobileData();
+                  
+                    val.Mo_shainList = ShainList();
+                    //val.curShain = allow_tab;
+
+                    if (kijun_val == "月別")
+                    {
+                        //val.curMonth = kisomodel.curMonth;
+                        val.Mo_monthlist = kisomodel.Mo_monthlist;
+                        val.MoMthList = MoMthList(val.curShain, pg_year, kubun_code);
+                        val.goukei = kisomodel.goukei;
+
+                    }
+                    if (kijun_val == "年間")
+                    {
+                        val.curMonth = "";
+                        val.Yeargoukei = kisomodel.Yeargoukei;
+                    }
+                    ModelState.Clear();
+                }
+                //added by nan 20220602 end
+
             }
             else
             {
@@ -6697,6 +6947,7 @@ namespace koukahyosystem.Controllers
                         tabName = sName,
                     });
                 }
+
                
             }
             catch
@@ -8607,6 +8858,241 @@ namespace koukahyosystem.Controllers
             string str = HttpUtility.UrlDecode(s);
             return str;
         }
+
+        #region added by nan 20220602
+        public void ReadMobileData()
+        {
+            var mthList = new List<SelectListItem>();
+            for (int i = 1; i <= 12; i++)
+            {
+                mthList.Add(new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString() 
+                });
+            }
+            kisomodel.Mo_monthlist = mthList;
+            if (kisomodel.curMonth == null )
+            {
+                kisomodel.curMonth = DataCurMonth();
+            }
+            
+            //Mo_monthShainlist //リーダー用
+        }
+        public string DataCurMonth()
+        {
+
+            string curMonth = "";
+            string sqlStr = "SELECT MONTH(NOW()) as curMonth;";
+
+            var readDate = new SqlDataConnController();
+            DataTable dt = readDate.ReadData(sqlStr);
+
+            if (dt.Rows.Count > 0)
+            {
+                curMonth = dt.Rows[0]["curMonth"].ToString();
+               
+            }
+           return curMonth;
+        }
+
+        public List<Models.MoMthclass> MoMthList(string logid, string pg_year, string kubun)
+        {
+            kisomodel.goukei = "";
+            var MoMthListVal = new List<Models.MoMthclass>();
+            kisomodel.shinseiStr = "";
+            kisomodel.kakuteiStr = "";
+            string selYear = "";
+            DataTable kisoinfo_dt = new DataTable();
+            string sql = "";
+            sql += " SELECT mk.cKUBUN as cKUBUN, mk.cKISO as cKISO,";
+            sql += " mk.sKISO as sKISO ,mki.nTEN as nTEN, ";
+            sql += " mk.dNENDOU as dNENDOU ";
+            sql += " FROM m_kiso mk ";
+            sql += " left join m_kisoten mki on mk.cKUBUN = mki.cKUBUN and mk.dNENDOU = mki.dNENDOU ";
+            sql += " Where mk.cKUBUN = "+ kubun + " and mk.fDELETE = 0 ";
+            sql += " Group by mk.dNENDOU ";
+            sql += " Order by mk.dNENDOU DESC ";
+            var readDate = new SqlDataConnController();
+            kisoinfo_dt = readDate.ReadData(sql);
+
+            //m_kiso　から質問項目 、m_kisoten　1つ項目の点数
+            if (kisoinfo_dt.Rows.Count > 0)
+            {
+                DataRow[] dr_kiso = kisoinfo_dt.Select("dNENDOU = "+ pg_year + "");
+                if (dr_kiso.Length > 0)
+                {
+                    selYear = pg_year;
+                }
+                else
+                {
+                    int pg_yearVal = 0;
+                    if (pg_year != "")
+                    {
+                        pg_yearVal = int.Parse(pg_year);
+                    }
+
+                    int yrVal1 = 0;                                  
+                    foreach (DataRow dr in kisoinfo_dt.Rows)
+                    {
+                        string yr =  dr["dNENDOU"].ToString();
+                        int yrVal2 = 0;
+                        if (yr !="" )
+                        {
+                            yrVal2 = int.Parse(yr);
+                        }
+                        if ((yrVal2 < pg_yearVal && pg_yearVal < yrVal1) && yrVal1 != 0)
+                        {
+                            pg_yearVal = yrVal2;
+                            break;
+                        }
+                         yrVal1 = yrVal2;                        
+                    }
+                    selYear = pg_yearVal.ToString();
+                }
+            }
+            //基礎質問データがあるのみ
+            if (selYear != "")
+            {
+                sql = "";
+                sql += " SELECT mkiso.cKUBUN as cKUBUN,mkiso.cKISO as cKISO,mkiso.sKISO as sKISO,";
+                sql += " dt.cSHAIN as cSHAIN, dt.nGETSU as nGETSU, ifnull(dt.nTEN ,'')as nTEN , dt.fSHINSEI as fSHINSEI, dt.fKAKUTEI as fKAKUTEI ";
+                sql += " FROM m_kiso mkiso  ";
+                sql += " LEFT JOIN( ";
+                sql += " SELECT cKUBUN,cKISO, cSHAIN, nGETSU, nTEN , fSHINSEI, fKAKUTEI ";
+                sql += " FROM r_kiso rkiso Where rkiso.dNENDOU = '"+ pg_year + "' and rkiso.cSHAIN = '"+ logid + "' and rkiso.nGETSU = '"+ kisomodel.curMonth + "' ";
+                sql += " ) dt on dt.cKUBUN = mkiso.cKUBUN and mkiso.cKISO = dt.cKISO ";                  
+                sql += " Where mkiso.dNENDOU = '"+ selYear + "' and mkiso.cKUBUN = '"+ kubun + "' ";
+                DataTable dt = new DataTable();
+                dt = readDate.ReadData(sql);
+
+                int markVal = 0;
+                int sumMarkVal = 0;
+                foreach (DataRow dr in dt.Rows)
+                {
+                   int index =  dt.Rows.IndexOf(dr) + 1;
+                    MoMthListVal.Add(new Models.MoMthclass
+                    {
+                       
+                        Mo_qstCode = dr["cKISO"].ToString(),
+                        Mo_qst = index.ToString() + ". " + dr["sKISO"].ToString(),
+                        Mo_mark = dr["nTEN"].ToString(),
+                        //year_value = "0",
+
+                    });
+                    if (dr["nTEN"].ToString() != "")
+                    {
+                        markVal = int.Parse(dr["nTEN"].ToString());
+                        sumMarkVal +=  markVal;
+                    }
+                    
+                }
+                if (sumMarkVal != 0)
+                {
+                    kisomodel.goukei = sumMarkVal.ToString();
+                }
+
+                sql = "";
+                sql += " SELECT rk.nGETSU as nGETSU, rk.fSHINSEI as fSHINSEI, fKAKUTEI as fKAKUTEI ";
+                sql += " FROM r_kiso rk where rk.dNENDOU = '" + pg_year + "' and rk.cSHAIN  = '" + logid + "' Group by nGETSU;";
+                dt = new DataTable();
+                dt = readDate.ReadData(sql);
+                foreach(DataRow dr in dt.Rows)
+                {
+                    int index = dt.Rows.IndexOf(dr);
+                    if (dr["fSHINSEI"].ToString() == "1")
+                    {
+                        kisomodel.shinseiStr += dr["nGETSU"].ToString() + ",";
+                    }
+                    if (dr["fKAKUTEI"].ToString() == "1")
+                    {
+                        kisomodel.kakuteiStr += dr["nGETSU"].ToString() + ",";
+                    }
+                }
+
+
+            }
+            return MoMthListVal;
+        }
+
+        public bool SaveKisoMo(string logid, string pg_year, string kubun,string hyoukasha)
+        {
+            bool fsave = false;                   
+            string sql = "";
+            string kakuninDate ="";           
+            if (mo_kakutei == "1")
+            {
+                kakuninDate = get_serverDate();
+            }
+            else
+            {
+                kakuninDate = "@null";
+            }
+          
+            foreach (var item in kisomodel.MoMthList)
+            {
+                string ckiso = item.Mo_qstCode.ToString();
+                string tensuu = "";
+                if (item.Mo_mark != null)
+                {
+                    tensuu = item.Mo_mark.ToString();
+                }
+                else
+                {
+                    //申請する場合は
+                    if (mo_shinsei == "1"　|| mo_kakutei =="1")
+                    {
+                        tensuu = "0";
+                    }
+                    else//一時保存の場合
+                    {
+                        tensuu = "@null";
+                    }
+                    
+                }
+                sql += " INSERT INTO r_kiso (cSHAIN, cKISO, cKUBUN,dNENDOU,nGETSU,nTEN,fSHINSEI,fKAKUTEI,cKAKUNINSHA,dKAKUNIN) VALUES";               
+                sql += " ('" + logid + "', '"+ ckiso + "', '"+ kubun + "'," + pg_year+" , "+ kisomodel.curMonth +", " + tensuu + " ,'" + mo_shinsei+ "', '" + mo_kakutei + "' , '" + hyoukasha + "' , " + kakuninDate + ")  ";
+                sql += " ON DUPLICATE KEY UPDATE ";               
+                sql += " cSHAIN = '" + logid + "', cKISO = '"+ ckiso + "', cKUBUN ='"+ kubun + "' , dNENDOU ='"+ pg_year + "',  nGETSU ='"+ kisomodel.curMonth + "'" ;
+                sql += " , nTEN ="+ tensuu + " , fSHINSEI ='"+ mo_shinsei + "' , fKAKUTEI ='"+ mo_kakutei  + "', cKAKUNINSHA ='"+ hyoukasha + "', dKAKUNIN="+ kakuninDate + "; "  ;                
+            }
+            //inert query
+            if (sql != "")
+            {                             
+                var insertdata = new SqlDataConnController();
+                fsave = insertdata.inputsql(sql);
+            }                       
+            else
+            {
+                fsave = false;
+            }
+            return fsave;
+        }
+
+        public List<SelectListItem> ShainList()
+        {
+            var ShainListval = new List<SelectListItem>(); // 20220602 added by nan  
+            string allhyouka = hyoukalist(logid);
+            string get_shain = "SELECT rk.cSHAIN as cSHAIN,ms.sSHAIN as sSHAIN FROM r_kiso rk " +
+                       "join m_shain ms on ms.cSHAIN=rk.cSHAIN " +
+                       // "where rk.cKAKUNINSHA ='" + logid + " ' " +
+                       "where  rk.cSHAIN in (" + allhyouka + ") " +//20220523 added by lwin mar
+                       "and ms.fTAISYA=0 and rk.dNENDOU='" + pg_year + "' group by rk.cSHAIN;";
+
+            System.Data.DataTable dt_shain = new System.Data.DataTable();
+            var shain_readData = new SqlDataConnController();
+            dt_shain = shain_readData.ReadData(get_shain);
+            foreach (DataRow dr_shain in dt_shain.Rows)
+            {
+                ShainListval.Add(new SelectListItem
+                {
+                    Value = dr_shain["cSHAIN"].ToString(),
+                    Text = dr_shain["sSHAIN"].ToString()
+                });
+            }
+            return ShainListval;
+        }
+        #endregion
     }
 }
     

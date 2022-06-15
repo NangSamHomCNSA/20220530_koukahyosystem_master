@@ -8,14 +8,11 @@
     //var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 10, ajaxUpdateContainerId: "gridContent");
     //grid.Pager(WebGridPagerModes.All);
     ViewBag.Title = "HyoukaIrai";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="~/Content/Common/commonstyle.css" rel="stylesheet" />
-    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
     <style>
 
 
@@ -55,80 +52,76 @@
         .fixed_header {
             width: auto;
             table-layout: fixed;
-            /*border-collapse: collapse;*/
+            border-collapse: collapse;
         }
 
-            .fixed_header tbody {
-                display: block;
-                width: 100%;
-                overflow: auto;
-                height: 65vh;
-            }
+        .fixed_header tbody {
+            display: block;
+            width: 100%;
+            overflow: auto;
+            height: 65vh;
+        }
 
-            .fixed_header thead tr {
-                border-left: 1px solid #cccccc;
-                display: block;
-                width: 460px;
-            }
+        .fixed_header thead tr {
+             border-left: 1px solid #cccccc;
+            display: block;
+           width:455px;
+        }
 
-            .fixed_header thead {
-                background-color: lightblue;
-                color: black;
-            }
+        .fixed_header thead {
+            background-color: lightblue;
+            color: black;
+        }
 
-            .fixed_header th,
-            .fixed_header td {
-                text-align: center;
-            }
+        .fixed_header th,
+        .fixed_header td {
+            text-align: center;
+        }
 
-                .fixed_header th:nth-child(3), .fixed_header td:nth-child(3) {
-                    width: 31px;
-                    border-left: 2px solid #cccccc;
-                    border-right: 2px solid #cccccc;
-                    min-width: 31px;
-                }
+        .fixed_header th:nth-child(3), .fixed_header td:nth-child(3) {
+            width: 31px;
+            border-left: 2px solid #cccccc;
+            border-right: 2px solid #cccccc;
+            min-width: 31px;
+        }
 
-                .fixed_header th:nth-child(4) {
-                    width: 115px;
-                    border-left: 1px solid #cccccc;
-                    border-right: 1px solid #cccccc;
-                    min-width: 115px;
-                    text-align: center;
-                }
+        .fixed_header th:nth-child(4) {
+            width: 128px;
+            border-left: 1px solid #cccccc;
+            border-right: 1px solid #cccccc;
+            min-width: 130px;
+            text-align: center;
+        }
 
-                .fixed_header td:nth-child(4) {
-                    width: 115px;
-                    border-left: 2px solid #cccccc;
-                    border-right: 2px solid #cccccc;
-                    min-width: 115px;
-                    text-align: left;
-                }
+        .fixed_header td:nth-child(4) {
+            width: 130px;
+            border-left: 2px solid #cccccc;
+            border-right: 2px solid #cccccc;
+            min-width: 100px;
+            text-align: left;
+        }
 
-                .fixed_header th:nth-child(5), .fixed_header td:nth-child(5) {
-                    width: 70px;
-                    border-left: 2px solid #cccccc;
-                    border-right: 2px solid #cccccc;
-                    min-width: 50px;
-                }
+        .fixed_header th:nth-child(5), .fixed_header td:nth-child(5) {
+            width: 70px;
+            border-left: 2px solid #cccccc;
+            border-right: 2px solid #cccccc;
+        }
 
-                .fixed_header th:nth-child(6), .fixed_header td:nth-child(6) {
-                    width: 70px;
-                    border-left: 2px solid #cccccc;
-                    border-right: 2px solid #cccccc;
-                    min-width: 50px;
-                }
+        .fixed_header th:nth-child(6), .fixed_header td:nth-child(6) {
+            width: 70px;
+            border-left: 2px solid #cccccc;
+            border-right: 2px solid #cccccc;
+        }
 
-                .fixed_header th:nth-child(7), .fixed_header td:nth-child(7) {
-                    width: 70px;
-                    border-left: 2px solid #cccccc;
-                    border-right: 2px solid #cccccc;
-                    min-width: 50px;
-                }
+        .fixed_header th:nth-child(7), .fixed_header td:nth-child(7) {
+            width: 70px;
+            border-left: 2px solid #cccccc;
+            border-right: 2px solid #cccccc;
+        }
 
-                .fixed_header th:nth-child(8), .fixed_header td:nth-child(8) {
-                    width: 70px;
-                    min-width: 50px;
-                }
+        .fixed_header th:nth-child(8), .fixed_header td:nth-child(8) {
+            width: 70px;
+        }
 
         select {
             vertical-align: middle
@@ -149,13 +142,13 @@
             margin: 10px 10px;
         }
 
-        /*.div1 {
+        .div1 {
             text-align: right;
-        }*/
+        }
 
-        .div2, .div3, .div4, .div1 {
+        .div2, .div3, .div4 {
             display: inline-block;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         h4 {
@@ -163,43 +156,25 @@
             display: inline-block;
             margin-right: 50.5%
         }
-        
-       
-        #h_cGROUP {
-            width: 240px;
-        }
-
-        #h_cBUSHO {
-            width: 240px;
-        }
     </style>
     <style>
         @@media only screen and (max-width: 1024px) {
-
-            .div5 {
-                text-align: start;
-            }
-
-           
-            .headline {
-                line-height: 38px;
-                font-size:18px;
+            .div1 {
+                text-align: center;
             }
         }
 
-        @@media only screen and (max-width: 850px) {
-            /*.filter1on1{
-                padding-right:100px;
-            }*/
-        }
+        /*@@media only screen and (max-width: 768px) {
+            .div1 {
+                text-align: center;
+            }
+
+        }*/
 
         @@media only screen and (max-width: 576px) {
-            .div5 {
-                text-align: start;
-            }
 
             .div1 {
-                display: block;
+                text-align: start;
             }
 
             .div2 {
@@ -215,72 +190,10 @@
             }
         }
 
-        @@media only screen and (max-width: 420px) {
-            
-            h4 {
-                margin-right: 0;
-            }
-            .filter1on1{
-                padding-right:60px;
-            }
-            .table_div {
-                margin: 5px 5px;
-            }
-
-            .header_text {
-                padding-left: 0px;
-            }
-
-            .fixed_header {
-                overflow: auto;
-                width: 420px;
-                table-layout: auto;
-                border-collapse: collapse;
-            }
-
-                .fixed_header thead tr {
-                    display: block;
-                    width: auto;
-                }
-
-            .btncss {
-                width: auto;
-            }
-
-            .fixed_header thead th, .fixed_header thead td {
-                width: 420px;
-            }
-
-            .fixed_header th:nth-child(3), .fixed_header td:nth-child(3) {
-                width: 30px;
-                min-width: 30px;
-            }
-
-            #selectBtn {
-                margin-left: 0px;
-            }
-            .yeardd {
-                text-align: center;
-                align-content: center;
-                vertical-align: central;
-            }
-            #ht {
-                height: 30px;
-            }
-            .headline {
-                line-height: 30px;
-                font-size:14px;
-            }
-            #h_cGROUP {
-                width: 200px;
-            }
-
-            #h_cBUSHO {
-                width: 200px;
-            }
+        @@media only screen and (max-width: 375px) {
         }
 
-        @@media only screen and (max-width: 380px) {
+        @@media only screen and (max-width: 320px) {
         }
     </style>
     <script type="text/javascript" src=@Url.Content("~/Scripts/jquery-1.12.4.min.js")></script>
@@ -335,11 +248,12 @@
                 //$(this).css("background","blue");
                 var keval = $(this).find("input").val();
                 if (keval == "済") {
-                    c_count = 1;
+                   // c_count = 1;
+                    c_count++;//20220603 added by lwinmar
                 }
             });
-
-            if (c_count == 1) {
+           
+            if (c_count == 10){
 
                 document.getElementById("dai1").disabled = true;
                 $('#dai1').addClass("disabled");
@@ -354,11 +268,12 @@
                  //$(this).css("background","blue");
                  var keval = $(this).find("input").val();
                  if (keval == "済") {
-                     c_count = 1;
+                    // c_count = 1;
+                     c_count++;//20220603 added by lwinmar
                  }
              });
 
-             if (c_count == 1) {
+             if (c_count == 10) {
                  document.getElementById("dai2").disabled = true;
                  $('#dai2').addClass("disabled");
              }
@@ -372,11 +287,12 @@
                  //$(this).css("background","pink");
                  var keval = $(this).find("input").val();
                  if (keval == "済") {
-                     c_count = 1;
+                    // c_count = 1;
+                     c_count++;//20220603 added by lwinmar
                  }
              });
 
-            if (c_count == 1)
+            if (c_count == 10)
             {
                 document.getElementById("dai3").disabled = true;
                 $('#dai3').addClass("disabled");
@@ -391,11 +307,12 @@
                  //$(this).css("background","orange");
                  var keval = $(this).find("input").val();
                  if (keval == "済") {
-                     c_count = 1;
+                     //c_count = 1;
+                     c_count++;//20220603 added by lwinmar
                  }
              });
 
-             if (c_count == 1) {
+             if (c_count == 10) {
                  document.getElementById("dai4").disabled = true;
                  $('#dai4').addClass("disabled");
              }
@@ -433,8 +350,8 @@
             var th = $('#DataTable th').eq($(this).index());
             var headername = th.text();
             var col = $(this).index();
-            var rowIndex = $(this).parent().index();
-
+             var rowIndex = $(this).parent().index();
+            // alert(headername);
             if (headername == '第1')
             {
                 if (($("#dai1").is(":disabled")) == true) {
@@ -480,6 +397,7 @@
 
                     //退職者
                     var ftaisha = row.find('td:eq(1) input').val();
+                  //  var ftaisha = row.find('td:eq(1) c').val();
                     if (ftaisha == '1')
                     {
                         event.preventDefault();
@@ -631,13 +549,18 @@
                     $("#DataTable tbody tr").find('td:eq(' + col + ')').each(function () {
                     //var textVal = ($(this).find('input[type="Text"]').val());
                     //alert('textVal<<' + textVal);
-                        var hyoukashamei = $('#DataTable tr:eq(' + rCount + ') td:eq(0)').text();
+                        var hyoukashamei = $('#DataTable tr:eq('+rCount+') td:eq(0)').text();
+
+                        var chkval = ($(this).find('input[type="Text"]').val());
+                        if (chkval == "済") {
+                            countchecked++;
+                        }
                         if ($(this).find(':checkbox').is(':checked')) {
                             countchecked++;
                         }
                         rCount++;
-                     });
-
+                    });
+                    //alert(countchecked);
                     if (countchecked > LimitNum) {
                         event.preventDefault();
                         event.stopPropagation();
@@ -664,13 +587,17 @@
 
             var btnVal = $('#DataTable tr:eq(1) td:eq(' + col + ')').text();
             btnVal = btnVal.trim();
-
             $("#DataTable tbody tr").find('td:eq(' + col + ')').each(function () {
+                var chkval = ($(this).find('input[type="Text"]').val());
+                if (chkval == "済") {
+                    countchecked++;
+                }
                 if ($(this).find(':checkbox').is(':checked')) {
                     countchecked++;
                 }
                 var keval = $(this).find("input").val();
-                if (keval == "未")
+                //if (keval == "未")
+                if (keval == "済")//20220603 added by lwinmar
                 {
                     countkaijyou++;
                 }
@@ -700,9 +627,10 @@
             }
 
             if (btnVal == "確定") {
-
-                //return;
-                if (countkaijyou != 10) {
+                
+              //  if (countkaijyou != 10) {
+                //20220603 added by lwinmar
+                if (countkaijyou == 10) {
                     alert('依頼者を解除出来ません。');
                     return;
                 }
@@ -777,206 +705,212 @@
 
     </script>
 
-
+    
 </head>
 <body>
     @if (Session["isAuthenticated"] != null)
     {
-    <div id='divElement'>
+        <div id='divElement' class="panel panel-info">
 
-        @using (Html.BeginForm("HyoukaIrai", "HyoukaIrai", FormMethod.Post))
-        {
-            <div id="headertitle" style="background-color: rgb(34, 148, 172); width:100%;">
-                <h6 class="text-center align-middle headline" style="color:white;">評価依頼画面</h6>
-            </div>
-
-            <div class="container" style="margin:10px;">
-                <input type="submit" value="display" id="Btn_display" name="year_btn" class="button" style="display:none" />
-                <div class="filter1on1">
-                    <div class="mb-2" style="display:inline-block;margin-right:10px;">
-                        <div class="row g-3">
-                            <div class="col-auto" style="padding-right:0!important">
-                                @Html.Label("年度", new { style = "color:black;font-weight: normal !important;margin-left:0px;margin-right:5px;" })
+            @using (Html.BeginForm("HyoukaIrai", "HyoukaIrai", FormMethod.Post))
+            {
+                <div class="panel-heading" style="background-color: rgb(34, 148, 172); width:100%">
+                    <div class="container">
+                        <input type="submit" value="display" id="Btn_display" name="year_btn" class="btncss" style="display:none" />
+                        <div class="row">
+                            <div class="col-sm-4" align="left">
+                                @Html.Label("年度", new { style = "color:white;font-weight: normal !important;margin-right:5px;" })
+                                <button name="year_btn" value="<" class="btncss btn_year"><</button>
+                                @Html.DropDownListFor(m => m.cur_year, Model.YearList, new { @id = "year", style = "width:70px;Height:22px;margin-bottom:4px;", onchange = "SelectedIndexChanged()" })
+                                <button name="year_btn" value=">" class="btncss btn_year">></button>
                             </div>
-                            <div class="col-auto" style="margin-top:11px;">
-                                <button class="btn btn-link preBtn" name="year_btn" value="<">
-                                    <i class="fas fa-caret-left"></i>
-                                </button>
-                                @Html.DropDownListFor(m => m.cur_year, Model.YearList, new { @id = "year", onchange = "SelectedIndexChanged()", @class = "btn btn-sm dropdown-toggle yeardropdown data-bs-toggle" })
-                                <button class="btn btn-link preBtn" name="year_btn" value=">" style="">
-                                    <i class="fas fa-caret-right"></i>
-
-                                </button>
+                            <div class="col-sm-8" align="center">
+                                <h4 align="center">評価依頼画面</h4>
                             </div>
                         </div>
+
                     </div>
-                    <div style="display:inline-block;">
-                        <div class="row ">
-                            <div class="col-auto mb-2">
-                                @Html.Label(Model.busho_lbl ?? "", new { id = "lbl1", style = "font-weight: normal !important;width:auto;", @class = "col-sm-1 col-form-label fontsize" })
-                                @Html.DropDownListFor(m => m.h_cBUSHO, Model.h_bushoList, "", new { id = "h_cBUSHO", style = "margin-left:10px;text-align:left;", autofocus = "autofocus", @class = "yeardropdown btn btn-sm dropdown-toggle fontsize " })
+                </div>
+
+                <div class="table_div">
+
+                    <div class="row" style="padding-top:5px;padding-bottom:5px">
+                        @*<div style="display:flex;justify-content:center;padding:5px;">*@
+                        <div class="col-lg-9 div1">
+                            <div class="div2">
+                                @Html.Label(Model.busho_lbl ?? "", new { style = "font-weight: normal !important;margin-right:3px;" })
+                                @Html.DropDownListFor(m => m.h_cBUSHO, Model.h_bushoList, "", new { id = "h_cBUSHO", style = "width:160px;margin-left:7px;margin-right:12px;height:25px", autofocus = "autofocus" })
                             </div>
-                            <div class="col-auto mb-2 ">
-                                @Html.Label(Model.group_lbl ?? "", new { id = "lbl2", style = " font-weight: normal !important;width:auto; ", @class = "col-sm-1 col-form-label fontsize" })
-                                @Html.DropDownListFor(m => m.h_cGROUP, Model.h_groupList, "", new { id = "h_cGROUP", style = "margin-left:10px;text-align:left;", @class = "yeardropdown btn btn-sm dropdown-toggle fontsize " })
+                            <div class="div3">
+                                @Html.Label(Model.group_lbl ?? "", new { style = " font-weight: normal !important; " })
+                                @Html.DropDownListFor(m => m.h_cGROUP, Model.h_groupList, "", new { id = "h_cGROUP", style = "width:160px;height:25px;margin-left:7px;margin-right:12px;" })
                             </div>
-                            <div class="col-auto mb-2">
-                                <button id="selectBtn" name="shain_btn" value="選択" class="DefaultBtn fontsize">選択</button>
+                            <div class="div4">
+                                <button id="selectBtn" name="shain_btn" value="選択" class="btncss" style="margin-left:12px; height:35px; width:60px;">選択</button>
+
                             </div>
+
                         </div>
+                        @*<div class="col-lg-4">
+                                @Html.Label(Model.group_lbl ?? "", new { style = " font-weight: normal !important; ", align = "left" })
+                                @Html.DropDownListFor(m => m.h_cGROUP, Model.h_groupList, "", new { id = "h_cGROUP", style = "height:25px;margin-left:5px;margin-right:12px;" })
+                            </div>*@
+                        <div class="col-lg-3">
+                            @*<button id="selectBtn" name="shain_btn" value="選択" class="btncss" style="visibility:hidden;margin-left:12px; height:35px; width:60px;">選択</button>*@
+
+                        </div>
+
+                        @*</div>*@
+
                     </div>
-                </div>
-            </div>
-            <div class="table_div">
-                <div style="margin:10px 10px 10px 10px;overflow:auto;" class="row">
 
-                    <table class="fixed_header fontsize" id="DataTable" cellpadding="7" align="center">
+                    <div style="margin:10px 10px 10px 10px;">
 
-                        <thead>
-                            <tr style="border-top:2px solid #cccccc; ">
-                                <th>評価者ID</th>
-                                <th>退職者</th>
-                                <th></th>
-                                <th>依頼者</th>
-                                <th>第1</th>
-                                <th>第2</th>
-                                <th>第3</th>
-                                <th>第4</th>
-                                <td></td>
-                            </tr>
-                            @if (Model.HyoukaIraiList.Count > 0)
-                            {
-                                <tr style="border-top:1px solid #cccccc; ">
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        @*onclick="BackBtnFunction(this.id)"*@
-                                        <button id="dai1" name="dai_btn" value="dai1" type="submit" class="btncss" style="padding-top:2px;padding-bottom:2px;">@Model.Dai1_BtnName</button>
-                                    </td>
-                                    <td>
-                                        <button id="dai2" name="dai_btn" value="dai2" type="submit" class="btncss" style="padding-top:2px;padding-bottom:2px;">@Model.Dai2_BtnName</button>
-                                    </td>
-                                    <td>
-                                        <button id="dai3" name="dai_btn" value="dai3" type="submit" class="btncss" style="padding-top:2px;padding-bottom:2px;">@Model.Dai3_BtnName</button>
-                                    </td>
-                                    <td>
-                                        <button id="dai4" name="dai_btn" value="dai4" type="submit" class="btncss" style="padding-top:2px;padding-bottom:2px;">@Model.Dai4_BtnName</button>
-                                    </td>
+                        <table class="fixed_header" id="DataTable" cellpadding="7" align="center">
+                            <thead>
+                                <tr style="border-top:2px solid #cccccc; ">
+                                    <th>評価者ID</th>
+                                    <th>退職者</th>
+                                    <th></th>
+                                    <th>依頼者</th>
+                                    <th>第1</th>
+                                    <th>第2</th>
+                                    <th>第3</th>
+                                    <th>第4</th>
                                     <td></td>
                                 </tr>
-                            }
-                        </thead>
-
-                        <tbody>
-
-                            @*@foreach (var item in Model)*@
-                            @for (int i = 0; i < Model.HyoukaIraiList.Count; i++)
-                            {
-                                var num = @i + 1;
-                                <tr>
-                                    <td>
-                                        <!--依頼者コード-->
-                                        @*<label for="name">@Model.HyoukaIraiList[i].HyoukashaId</label>*@
-                                        @Html.TextBoxFor(model => model.HyoukaIraiList[i].HyoukashaId, new { style = "width:100%; " })
-                                    </td>
-                                    <td>
-                                        <!--退職者-->
-                                        @*<label for="name">@item.hyoukasha</label>*@
-                                        @Html.TextBoxFor(model => model.HyoukaIraiList[i].ftaisya, new { style = "width:100%;border:none!important;", @readonly = "readonly" })
-
-                                    </td>
-                                    <td>
-                                        <!--番号-->
-                                        @num
-                                    </td>
-                                    <td>
-                                        <!--依頼者名-->
-                                        @*<label for="name">@item.hyoukasha</label>*@
-                                        @Html.TextBoxFor(model => model.HyoukaIraiList[i].hyoukasha, new { style = "width:100%;border:none!important;", @readonly = "readonly" })
-
-                                    </td>
-
-                                    @if (Model.HyoukaIraiList[i].dai_1 == "")
-                                    {
+                                @if (Model.HyoukaIraiList.Count > 0)
+                                {
+                                    <tr style="border-top:1px solid #cccccc; ">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                         <td>
-                                            <!--第1-->
-                                            @*<input type="checkbox" name="dai_1" id="dai_1" />*@
-                                            @Html.CheckBoxFor(model => model.HyoukaIraiList[i].f_chkDai1, new { id = "chk_dai1", style = "width:100%; " })
+                                            @*onclick="BackBtnFunction(this.id)"*@
+                                            <button id="dai1" name="dai_btn" value="dai1" type="submit" class="btncss" style="padding-top:2px;padding-bottom:2px;">@Model.Dai1_BtnName</button>
                                         </td>
-                                    }
-                                    else //Model.HyoukaIraiList[i].dai_1 !=""
-                                    {
                                         <td>
-                                            <!--第1-->
-                                            @Html.TextBoxFor(model => model.HyoukaIraiList[i].dai_1, new { id = "txt_dai_1", style = "width:100%; text-align:center;border:none!important;", @readonly = "readonly" })
+                                            <button id="dai2" name="dai_btn" value="dai2" type="submit" class="btncss" style="padding-top:2px;padding-bottom:2px;">@Model.Dai2_BtnName</button>
                                         </td>
-                                    }
+                                        <td>
+                                            <button id="dai3" name="dai_btn" value="dai3" type="submit" class="btncss" style="padding-top:2px;padding-bottom:2px;">@Model.Dai3_BtnName</button>
+                                        </td>
+                                        <td>
+                                            <button id="dai4" name="dai_btn" value="dai4" type="submit" class="btncss" style="padding-top:2px;padding-bottom:2px;">@Model.Dai4_BtnName</button>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            </thead>
+                            <tbody>
 
-                                    @if (Model.HyoukaIraiList[i].dai_2 == "")
-                                    {
-                                        <!--第2-->
+                                @*@foreach (var item in Model)*@
+                                @for (int i = 0; i < Model.HyoukaIraiList.Count; i++)
+                                {
+                                    var num = @i + 1;
+                                    <tr>
                                         <td>
-                                            @Html.CheckBoxFor(model => model.HyoukaIraiList[i].f_chkDai2, new { style = "width:100%; " })
+                                            <!--依頼者コード-->
+                                            @*<label for="name">@Model.HyoukaIraiList[i].HyoukashaId</label>*@
+                                            @Html.TextBoxFor(model => model.HyoukaIraiList[i].HyoukashaId, new { style = "width:100%; " })
                                         </td>
-                                    }
-                                    else
-                                    {
-                                        <!--第2-->
                                         <td>
-                                            @Html.TextBoxFor(model => model.HyoukaIraiList[i].dai_2, new { id = "txt_dai_2", style = "width:100%; text-align:center;border:none!important;", @readonly = "readonly" })
-                                        </td>
-                                    }
+                                            <!--退職者-->
+                                            @*<label for="name">@item.hyoukasha</label>*@
+                                            @Html.TextBoxFor(model => model.HyoukaIraiList[i].ftaisya, new { style = "width:100%;border:none!important;", @readonly = "readonly" })
 
-                                    @if (Model.HyoukaIraiList[i].dai_3 == "")
-                                    {
-                                        <!--第3-->
-                                        <td>
-                                            @Html.CheckBoxFor(model => model.HyoukaIraiList[i].f_chkDai3, new { style = "width:100%; " })
                                         </td>
-                                    }
-                                    else
-                                    {
-                                        <!--第3-->
                                         <td>
-                                            @Html.TextBoxFor(model => model.HyoukaIraiList[i].dai_3, new { id = "txt_dai_3", style = "width:100%; text-align:center;border:none!important;", @readonly = "readonly" })
+                                            <!--番号-->
+                                            @num
                                         </td>
-                                    }
+                                        <td>
+                                            <!--依頼者名-->
+                                            @*<label for="name">@item.hyoukasha</label>*@
+                                            @Html.TextBoxFor(model => model.HyoukaIraiList[i].hyoukasha, new { style = "width:100%;border:none!important;", @readonly = "readonly" })
 
-                                    @if (Model.HyoukaIraiList[i].dai_4 == "")
-                                    {
-                                        <!--第4-->
-                                        <td>
-                                            @Html.CheckBoxFor(model => model.HyoukaIraiList[i].f_chkDai4, new { style = "width:100%; " })
                                         </td>
-                                    }
-                                    else
-                                    {
-                                        <!--第4-->
-                                        <td>
-                                            @Html.TextBoxFor(model => model.HyoukaIraiList[i].dai_4, new { id = "txt_dai_4", style = "width:100%; text-align:center;border:none!important;", @readonly = "readonly" })
-                                        </td>
-                                    }
-                                    <td> @Html.TextBoxFor(model => model.HyoukaIraiList[i].fborder, new { style = "width:100%;border:none!important;", @readonly = "readonly" }) </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                    @Html.HiddenFor(m => m.jiki, new { id = "jiki", style = "position:absoulte" })
-                    @Html.HiddenFor(m => m.Dai1_BtnName, new { style = "position:absoulte" })
-                    @Html.HiddenFor(m => m.Dai2_BtnName, new { style = "position:absoulte" })
-                    @Html.HiddenFor(m => m.Dai3_BtnName, new { style = "position:absoulte" })
-                    @Html.HiddenFor(m => m.Dai4_BtnName, new { style = "position:absoulte" })
-                    @Html.HiddenFor(m => m.fDai1, new { style = "position:absoulte" })
-                    @Html.HiddenFor(m => m.fDai2, new { style = "position:absoulte" })
-                    @Html.HiddenFor(m => m.fDai3, new { style = "position:absoulte" })
-                    @Html.HiddenFor(m => m.fDai4, new { style = "position:absoulte" })
+
+                                        @if (Model.HyoukaIraiList[i].dai_1 == "")
+                                        {
+                                            <td>
+                                                <!--第1-->
+                                                @*<input type="checkbox" name="dai_1" id="dai_1" />*@
+                                                @Html.CheckBoxFor(model => model.HyoukaIraiList[i].f_chkDai1, new { id = "chk_dai1", style = "width:100%; " })
+                                            </td>
+                                        }
+                                        else //Model.HyoukaIraiList[i].dai_1 !=""
+                                        {
+                                            <td>
+                                                <!--第1-->
+                                                @Html.TextBoxFor(model => model.HyoukaIraiList[i].dai_1, new { id = "txt_dai_1", style = "width:100%; text-align:center;border:none!important;", @readonly = "readonly" })
+                                            </td>
+                                        }
+
+                                        @if (Model.HyoukaIraiList[i].dai_2 == "")
+                                        {
+                                            <!--第2-->
+                                            <td>
+                                                @Html.CheckBoxFor(model => model.HyoukaIraiList[i].f_chkDai2, new { style = "width:100%; " })
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <!--第2-->
+                                            <td>
+                                                @Html.TextBoxFor(model => model.HyoukaIraiList[i].dai_2, new { id = "txt_dai_2", style = "width:100%; text-align:center;border:none!important;", @readonly = "readonly" })
+                                            </td>
+                                        }
+
+                                        @if (Model.HyoukaIraiList[i].dai_3 == "")
+                                        {
+                                            <!--第3-->
+                                            <td>
+                                                @Html.CheckBoxFor(model => model.HyoukaIraiList[i].f_chkDai3, new { style = "width:100%; " })
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <!--第3-->
+                                            <td>
+                                                @Html.TextBoxFor(model => model.HyoukaIraiList[i].dai_3, new { id = "txt_dai_3", style = "width:100%; text-align:center;border:none!important;", @readonly = "readonly" })
+                                            </td>
+                                        }
+
+                                        @if (Model.HyoukaIraiList[i].dai_4 == "")
+                                        {
+                                            <!--第4-->
+                                            <td>
+                                                @Html.CheckBoxFor(model => model.HyoukaIraiList[i].f_chkDai4, new { style = "width:100%; " })
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <!--第4-->
+                                            <td>
+                                                @Html.TextBoxFor(model => model.HyoukaIraiList[i].dai_4, new { id = "txt_dai_4", style = "width:100%; text-align:center;border:none!important;", @readonly = "readonly" })
+                                            </td>
+                                        }
+                                        <td> @Html.TextBoxFor(model => model.HyoukaIraiList[i].fborder, new { style = "width:100%;border:none!important;", @readonly = "readonly" }) </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        @Html.HiddenFor(m => m.jiki, new { id = "jiki", style = "position:absoulte" })
+                        @Html.HiddenFor(m => m.Dai1_BtnName, new { style = "position:absoulte" })
+                        @Html.HiddenFor(m => m.Dai2_BtnName, new { style = "position:absoulte" })
+                        @Html.HiddenFor(m => m.Dai3_BtnName, new { style = "position:absoulte" })
+                        @Html.HiddenFor(m => m.Dai4_BtnName, new { style = "position:absoulte" })
+                        @Html.HiddenFor(m => m.fDai1, new { style = "position:absoulte" })
+                        @Html.HiddenFor(m => m.fDai2, new { style = "position:absoulte" })
+                        @Html.HiddenFor(m => m.fDai3, new { style = "position:absoulte" })
+                        @Html.HiddenFor(m => m.fDai4, new { style = "position:absoulte" })
+                    </div>
+
                 </div>
-
-            </div>
-        }
-    </div>
+            }
+        </div>
     }
     @if (TempData["com_msg"] != null)
     {
