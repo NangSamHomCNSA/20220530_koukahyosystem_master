@@ -488,7 +488,7 @@ namespace koukahyosystem.Controllers
                         {
                             dHIDUKE = dr["dHIDUKE"].ToString(),
                             cMOKUHYO = dr["cMOKUHYO"].ToString(),
-                            sMOKUHYO = dr["sMOKUHYO"].ToString(),
+                            sMOKUHYO = decode_utf8(dr["sMOKUHYO"].ToString()),
                             fKANRYOU = send,
                             dJISHIBI = dr["dJISHIBI"].ToString()
 
@@ -502,7 +502,7 @@ namespace koukahyosystem.Controllers
                             cTAISHOSHA = dr["cTAISHOSHA"].ToString(),
                             sTAISHOSHA = dr["sTAISHOSHA"].ToString(),
                             cMOKUHYO = dr["cMOKUHYO"].ToString(),
-                            sMOKUHYO = dr["sMOKUHYO"].ToString(),
+                            sMOKUHYO = decode_utf8(dr["sMOKUHYO"].ToString()),
                             dJISHIBI = dr["dJISHIBI"].ToString()
                         });
                     }
@@ -571,18 +571,18 @@ namespace koukahyosystem.Controllers
 
                     }
                     //対象者　//社員名
-                    OneMdl.sMOKUHYO = dr["sMOKUHYO"].ToString();
-                    OneMdl.Actiontask = dr["sACTIONTASK"].ToString();
-                    OneMdl.Trouble_tantousha = dr["sTROUBLE"].ToString();
-                    OneMdl.Trouble_Leader = dr["sTROUBLE_L"].ToString();
-                    OneMdl.Awareness_tantousha = dr["sAWARENESS"].ToString();
-                    OneMdl.Awareness_Leader = dr["sAWARENESS_L"].ToString();
+                    OneMdl.sMOKUHYO = decode_utf8(dr["sMOKUHYO"].ToString());
+                    OneMdl.Actiontask = decode_utf8(dr["sACTIONTASK"].ToString());
+                    OneMdl.Trouble_tantousha = decode_utf8(dr["sTROUBLE"].ToString());
+                    OneMdl.Trouble_Leader = decode_utf8(dr["sTROUBLE_L"].ToString());
+                    OneMdl.Awareness_tantousha = decode_utf8(dr["sAWARENESS"].ToString());
+                    OneMdl.Awareness_Leader = decode_utf8(dr["sAWARENESS_L"].ToString());
                     OneMdl.dJISHIBI = dr["dJISHIBI"].ToString();
 
                     //面談者　
-                    OneMdl.Feedback = dr["sFEEDBACK"].ToString();
-                    OneMdl.Todo = dr["sTODO"].ToString();
-                    OneMdl.Memo = dr["sMEMO"].ToString();
+                    OneMdl.Feedback = decode_utf8(dr["sFEEDBACK"].ToString());
+                    OneMdl.Todo = decode_utf8(dr["sTODO"].ToString());
+                    OneMdl.Memo = decode_utf8(dr["sMEMO"].ToString());
 
 
                     if (dr["fKANRYOU"].ToString() == "1")
@@ -659,45 +659,45 @@ namespace koukahyosystem.Controllers
 
                     if (pv_dr["sMOKUHYO"].ToString() != "")
                     {
-                        OneMdl.prv_tema = pv_dr["sMOKUHYO"].ToString();
+                        OneMdl.prv_tema = decode_utf8(pv_dr["sMOKUHYO"].ToString());
                     }
 
                     if (pv_dr["sACTIONTASK"].ToString() != "")
                     {
-                        OneMdl.prv_taskaction = pv_dr["sACTIONTASK"].ToString();
+                        OneMdl.prv_taskaction = decode_utf8(pv_dr["sACTIONTASK"].ToString());
                     }
                     if (pv_dr["sTROUBLE"].ToString() != "")
                     {
-                        OneMdl.prv_trouble = pv_dr["sTROUBLE"].ToString();
+                        OneMdl.prv_trouble = decode_utf8(pv_dr["sTROUBLE"].ToString());
                     }
 
                     if (pv_dr["sTROUBLE_L"].ToString() != "")
                     {
 
-                        OneMdl.prv_trouble_L = pv_dr["sTROUBLE_L"].ToString();
+                        OneMdl.prv_trouble_L = decode_utf8(pv_dr["sTROUBLE_L"].ToString());
                     }
 
 
                     if (pv_dr["sAWARENESS"].ToString() != "")
                     {
-                        OneMdl.prv_awareness = pv_dr["sAWARENESS"].ToString();
+                        OneMdl.prv_awareness = decode_utf8(pv_dr["sAWARENESS"].ToString());
                     }
 
 
                     if (pv_dr["sAWARENESS_L"].ToString() != "")
                     {
-                        OneMdl.prv_awareness_L = pv_dr["sAWARENESS_L"].ToString();
+                        OneMdl.prv_awareness_L = decode_utf8(pv_dr["sAWARENESS_L"].ToString());
                     }
 
                     if (pv_dr["sFEEDBACK"].ToString() != "")
                     {
-                        OneMdl.prv_feedback = pv_dr["sFEEDBACK"].ToString();
+                        OneMdl.prv_feedback = decode_utf8(pv_dr["sFEEDBACK"].ToString());
                     }
 
 
                     if (pv_dr["sMEMO"].ToString() != "")
                     {
-                        OneMdl.prv_memo = pv_dr["sMEMO"].ToString();
+                        OneMdl.prv_memo = decode_utf8(pv_dr["sMEMO"].ToString());
                     }
 
                 }
@@ -990,6 +990,11 @@ namespace koukahyosystem.Controllers
             return SortedOneList;
 
 
+        }
+        private string decode_utf8(string s)
+        {
+            string str = HttpUtility.UrlDecode(s);
+            return str;
         }
 
 

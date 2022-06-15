@@ -13,17 +13,17 @@ namespace koukahyosystem.Models
     {
         [Key]
         [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
-        
+
         public List<monthTable_lists> shinsei_tableList_month { get; set; }
 
         public List<yearTable_lists> shinsei_tableList_year { get; set; }
-       // public List<order_lists> monthOrder_list { get; set; }
+        // public List<order_lists> monthOrder_list { get; set; }
         //public List<order_lists> monthOrder_list { get; set; }
         public List<string> monthList { get; set; }
 
         [DataType(DataType.DateTime)]
         public string year { get; set; }
-        
+
         public IEnumerable<SelectListItem> yearList { get; set; }
 
         public string disable_mth4 { get; set; }
@@ -64,14 +64,32 @@ namespace koukahyosystem.Models
         public string txt_kijun { get; set; }
         public string txt_mark { get; set; }
         public string markLabel { get; set; }
+
+        public IEnumerable<SelectListItem> Mo_monthlist { get; set; } //added by nan 20220602
+        public string curMonth { get; set; }//added by nan 20220602
+
+        public IEnumerable<SelectListItem> Mo_monthShainlist { get; set; } //added by nan 20220602
+        public string IndexShain { get; set; }//added by nan 20220602
+
+        public List<MoMthclass> MoMthList { get; set; }
+
+        [Display(Name = "合計　")]
+        public string goukei { get; set; }
+        public string Yeargoukei { get; set; }
+
+        public IEnumerable<SelectListItem> Mo_shainList { get; set; } //added by nan 20220602
+        public string curShain { get; set; }//added by nan 20220602
+
+        public string shinseiStr { get; set; }
+        public  string kakuteiStr { get; set; }
     }
-    
+
     public class tabs
     {
         public string tabName { get; set; }
         public string tabId { get; set; }
     }
-   
+
     public class monthTable_lists
     {
         public string no_value { get; set; }
@@ -90,7 +108,7 @@ namespace koukahyosystem.Models
         public string two { get; set; }
         public string three { get; set; }
         public string total { get; set; }
-        
+
     }
 
     public class yearTable_lists
@@ -100,6 +118,16 @@ namespace koukahyosystem.Models
         public string question_code { get; set; }
         public string year_value { get; set; }
     }
+
+    #region モバイルレスポンシブ対応　 added by nan 
+    public class MoMthclass
+    {       
+        public string Mo_qstCode { get; set; }
+        public string Mo_qst { get; set; }
+        public string Mo_mark { get; set; }
+
+    }
+    #endregion
     //public class order_lists
     //{
     //    public string monthVal { get; set; }

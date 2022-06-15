@@ -14,21 +14,24 @@
     font-size: 18px;
 }
 /*************************** Login start ***********************************/
- .DefaultBtn{  
+.DefaultBtn {
     padding: 3px 10px 3px 10px;
-    border-radius: 4px;   
+    border-radius: 4px;
     transition-duration: 0.25s;
     color: black;
     border: 0px solid #555555;
     text-align: center;
     height: 32px;
+    background-color:  #ECECEC;
+    font-size:14px;
+
 }
-.DefaultBtn:active {
-    background-color:lightblue;
-}
-.DefaultBtn:hover {
-    background-color: lightblue;
-}
+    .DefaultBtn:active {
+        background-color: #CCCCCC;
+    }
+    .DefaultBtn:hover {
+        background-color: #CCCCCC;
+    }
 
 
 .errormsg ul li {
@@ -486,6 +489,7 @@ th {
     height: 32px;
     background-color: #C0E399;
     outline: none;
+    font-size: 14px;
 }
 
     .kanhyouBtn:active {
@@ -504,6 +508,7 @@ th {
     text-align: center;
     height: 32px;
     background-color: lightblue;
+    font-size:14px;
 }
 
     .SaveBtn:active {
@@ -589,6 +594,7 @@ th {
 .lbl_year {
     color: black;
     font-weight: normal !important;
+    margin-right:10px;
 }
 .btnmargin {
     margin: 0px 10px 0px 10px;
@@ -1141,3 +1147,141 @@ th {
     padding: 5px 0px 0px 0px !important;
 }
 /**************************** 目標設定確認　end *********************/
+
+
+/*****************************基礎評価　start ********************************/
+.kisoshinseiBtn {
+    display: inline-block;
+    padding: 5px 5px;
+    color: black;
+    font-size: 13px;
+    text-align: center;
+    text-decoration: none;
+    border: 0.5px solid #555555;
+    border-radius: 4px;
+}
+.first-col {
+    width: 25px;
+    min-width: 25px;
+    position: sticky;
+    /*position: -webkit-sticky;*/
+    left: 0;
+    background-color: #fff;
+    border: 1px solid black;
+    background-clip: padding-box;
+    text-align: center;
+}
+
+.second-col {
+    position: sticky;
+    /*position: -webkit-sticky;*/
+    width: auto;
+    min-width: 172px;
+    max-width: 300px;
+    left: 20px;
+    background-color: #fff;
+    border: 1px solid black;
+    background-clip: padding-box;
+    word-wrap: break-word;
+}
+
+.kisocss thead th:nth-of-type(1) {
+    background-color: rgb(189, 233, 242);
+    left: 0;
+    z-index: 3;
+    border: 1px solid black;
+}
+
+.kisocss thead th:nth-of-type(2) {
+    background-color: rgb(189, 233, 242);
+    /*left: 20px;*/
+    z-index: 3;
+    border: 1px solid black;
+}
+.KisoFilterMobile {
+    display: none;
+}
+.KisoSavebtn {
+    display:unset;
+}
+.kisoDesk {
+    display: unset;
+}
+.kisoMobile {
+    display: none;
+}
+.kisoBtn {
+    display: flex;
+    justify-content: flex-end;
+}
+.kisomocss {
+    width: 100%;
+    border: none;
+}
+
+    .kisomocss thead th {
+        border: none;
+    }
+
+    .kisomocss tr {
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        border-bottom: 1px solid black;
+        padding: 7px;
+    }
+
+    .kisomocss td {
+        border: none;
+    }
+.kisoyeartbl {
+    width:350px;
+}
+
+@media only screen and (max-width: 530px) {
+    .KisoFilterMobile {
+        display: unset;
+    }
+    .KisoSavebtn {
+        display: none;
+        
+    }
+    .kisoDesk {
+        display: none;
+    }
+    .kisoMobile {
+        display: unset;
+    }
+    .kisoBtn {
+        display: flex;
+        justify-content: flex-start;
+    }
+    .kisoyeartbl {
+        width: 100%;
+    }
+}
+/*************************************************************/
+/***************************** 基礎評価確認画面start ********************************/
+.L_kisoyearcss {
+    margin: 0!important;
+}
+.L_kisoBtn {
+    display: flex;
+    justify-content:flex-end;
+}
+.L_kisotab {
+    display:inline-block;
+}
+@media only screen and (max-width: 530px) {
+    .L_kisoyearcss {
+        margin: 0px 10px 0px 0px !important;
+    }
+    .L_kisoBtn {
+        display: flex;
+        justify-content: flex-start;
+    }
+    .L_kisotab {
+        display: none;
+    }
+}
+    /*************************************************************/

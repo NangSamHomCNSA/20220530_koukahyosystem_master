@@ -2,7 +2,7 @@
     * 作成者　: ルインマー
     * 日付：20200710
     * 機能　：社員満足度調査依頼
-    * * その他PGからパラメータ：Session["LoginName"],Session["curr_nendou"],Session["dToday"]
+    * * その他PGからパラメータ：Session["LoginName"],Session["curr_nendou"],Session["dToday"] test
     */
 using Microsoft.Office.Interop.Excel;
 using MySql.Data.MySqlClient;
